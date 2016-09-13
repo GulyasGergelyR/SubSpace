@@ -35,6 +35,7 @@ public class Ancestor {
 		// will print the error message in System.err.
 		//Added some nonse shit
 		//Added shit again
+		//Add text for TextBranch
 		GLFWErrorCallback.createPrint(System.err).set();
 
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
