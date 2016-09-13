@@ -33,6 +33,7 @@ public class Ancestor {
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
+		//Added some nonse shit
 		GLFWErrorCallback.createPrint(System.err).set();
 
 		// Initialize GLFW. Most GLFW functions will not work before doing this.
