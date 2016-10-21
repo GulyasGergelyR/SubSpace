@@ -2,7 +2,7 @@ package GameEngine.BaseEngine;
 
 import GameEngine.GeomEngine.SVector;
 
-public abstract class Mobile extends SObject{
+public abstract class SMobile extends SObject{
 	private SVector pos_before;
 	private float speed;
 	private float max_speed;
@@ -10,7 +10,7 @@ public abstract class Mobile extends SObject{
 	private float rot_max_speed;
 	
 	//Initialize
-	public Mobile()
+	public SMobile()
 	{
 		super();
 		pos_before = new SVector();
@@ -19,7 +19,7 @@ public abstract class Mobile extends SObject{
 		this.rot_speed = 0.0f;
 		this.rot_max_speed = 0.0f;
 	}
-	public Mobile(SVector pos, SVector pos_before, SVector look_dir, float speed, float max_speed, float rot_speed, float rot_max_speed)
+	public SMobile(SVector pos, SVector pos_before, SVector look_dir, float speed, float max_speed, float rot_speed, float rot_max_speed)
 	{
 		super(pos, look_dir);
 		this.pos_before = pos_before;
@@ -28,7 +28,7 @@ public abstract class Mobile extends SObject{
 		this.rot_speed = rot_speed;
 		this.rot_max_speed = rot_max_speed;
 	}
-	public Mobile(Mobile m)
+	public SMobile(SMobile m)
 	{
 		super(m);
 		this.pos_before = m.pos_before;
