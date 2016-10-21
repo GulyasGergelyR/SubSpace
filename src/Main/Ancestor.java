@@ -33,7 +33,8 @@ public class Ancestor {
         initGL(); // init OpenGL
         getDelta(); // call once before loop to initialise lastFrame
         lastFPS = getTime(); // call before loop to initialise fps timer
- 
+        
+        
         while (!Display.isCloseRequested()) {
             int delta = getDelta();
              

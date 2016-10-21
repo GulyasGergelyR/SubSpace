@@ -1,5 +1,6 @@
 package GameEngine.GeomEngine;
 
+
 public class SVector {
 	private float x;
 	private float y;
@@ -30,7 +31,7 @@ public class SVector {
 	public void setY(float y){
 		this.y = y;
 	}
-	// functions
+	// vector functions
 	public SVector add(SVector v){
 		return new SVector(this.x+v.x, this.y+v.y);
 	}
@@ -45,5 +46,15 @@ public class SVector {
 	}
 	public float l(){
 		return (float) Math.sqrt(this.x*this.x+this.y*this.y);
+	}
+	// angle functions
+	public float getAngle()
+	{
+		return (float) (Math.atan2(y,x)*180/Math.PI);
+	}
+	public SVector rotate(float f)	//rotating by 
+	{
+		float alpha = f*(float)Math.PI/180;
+		return(new SVector((float)(Math.cos(alpha)*x+Math.sin(alpha)*y),(float)(Math.sin(alpha)*(-x)+Math.cos(alpha)*y)));
 	}
 }

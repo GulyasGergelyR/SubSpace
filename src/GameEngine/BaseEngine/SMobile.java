@@ -3,71 +3,87 @@ package GameEngine.BaseEngine;
 import GameEngine.GeomEngine.SVector;
 
 public abstract class SMobile extends SObject{
-	private SVector pos_before;
-	private float speed;
-	private float max_speed;
-	private float rot_speed;
-	private float rot_max_speed;
+	private SVector moveDir;  //actual movement direction
+	private float speed = 0.0f;
+	private float maxSpeed = 1.0f;
+	private float rotSpeed = 0.0f;
+	private float maxRotSpeed = 1.0f;
+	private float acceleration = 0.0f;
+	private float rotAcceleration = 0.0f;
 	
 	//Initialize
 	public SMobile()
 	{
 		super();
-		pos_before = new SVector();
-		this.speed = 0.0f;
-		this.max_speed = 0.0f;
-		this.rot_speed = 0.0f;
-		this.rot_max_speed = 0.0f;
+		moveDir = new SVector();
 	}
-	public SMobile(SVector pos, SVector pos_before, SVector look_dir, float speed, float max_speed, float rot_speed, float rot_max_speed)
+	public SMobile(SVector pos, SVector look_dir, Object texture)
 	{
-		super(pos, look_dir);
-		this.pos_before = pos_before;
-		this.speed = speed;
-		this.max_speed = max_speed;
-		this.rot_speed = rot_speed;
-		this.rot_max_speed = rot_max_speed;
+		super(pos, look_dir, texture);
 	}
 	public SMobile(SMobile m)
 	{
 		super(m);
-		this.pos_before = m.pos_before;
 		this.speed = m.speed;
-		this.max_speed = m.max_speed;
-		this.rot_speed = m.rot_speed;
-		this.rot_max_speed = m.rot_max_speed;
+		this.maxSpeed = m.maxSpeed;
+		this.rotSpeed = m.rotSpeed;
+		this.maxRotSpeed = m.maxRotSpeed;
+		this.acceleration = m.acceleration;
+		this.rotAcceleration = m.rotAcceleration;
 	}
 	//get-set
-	public SVector getPos_before() {
-		return pos_before;
-	}
-	public void setPos_before(SVector pos_before) {
-		this.pos_before = pos_before;
-	}
+	
 	public float getSpeed() {
 		return speed;
 	}
 	public void setSpeed(float speed) {
 		this.speed = speed;
 	}
-	public float getMax_speed() {
-		return max_speed;
+	public float getMaxSpeed() {
+		return maxSpeed;
 	}
-	public void setMax_speed(float max_speed) {
-		this.max_speed = max_speed;
+	public void setMaxSpeed(float max_speed) {
+		this.maxSpeed = max_speed;
 	}
-	public float getRot_speed() {
-		return rot_speed;
+	public float getRotSpeed() {
+		return rotSpeed;
 	}
-	public void setRot_speed(float rot_speed) {
-		this.rot_speed = rot_speed;
+	public void setRotSpeed(float rot_speed) {
+		this.rotSpeed = rot_speed;
 	}
-	public float getRot_max_speed() {
-		return rot_max_speed;
+	public float getMaxRotSpeed() {
+		return maxRotSpeed;
 	}
-	public void setRot_max_speed(float rot_max_speed) {
-		this.rot_max_speed = rot_max_speed;
+	public void setMaxRotSpeed(float rot_max_speed) {
+		this.maxRotSpeed = rot_max_speed;
 	}
+	public SVector getMoveDir() {
+		return moveDir;
+	}
+	public void setMoveDir(SVector moveDir) {
+		this.moveDir = moveDir.norm();
+	}
+	public float getAcceleration() {
+		return acceleration;
+	}
+	public void setAcceleration(float acceleration) {
+		this.acceleration = acceleration;
+	}
+	public float getRotAcceleration() {
+		return rotAcceleration;
+	}
+	public void setRotAcceleration(float rotAcceleration) {
+		this.rotAcceleration = rotAcceleration;
+	}
+	public void Move(){
+		// TODO add fps dependency
+		speed += acceleration;
+		pos = pos.add(moveDir.m(speed));
+		
+		rotSpeed += rotAcceleration;
+		
+	}
+	
 	//functions
 	public void Move_by(SVector v)
 	{

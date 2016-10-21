@@ -2,34 +2,52 @@ package GameEngine.BaseEngine;
 
 import java.util.UUID;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
+import org.newdawn.slick.opengl.Texture;
+import org.omg.CosNaming.IstringHelper;
+
+import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
+import RenderingEngine.SRenderObject;
 
 public abstract class SObject {
-	private SVector pos;
-	
-	private SVector look_dir;
-	// TODO add sprite
-	// TODO add hitbox
-	
+	protected SVector pos;
+	protected SVector lookDir;
+	protected Texture texture;
 	private UUID Id = UUID.randomUUID();
+	// TODO add hitbox
+
+	
 	
 	//Initialize
 	public SObject()
 	{
 		this.pos = new SVector();
-		this.look_dir = new SVector();
+		this.lookDir = new SVector();
+		this.texture = SResLoader.getTexture("res/default.png");
+		this.Id = UUID.randomUUID();
 	}
-	public SObject(SVector pos, SVector look_dir)
+	public SObject(SVector pos, SVector lookDir, Object texture)
 	{
 		this.pos = pos;
-		this.look_dir = look_dir;
+		this.lookDir = lookDir;
+		this.Id = UUID.randomUUID();
+		if (texture instanceof String){
+			this.texture = SResLoader.getTexture((String)texture);
+		}
+		else{
+			this.texture = (Texture)texture;
+		}
 	}
 	public SObject(SObject o)
 	{
 		this.pos = o.pos;
-		this.look_dir = o.look_dir;
+		this.lookDir = o.lookDir;
+		this.texture = o.texture;
+		this.Id = o.Id;
 	}
-	// get-set
+	// Properties
 	public SVector getPos() {
 		return pos;
 	}
@@ -38,10 +56,10 @@ public abstract class SObject {
 	}
 	
 	public SVector getLook_dir() {
-		return look_dir;
+		return lookDir;
 	}
-	public void setLook_dir(SVector look_dir) {
-		this.look_dir = look_dir;
+	public void setLook_dir(SVector lookDir) {
+		this.lookDir = lookDir;
 	}
 	public UUID getId() {
 		return Id;
@@ -49,9 +67,20 @@ public abstract class SObject {
 	public void setId(UUID id) {
 		Id = id;
 	}
+	public void setTexture(String s){
+		this.texture = SResLoader.getTexture(s);
+	}
+	public void setTexture(Texture t){
+		this.texture = t;
+	}
+	public Texture getTexture(){
+		return texture;
+	}
 	
 	// functions
-	
+	public SRenderObject Draw(){
+		return new SRenderObject(texture, pos, lookDir.getAngle());
+	}
 	
 	
 }

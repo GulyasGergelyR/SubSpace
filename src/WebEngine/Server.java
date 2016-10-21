@@ -1,9 +1,6 @@
 package WebEngine;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.Date;
 
 /**
  * A TCP server that runs on port 9090.  When a client connects, it
@@ -20,7 +17,7 @@ public class Server {
 	}
 	
 	public void Listen() throws IOException{
-		ServerSocket listener = new ServerSocket(port);
+		listener = new ServerSocket(port);
 	}
 	
 	public void Read(){}
