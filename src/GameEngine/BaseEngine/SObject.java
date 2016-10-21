@@ -1,5 +1,7 @@
 package GameEngine.BaseEngine;
 
+import java.util.UUID;
+
 import GameEngine.GeomEngine.SVector;
 
 public abstract class SObject {
@@ -9,7 +11,7 @@ public abstract class SObject {
 	// TODO add sprite
 	// TODO add hitbox
 	
-	private int Id;
+	private UUID Id = UUID.randomUUID();
 	
 	//Initialize
 	public SObject()
@@ -41,10 +43,10 @@ public abstract class SObject {
 	public void setLook_dir(SVector look_dir) {
 		this.look_dir = look_dir;
 	}
-	public int getId() {
+	public UUID getId() {
 		return Id;
 	}
-	public void setId(int id) {
+	public void setId(UUID id) {
 		Id = id;
 	}
 	

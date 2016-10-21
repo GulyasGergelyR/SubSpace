@@ -10,13 +10,24 @@ import javax.swing.JOptionPane;
  * Trivial client for the date server.
  */
 public class Client {
-
-    /**
-     * Runs the client as an application.  First it displays a dialog
-     * box asking for the IP address or hostname of a host running
-     * the date server, then connects to it and displays the date that
-     * it serves.
-     */
+	private String serverAddress;
+	private int port;
+	private Socket socket;
+	
+	public Client(String serverAddress, int port){
+		this.serverAddress = serverAddress;
+		this.port = port;
+	}
+	
+	public void Connect() throws IOException{
+		socket = new Socket(serverAddress, port);
+	}
+	
+	public void Read(){}
+	
+	public void Write(){}
+	
+	/*
     public static void main(String[] args) throws IOException {
         String serverAddress = JOptionPane.showInputDialog(
             "Enter IP Address of a machine that is\n" +
@@ -28,5 +39,6 @@ public class Client {
         JOptionPane.showMessageDialog(null, answer);
         s.close();
         System.exit(0);
-    }
+        
+    }*/
 }

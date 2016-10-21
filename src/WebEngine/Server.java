@@ -12,10 +12,22 @@ import java.util.Date;
  * server you can write.
  */
 public class Server {
-
-    /**
-     * Runs the server.
-     */
+	private int port;
+	private ServerSocket listener;
+	
+	public Server(int port){
+		this.port = port;
+	}
+	
+	public void Listen() throws IOException{
+		ServerSocket listener = new ServerSocket(port);
+	}
+	
+	public void Read(){}
+	
+	public void Write(){}
+	
+	/*
     public static void main(String[] args) throws IOException {
         ServerSocket listener = new ServerSocket(9090);
         try {
@@ -33,5 +45,5 @@ public class Server {
         finally {
             listener.close();
         }
-    }
+    }*/
 }
