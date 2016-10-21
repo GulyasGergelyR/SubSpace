@@ -84,10 +84,11 @@ public class SMain {
 	
 	private static void initResources() {
 		// TODO Auto-generated method stub
-		String[] res = new String[3];
+		String[] res = new String[4];
 		res[0] = "res/entity/spaceshipv1.png";
 		res[1] = "res/entity/prob.png";
 		res[2] = "res/dot.png";
+		res[3] = "res/entity/spaceshipv2.png";
 		SResLoader.add_Sprite_Array(res);
 	}
 
