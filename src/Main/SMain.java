@@ -89,7 +89,7 @@ public class SMain {
 		res[1] = "res/entity/prob.png";
 		res[2] = "res/dot.png";
 		res[3] = "res/entity/spaceshipv2.png";
-		SResLoader.add_Sprite_Array(res);
+		SResLoader.addSpriteArray(res);
 	}
 
 	private static void StartServer(){

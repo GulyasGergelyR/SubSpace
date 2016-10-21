@@ -1,5 +1,6 @@
 package GameEngine.BaseEngine;
 
+import GameEngine.EntityEngine.SControl;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 
@@ -11,12 +12,15 @@ public abstract class SMobile extends SObject{
 	private float maxRotSpeed = 1.0f;
 	private float acceleration = 0.0f;     // point/frame^2
 	private float rotAcceleration = 0.0f;  // degree/frame^2
+	private SControl controller;
+	
 	
 	//Initialize
 	public SMobile()
 	{
 		super();
 		moveDir = new SVector();
+		controller = new SControl(this);
 	}
 	public SMobile(SVector pos, SVector look_dir, Object texture)
 	{
@@ -76,6 +80,9 @@ public abstract class SMobile extends SObject{
 	public void setRotAcceleration(float rotAcceleration) {
 		this.rotAcceleration = rotAcceleration;
 	}
+	public void setController(SControl controller){
+		this.controller = controller;
+	}
 	public void Move(){
 		// TODO add fps dependency
 		speed += acceleration*SMain.getDeltaRatio();
@@ -83,5 +90,8 @@ public abstract class SMobile extends SObject{
 		
 		rotSpeed += rotAcceleration*SMain.getDeltaRatio();
 		lookDir = lookDir.rotate(rotSpeed);
+	}
+	public void update(){
+		controller.Think();
 	}
 }

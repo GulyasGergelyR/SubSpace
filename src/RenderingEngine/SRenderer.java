@@ -42,7 +42,7 @@ public class SRenderer {
 		float rotateBy = SRO.rotateBy;
 		float transparency = SRO.transparency;
 		Texture texture = SRO.texture;
-		
+
 		int alpha = (int)(transparency*255);
 		Color c = new Color(255,255,255,alpha);
 		c.bind();

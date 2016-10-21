@@ -14,7 +14,7 @@ public abstract class SResLoader {
 
 	static int N = 0;
 
-	public static void add_Sprite_Array(String[] s) {
+	public static void addSpriteArray(String[] s) {
 		N = s.length;
 		for (int i = 0; i <s.length; i++) {
 			if (s[i].length()>0) addSprite(s[i]);
@@ -41,7 +41,7 @@ public abstract class SResLoader {
 			i++;
 		}
 		System.out.println("No PNG found with name: "+s);
-		return getTexture("res/entity/spaceshipv1.png");
+		return getTexture("res/dot.png");
 	}
 
 	public static Texture initResources(String s) {

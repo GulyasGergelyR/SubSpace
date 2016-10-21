@@ -20,7 +20,8 @@ public class SEntity extends GameEngine.BaseEngine.SSlidable{
 		List<SRenderObject> list = super.Draw();
 		list.add(new SRenderObject(SResLoader.getTexture("res/dot.png"), pos, 0.0f, 0.5f, 1.0f));
 		return list;
-		
 	}
+	
+	
 	
 }
