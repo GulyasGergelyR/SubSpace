@@ -28,7 +28,9 @@ public class SRenderer {
 	private void DrawEntities(){
 		List<SEntity> Entities = GameInstance.getEntities();
 		for (SEntity entity : Entities){
-			Draw(entity.Draw());
+			for(SRenderObject draw : entity.Draw()){
+				Draw(draw);
+			}
 		}
 	}
 	

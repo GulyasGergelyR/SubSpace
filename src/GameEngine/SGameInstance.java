@@ -22,4 +22,8 @@ public class SGameInstance {
 	public SFPS getFPS(){
 		return FPS;
 	}
+	
+	public void addEntity(SEntity entity){
+		Entities.add(entity);
+	}
 }

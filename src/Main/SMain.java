@@ -1,13 +1,30 @@
 package Main;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.glBlendFunc;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
+
 import javax.swing.JOptionPane;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.opengl.GL11;
 
 import GameEngine.SGameInstance;
+import GameEngine.SResLoader;
+import GameEngine.EntityEngine.SEntity;
 import RenderingEngine.SRenderer;
 import WebEngine.Client;
 import WebEngine.Server;
@@ -51,7 +68,6 @@ public class SMain {
 	private static void InitClient(){
 		gameInstance = new SGameInstance();
 		renderer = new SRenderer(gameInstance);
-		
 		try {
             Display.setDisplayMode(new DisplayMode(800, 600));
             Display.create();
@@ -61,15 +77,26 @@ public class SMain {
         }
  
         initGL(); // init OpenGL
+        initResources();
+        
+        gameInstance.addEntity(new SEntity());
 	}
 	
+	private static void initResources() {
+		// TODO Auto-generated method stub
+		String[] res = new String[3];
+		res[0] = "res/entity/spaceshipv1.png";
+		res[1] = "res/entity/prob.png";
+		res[2] = "res/dot.png";
+		SResLoader.add_Sprite_Array(res);
+	}
+
 	private static void StartServer(){
 		
 	}
 	private static void StartClient(){
 		while (!Display.isCloseRequested()) {
-			System.out.println(getDelta()+" "+getDeltaRatio());
-			renderer.DrawObjects();
+			renderGL();
 			Display.update();
             Display.sync(60); // cap fps to 60fps
 			updateDelta();
@@ -95,9 +122,18 @@ public class SMain {
 	}
 	
 	public static void initGL() {
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glOrtho(0, 800, 0, 600, 1, -1);
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-    }
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, 800, 0, 600, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
+
+	public static void renderGL() {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		renderer.DrawObjects();
+	}
 }
