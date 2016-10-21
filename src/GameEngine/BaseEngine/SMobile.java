@@ -1,15 +1,16 @@
 package GameEngine.BaseEngine;
 
 import GameEngine.GeomEngine.SVector;
+import Main.SMain;
 
 public abstract class SMobile extends SObject{
-	private SVector moveDir;  //actual movement direction
-	private float speed = 0.0f;
+	private SVector moveDir;               // actual movement direction
+	private float speed = 0.0f;            // point/frame
 	private float maxSpeed = 1.0f;
-	private float rotSpeed = 0.0f;
+	private float rotSpeed = 0.0f;         // degree/frame
 	private float maxRotSpeed = 1.0f;
-	private float acceleration = 0.0f;
-	private float rotAcceleration = 0.0f;
+	private float acceleration = 0.0f;     // point/frame^2
+	private float rotAcceleration = 0.0f;  // degree/frame^2
 	
 	//Initialize
 	public SMobile()
@@ -26,10 +27,10 @@ public abstract class SMobile extends SObject{
 		super(m);
 		this.speed = m.speed;
 		this.maxSpeed = m.maxSpeed;
-		this.rotSpeed = m.rotSpeed;
+		this.rotSpeed = m.rotSpeed;  
 		this.maxRotSpeed = m.maxRotSpeed;
 		this.acceleration = m.acceleration;
-		this.rotAcceleration = m.rotAcceleration;
+		this.rotAcceleration = m.rotAcceleration;  
 	}
 	//get-set
 	
@@ -77,20 +78,10 @@ public abstract class SMobile extends SObject{
 	}
 	public void Move(){
 		// TODO add fps dependency
-		speed += acceleration;
-		pos = pos.add(moveDir.m(speed));
+		speed += acceleration*SMain.getDeltaRatio();
+		pos = pos.add(moveDir.m(speed*SMain.getDeltaRatio()));
 		
-		rotSpeed += rotAcceleration;
-		
-	}
-	
-	//functions
-	public void Move_by(SVector v)
-	{
-		
-	}
-	public void Rotate_by(SVector v)
-	{
-		
+		rotSpeed += rotAcceleration*SMain.getDeltaRatio();
+		lookDir = lookDir.rotate(rotSpeed);
 	}
 }

@@ -19,7 +19,7 @@ public class SGameInstance {
 		return Entities;
 	}
 	
-	public int getDelta(){
-		return FPS.getDelta();
+	public SFPS getFPS(){
+		return FPS;
 	}
 }

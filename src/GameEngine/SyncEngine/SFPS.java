@@ -11,13 +11,12 @@ public class SFPS {
 	private int fps;
 	private long last_frame;
 	private int last_fps;
-	
 	private int FPS_M;
 	
 	public SFPS(){
 		FPS_M = Specifications.FPS_M;
+		last_frame = getTime();
 	}
-	
 	
 	public int getDelta() {
 		long time = getTime();
