@@ -1,11 +1,11 @@
 package GameEngine.EntityEngine;
 
-import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SMobile;
 
 public class SAIControl extends SControl{
 	
-	public SAIControl(SObject O){
-		super(O);
+	public SAIControl(SMobile mobile){
+		super(mobile);
 	}
 
 }

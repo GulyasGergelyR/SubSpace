@@ -1,15 +1,16 @@
 package GameEngine.EntityEngine;
 
-import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SMobile;
 
 public class SControl {
-	private SObject Owner;
+	protected SMobile Owner;
 	
-	public SControl(SObject O){
-		Owner = O;
+	public SControl(SMobile mobile){
+		Owner = mobile;
 	}
 	
 	public void Think(){
-		
+		Owner.Move();
+		Owner.Rotate();
 	}
 }

@@ -69,7 +69,7 @@ public class SMain {
 		gameInstance = new SGameInstance();
 		renderer = new SRenderer(gameInstance);
 		try {
-            Display.setDisplayMode(new DisplayMode(800, 600));
+            Display.setDisplayMode(new DisplayMode(1024, 768));
             Display.create();
         } catch (LWJGLException e) {
             e.printStackTrace();
@@ -97,6 +97,7 @@ public class SMain {
 	}
 	private static void StartClient(){
 		while (!Display.isCloseRequested()) {
+			gameInstance.UpdateEntities();
 			renderGL();
 			Display.update();
             Display.sync(60); // cap fps to 60fps
@@ -125,7 +126,7 @@ public class SMain {
 	public static void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 800, 0, 600, -1, 1);
+		glOrtho(0, 1024, 0, 768, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND); 

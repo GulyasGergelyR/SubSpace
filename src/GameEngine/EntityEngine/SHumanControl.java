@@ -3,63 +3,43 @@ package GameEngine.EntityEngine;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 
 public class SHumanControl extends SControl{
 	
-	public SHumanControl(SObject O){
-		super(O);
+	public SHumanControl(SMobile mobile){
+		super(mobile);
 	}
 
 	@Override
 	public void Think() {
-		SVector moveDir = new SVector();
+		SVector acclDir = new SVector();
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			
+			acclDir = acclDir.add(-1.0f, 0.0f);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			
+			acclDir = acclDir.add(1.0f, 0.0f);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			
+			acclDir = acclDir.add(0.0f, 1.0f);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			
+			acclDir = acclDir.add(0.0f, -1.0f);
 		}
-	}
-	
-	/*public void set_look_dir() {
+		
+		if(acclDir.l()==0){
+			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/2.0f));
+		}
+		else{
+			Owner.setAcclDir(acclDir.setLength(Owner.getMaxAcceleration()));
+		}
+		Owner.Move();
+		
+		System.out.println(Owner.getId());
+		
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
-		
-		System.out.printf("%f, %f\n",pos.get_x(),pos.get_y());
-		vector look_at=new vector(M_x,M_y);
-		super.set_look_dir(look_at.sub(pos),1.0f);
+		Owner.setLookDir(new SVector(M_x,M_y).sub(Owner.getPos()));
 	}
-	
-	public vector get_v()
-	{
-		return new vector(pos.sub(pos_before));
-	}
-	
-	public void Move() {
-		
-		set_look_dir();
-	
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			pos.set_x(pos.get_x()-get_speed() / MechaCube.get_FPS_M());
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			pos.set_x(pos.get_x()+get_speed() / MechaCube.get_FPS_M());
-			
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			pos.set_y(pos.get_y()+get_speed() / MechaCube.get_FPS_M());
-			
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			pos.set_y(pos.get_y()-get_speed() / MechaCube.get_FPS_M());
-		}
-	}*/
 }

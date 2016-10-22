@@ -35,6 +35,9 @@ public class SVector {
 	public SVector add(SVector v){
 		return new SVector(this.x+v.x, this.y+v.y);
 	}
+	public SVector add(float x, float y){
+		return new SVector(this.x+x, this.y+y);
+	}
 	public SVector sub(SVector v){
 		return new SVector(this.x-v.x, this.y-v.y);
 	}
@@ -46,6 +49,12 @@ public class SVector {
 	}
 	public float l(){
 		return (float) Math.sqrt(this.x*this.x+this.y*this.y);
+	}
+	public SVector setLength(float length){
+		if(this.l()>0.0f){
+			return this.m(length/this.l());
+		}
+		return this;
 	}
 	// angle functions
 	public float getAngle()

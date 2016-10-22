@@ -26,4 +26,10 @@ public class SGameInstance {
 	public void addEntity(SEntity entity){
 		Entities.add(entity);
 	}
+	
+	public void UpdateEntities(){
+		for(SEntity entity : Entities){
+			entity.update();
+		}
+	}
 }
