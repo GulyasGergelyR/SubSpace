@@ -36,8 +36,6 @@ public class SHumanControl extends SControl{
 		}
 		Owner.Move();
 		
-		System.out.println(Owner.getId());
-		
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
 		Owner.setLookDir(new SVector(M_x,M_y).sub(Owner.getPos()));

@@ -9,7 +9,7 @@ import RenderingEngine.SRenderObject;
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public SEntity(){
 		super();
-		this.pos = new SVector(500.0f,500.0f);
+		this.pos = new SVector(250.0f,250.0f);
 		this.texture = SResLoader.getTexture("res/entity/spaceshipv1.png");
 		this.scale = 0.05f;
 		this.setController(new SHumanControl(this));
