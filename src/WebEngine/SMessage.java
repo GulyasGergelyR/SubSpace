@@ -15,8 +15,8 @@ public class SMessage {
 		String uuid = new String(Arrays.copyOfRange(input, 0,36));
 		if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
 			this.Id = UUID.fromString(uuid);
-		} else this.Invalid = true;
-		
+		}else
+			this.Invalid = true;
 		this.commandName = new String(Arrays.copyOfRange(input, 36,41));
 		this.content = new String(Arrays.copyOfRange(input, 41,Specifications.DataLength));
 	}

@@ -49,7 +49,6 @@ public class SUDPClient {
 		    clientSocket.send(sendPacket);
 		    System.out.println("Data Sent "+message.getContent());
 		}
-		
 	}
 	
 	private class Listener extends CommunicationThread{
