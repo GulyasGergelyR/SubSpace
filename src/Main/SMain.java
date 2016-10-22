@@ -27,6 +27,8 @@ import GameEngine.SResLoader;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
+import WebEngine.SMessage;
+import WebEngine.SUDPClient;
 import WebEngine.SUDPServer;
 
 public class SMain {
@@ -34,6 +36,9 @@ public class SMain {
 	private static SGameInstance gameInstance;
 	private static SRenderer renderer;
 	private static int delta;
+	
+	private static SUDPServer server;
+	private static SUDPClient client;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -50,25 +55,41 @@ public class SMain {
 		
 		if (n == 0){
 			// Start server
-			SUDPServer server;
+			
 			try {
-				server = new SUDPServer(9090);
 				InitServer();
 				StartServer(server);
+				server = new SUDPServer(9090);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
+				if (server != null)
+					server.Close();
 				e.printStackTrace();
+			} finally {
+				if (server != null)
+					server.Close();
 			}
 		}
 		else{
-			// Start client
-			InitClient();
-			StartClient();
+			try {
+				InitClient();
+				StartClient();
+				client = new SUDPClient(9090);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				if(client!=null)
+					client.Close();
+				e.printStackTrace();
+			} finally {
+				if(client!=null)
+					client.Close();
+			}
 		}
 	}
-	
+
 	private static void InitServer(){
 		gameInstance = new SGameInstance();
+		initResources();
 	}
 	private static void InitClient(){
 		gameInstance = new SGameInstance();
@@ -119,7 +140,16 @@ public class SMain {
 		}
 		Display.destroy();
 	}
-
+	
+	public static void SendClientMessage(SMessage message){
+		try {
+			client.SendMessage(message);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;

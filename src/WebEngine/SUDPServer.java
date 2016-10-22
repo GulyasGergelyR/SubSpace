@@ -22,7 +22,7 @@ public class SUDPServer {
 	private List<SClient> clients;
 	
 	public SUDPServer(int port) throws Exception{
-		DatagramSocket serverSocket = new DatagramSocket(9876);
+		DatagramSocket serverSocket = new DatagramSocket(port);
         listener = new Listener(serverSocket);
         handler = new Handler(serverSocket);
         clients = new ArrayList<SClient>();
@@ -36,6 +36,12 @@ public class SUDPServer {
 	}
 	public void StopHandler(){
 		handler.StopThread();
+	}
+	
+	public void Close(){
+		listener.serverSocket.close();
+		StopListener();
+		StopHandler();
 	}
 	
 	private class Handler extends CommunicationThread{
@@ -65,11 +71,9 @@ public class SUDPServer {
 					e.printStackTrace();
 				}
                 
-                byte[] command = Arrays.copyOfRange(receivePacket.getData(), 0, 4);
-                
-                
                 String sentence = new String( receivePacket.getData());
-                System.out.println("RECEIVED: " + sentence);
+                if(sentence.length()>0)
+                	System.out.println("RECEIVED: " + sentence);
                 
                 InetAddress IPAddress = receivePacket.getAddress();
                 int port = receivePacket.getPort();
@@ -80,13 +84,19 @@ public class SUDPServer {
                 		new_client = false;
                 	}
                 }
+                
+                SMessage message = new SMessage(receivePacket.getData());
+                System.out.println("RECEIVED: " + message.getId());
+                System.out.println("RECEIVED: " + message.getCommand());
+                System.out.println("RECEIVED: " + message.getContent());
                 if (new_client){
                 	// TODO add client side creation
                 	SClient client = new SClient(IPAddress, port);
                 	SEntity entity = new SEntity();
-                	entity.setController(new SDistantHumanControl(entity));
-                	SMain.getGameInstance().addEntity(entity);
-                	client.setId(entity.getId());
+                	//entity.setController(new SDistantHumanControl(entity));
+                	//SMain.getGameInstance().addEntity(entity);
+                	//client.setId(entity.getId());
+                	
                 }
                 else{
                 	SMain.getGameInstance().AddClientMessage(new SMessage(receivePacket.getData()));

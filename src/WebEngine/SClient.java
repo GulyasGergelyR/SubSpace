@@ -46,8 +46,6 @@ public class SClient {
 		this.state = state;
 	}
 
-
-
 	public enum ClientState{
 		Init, Online, Offline 
 	}

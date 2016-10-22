@@ -86,7 +86,6 @@ public class SGameInstance {
 					control.setKeyTo(sub.substring(1, 1), state);
 					System.out.println("yap got it");
 				}
-				
 			}
 		}
 	}

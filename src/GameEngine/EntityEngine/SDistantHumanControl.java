@@ -34,7 +34,7 @@ public class SDistantHumanControl extends SControl{
 		prevKeyStates[key] = keyStates[key];
 		keyStates[key] = state;
 	}
-	public void setKeyTo(String keyChar, boolean state)
+	public boolean setKeyTo(String keyChar, boolean state)
 	{
 		int key = -1;
 		for(int i=0;i<numberofkeys; i++){
@@ -45,6 +45,7 @@ public class SDistantHumanControl extends SControl{
 		}
 		prevKeyStates[key] = keyStates[key];
 		keyStates[key] = state;
+		if (prevKeyStates[key] != state) return true; else return false;
 	}
 	
 	@Override
