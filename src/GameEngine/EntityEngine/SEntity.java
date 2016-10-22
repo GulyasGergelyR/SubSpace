@@ -1,7 +1,6 @@
 package GameEngine.EntityEngine;
 
 import java.util.List;
-
 import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;

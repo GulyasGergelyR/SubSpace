@@ -29,6 +29,7 @@ public abstract class SObject {
 		this.scale = 1.0f;
 		this.Id = UUID.randomUUID();
 	}
+	
 	public SObject(SVector pos, SVector lookDir, String texture)
 	{
 		this.pos = pos;
