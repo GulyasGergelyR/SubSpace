@@ -110,6 +110,9 @@ public abstract class SMobile extends SObject{
 	public void setController(SControl controller){
 		this.controller = controller;
 	}
+	public SControl getController(){
+		return this.controller;
+	}
 	// functions
 	public void Move(){
 		// TODO add fps dependency

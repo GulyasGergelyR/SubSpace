@@ -4,8 +4,6 @@ import org.lwjgl.Sys;
 
 import GameEngine.Specifications;
 
-
-
 public class SFPS {
 	private long last_frame;
 	private int FPS_M;

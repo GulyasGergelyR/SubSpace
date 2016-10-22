@@ -25,6 +25,7 @@ import org.lwjgl.opengl.DisplayMode;
 import GameEngine.SGameInstance;
 import GameEngine.SResLoader;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.SUDPServer;
 
@@ -49,18 +50,18 @@ public class SMain {
 		
 		if (n == 0){
 			// Start server
+			SUDPServer server;
 			try {
-				SUDPServer server = new SUDPServer(9090);
+				server = new SUDPServer(9090);
+				InitServer();
+				StartServer(server);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			InitServer();
-			StartServer(server);
 		}
 		else{
 			// Start client
-			
 			InitClient();
 			StartClient();
 		}
@@ -97,8 +98,13 @@ public class SMain {
 	}
 
 	private static void StartServer(SUDPServer server){
+		SServerTimer timer = new SServerTimer();
 		while(true){
+			timer.StartTimer();
+			//read inputs
 			gameInstance.UpdateEntities();
+			//write outputs
+			timer.SleepIfRequired();
 		}
 		
 		

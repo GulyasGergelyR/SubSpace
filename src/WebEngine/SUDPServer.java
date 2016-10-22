@@ -8,10 +8,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.xml.crypto.Data;
+
+import GameEngine.Specifications;
+import GameEngine.EntityEngine.SDistantHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import Main.SMain;
 
 public class SUDPServer {
+	
 	private Listener listener;
 	private Handler handler;
 	private List<SClient> clients;
@@ -50,7 +55,7 @@ public class SUDPServer {
 
 		@Override
 		public void run() {
-			byte[] receiveData = new byte[1024];
+			byte[] receiveData = new byte[Specifications.DataLength];
             while(running){
             	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
@@ -66,8 +71,6 @@ public class SUDPServer {
                 String sentence = new String( receivePacket.getData());
                 System.out.println("RECEIVED: " + sentence);
                 
-                
-                
                 InetAddress IPAddress = receivePacket.getAddress();
                 int port = receivePacket.getPort();
                 
@@ -81,11 +84,12 @@ public class SUDPServer {
                 	// TODO add client side creation
                 	SClient client = new SClient(IPAddress, port);
                 	SEntity entity = new SEntity();
+                	entity.setController(new SDistantHumanControl(entity));
                 	SMain.getGameInstance().addEntity(entity);
                 	client.setId(entity.getId());
                 }
                 else{
-                	
+                	SMain.getGameInstance().AddClientMessage(new SMessage(receivePacket.getData()));
                 }
                 /*
                 String capitalizedSentence = sentence.toUpperCase();
