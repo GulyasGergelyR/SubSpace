@@ -13,7 +13,7 @@ import RenderingEngine.SRenderObject;
 public abstract class SObject {
 	protected SVector pos;
 	protected SVector lookDir;
-	protected Texture texture;
+	protected String texture;
 	protected float scale;
 	private UUID Id = UUID.randomUUID();
 	// TODO add hitbox
@@ -25,22 +25,17 @@ public abstract class SObject {
 	{
 		this.pos = new SVector();
 		this.lookDir = new SVector();
-		this.texture = SResLoader.getTexture("res/entity/spaceshipv1.png");
+		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 1.0f;
 		this.Id = UUID.randomUUID();
 	}
-	public SObject(SVector pos, SVector lookDir, Object texture)
+	public SObject(SVector pos, SVector lookDir, String texture)
 	{
 		this.pos = pos;
 		this.lookDir = lookDir;
 		this.Id = UUID.randomUUID();
 		this.scale = 1.0f;
-		if (texture instanceof String){
-			this.texture = SResLoader.getTexture((String)texture);
-		}
-		else{
-			this.texture = (Texture)texture;
-		}
+		this.texture = texture;
 	}
 	public SObject(SObject o)
 	{
@@ -63,12 +58,9 @@ public abstract class SObject {
 		Id = id;
 	}
 	public void setTexture(String s){
-		this.texture = SResLoader.getTexture(s);
+		this.texture = s;
 	}
-	public void setTexture(Texture t){
-		this.texture = t;
-	}
-	public Texture getTexture(){
+	public String getTexture(){
 		return texture;
 	}
 	public SVector getLookDir() {

@@ -16,8 +16,8 @@ public class SDistantHumanControl extends SControl{
 	private static final int numberofkeys = 4;
 	
 	private final String[] keyChars = {"W","A","S","D"};
-	private boolean[] keyStates;
-	private boolean[] prevKeyStates;
+	private boolean[] keyStates = new boolean[numberofkeys];
+	private boolean[] prevKeyStates = new boolean[numberofkeys];
 	
 	public SDistantHumanControl(SMobile mobile){
 		super(mobile);
@@ -38,7 +38,7 @@ public class SDistantHumanControl extends SControl{
 	{
 		int key = -1;
 		for(int i=0;i<numberofkeys; i++){
-			if(keyChars[i]==keyChar){
+			if(keyChars[i].equals(keyChar)){
 				key = i;
 				break;
 			}

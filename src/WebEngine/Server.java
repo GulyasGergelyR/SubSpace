@@ -12,8 +12,6 @@ public class Server {
 	private int port;
 	private ServerSocket listener;
 	
-	
-	
 	public Server(int port){
 		this.port = port;
 	}

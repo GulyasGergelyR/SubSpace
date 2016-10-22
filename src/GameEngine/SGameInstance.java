@@ -35,7 +35,7 @@ public class SGameInstance {
 	
 	protected SEntity getEntityById(UUID Id){
 		for(SEntity entity : Entities){
-			if (entity.getId() == Id)
+			if (entity.getId().equals(Id))
 				return entity;
 		}
 		System.out.println("Entity not found, with Id: "+Id);
@@ -43,9 +43,10 @@ public class SGameInstance {
 	}
 	
 	public void UpdateEntities(){
-		for(SEntity entity : Entities){
-			entity.update();
-		}
+		if(Entities.size()>0)
+			for(SEntity entity : Entities){
+				entity.update();
+			}
 	}
 	
 	public void CheckServerMessages(){
@@ -62,8 +63,10 @@ public class SGameInstance {
 		int i = 0;
 
 		while(i<current_length){
+			i += 1;
 			SMessage message = ClientMessages.poll();
 			//TODO add command check as not only entity can get a refresh!
+			
 			SEntity entity = getEntityById(message.getId());
 			
 			String content = message.getContent();
@@ -72,19 +75,21 @@ public class SGameInstance {
 				if (content.indexOf(";")<content.length()-1)
 					content = content.substring(content.indexOf(";")+1);
 				else content = "";
+				//System.out.println(sub+" "+sub.substring(0, 1)+" "+sub.substring(1, 2)+" "+content);
 				// Checking sub
-				if("PR".contains(sub.substring(0, 0)) &&
-						"WASD".contains(sub.substring(1, 1))){
+				if("PR".contains(sub.substring(0, 1)) &&
+						"WASD".contains(sub.substring(1, 2))){
 					// P-Pressed or R-Released
+					
 					boolean state;
 					SDistantHumanControl control = (SDistantHumanControl)entity.getController();
-					if(sub.substring(0, 0) == "P"){
+					if(sub.substring(0, 1) == "P"){
 						state = true;
 					}else{
 						state = false;
 					}
-					control.setKeyTo(sub.substring(1, 1), state);
-					System.out.println("yap got it");
+					
+					control.setKeyTo(sub.substring(1, 2), state);
 				}
 			}
 		}

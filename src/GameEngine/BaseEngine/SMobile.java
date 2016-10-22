@@ -23,7 +23,7 @@ public abstract class SMobile extends SObject{
 		acclDir = new SVector();
 		controller = new SControl(this);
 	}
-	public SMobile(SVector pos, SVector look_dir, Object texture)
+	public SMobile(SVector pos, SVector look_dir, String texture)
 	{
 		super(pos, look_dir, texture);
 	}

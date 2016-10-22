@@ -78,29 +78,37 @@ public class SUDPServer {
                 InetAddress IPAddress = receivePacket.getAddress();
                 int port = receivePacket.getPort();
                 
-                boolean new_client = true;
-                for(SClient client : clients){
-                	if (client.getIPAddress() == IPAddress){
-                		new_client = false;
-                	}
+                SMessage message = new SMessage(receivePacket.getData());
+                
+                if (!message.isInvalid()){
+                	boolean new_client = true;
+                    for(SClient client : clients){
+                    	if (client.getId().equals(message.getId())){
+                    		new_client = false;
+                    		break;
+                    	}
+                    }
+                    
+                    
+                    
+                    if (new_client){
+                    	// TODO add client side creation
+                    	SClient client = new SClient(IPAddress, port);
+                    	SEntity entity = new SEntity();
+                    	entity.setController(new SDistantHumanControl(entity));
+                    	entity.setId(message.getId());
+                    	SMain.getGameInstance().addEntity(entity);
+                    	client.setId(entity.getId());
+                    	clients.add(client);
+                    }
+                    else{
+                    	//System.out.println("RECEIVED: " + message.getId());
+                        //System.out.println("RECEIVED: " + message.getCommand());
+                        //System.out.println("RECEIVED: " + message.getContent());
+                    	SMain.getGameInstance().AddClientMessage(new SMessage(receivePacket.getData()));
+                    }
                 }
                 
-                SMessage message = new SMessage(receivePacket.getData());
-                System.out.println("RECEIVED: " + message.getId());
-                System.out.println("RECEIVED: " + message.getCommand());
-                System.out.println("RECEIVED: " + message.getContent());
-                if (new_client){
-                	// TODO add client side creation
-                	SClient client = new SClient(IPAddress, port);
-                	SEntity entity = new SEntity();
-                	//entity.setController(new SDistantHumanControl(entity));
-                	//SMain.getGameInstance().addEntity(entity);
-                	//client.setId(entity.getId());
-                	
-                }
-                else{
-                	SMain.getGameInstance().AddClientMessage(new SMessage(receivePacket.getData()));
-                }
                 /*
                 String capitalizedSentence = sentence.toUpperCase();
                 sendData = capitalizedSentence.getBytes();

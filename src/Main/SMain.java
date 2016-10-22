@@ -58,8 +58,8 @@ public class SMain {
 			
 			try {
 				InitServer();
-				StartServer(server);
 				server = new SUDPServer(9090);
+				StartServer(server);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				if (server != null)
@@ -73,8 +73,8 @@ public class SMain {
 		else{
 			try {
 				InitClient();
-				StartClient();
 				client = new SUDPClient(9090);
+				StartClient();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				if(client!=null)
@@ -89,7 +89,6 @@ public class SMain {
 
 	private static void InitServer(){
 		gameInstance = new SGameInstance();
-		initResources();
 	}
 	private static void InitClient(){
 		gameInstance = new SGameInstance();
@@ -122,7 +121,7 @@ public class SMain {
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
-			//read inputs
+			gameInstance.CheckClientMessages();
 			gameInstance.UpdateEntities();
 			//write outputs
 			timer.SleepIfRequired();

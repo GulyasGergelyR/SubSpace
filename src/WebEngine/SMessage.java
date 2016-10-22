@@ -9,14 +9,16 @@ public class SMessage {
 	protected UUID Id;
 	protected String commandName;
 	protected String content;
+	protected boolean Invalid;
 	
 	public SMessage(byte[] input){
 		String uuid = new String(Arrays.copyOfRange(input, 0,36));
 		if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
 			this.Id = UUID.fromString(uuid);
-		}		
-		this.commandName = new String(Arrays.copyOfRange(input, 37,41));
-		this.content = new String(Arrays.copyOfRange(input, 42,Specifications.DataLength));
+		} else this.Invalid = true;
+		
+		this.commandName = new String(Arrays.copyOfRange(input, 36,41));
+		this.content = new String(Arrays.copyOfRange(input, 41,Specifications.DataLength));
 	}
 	
 	public SMessage(UUID Id, String commandName, String content){
@@ -28,7 +30,9 @@ public class SMessage {
 	public UUID getId() {
 		return Id;
 	}
-
+	public boolean isInvalid(){
+		return this.Invalid;
+	}
 	public String getCommand() {
 		return commandName;
 	}
