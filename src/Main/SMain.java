@@ -26,8 +26,7 @@ import GameEngine.SGameInstance;
 import GameEngine.SResLoader;
 import GameEngine.EntityEngine.SEntity;
 import RenderingEngine.SRenderer;
-import WebEngine.Client;
-import WebEngine.Server;
+import WebEngine.SUDPServer;
 
 public class SMain {
 	
@@ -50,13 +49,18 @@ public class SMain {
 		
 		if (n == 0){
 			// Start server
-			Server server = new Server(9090);
+			try {
+				SUDPServer server = new SUDPServer(9090);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			InitServer();
-			StartServer();
+			StartServer(server);
 		}
 		else{
 			// Start client
-			Client client = new Client("127:0:0:1",9090);
+			
 			InitClient();
 			StartClient();
 		}
@@ -92,7 +96,11 @@ public class SMain {
 		SResLoader.addSpriteArray(res);
 	}
 
-	private static void StartServer(){
+	private static void StartServer(SUDPServer server){
+		while(true){
+			gameInstance.UpdateEntities();
+		}
+		
 		
 	}
 	private static void StartClient(){
