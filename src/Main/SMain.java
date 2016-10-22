@@ -140,6 +140,8 @@ public class SMain {
 		Display.destroy();
 	}
 	
+	
+	
 	public static void SendClientMessage(SMessage message){
 		try {
 			client.SendMessage(message);
@@ -149,6 +151,9 @@ public class SMain {
 		}
 	}
 	
+	public static SUDPClient getUDPClient(){
+		return client;
+	}
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;

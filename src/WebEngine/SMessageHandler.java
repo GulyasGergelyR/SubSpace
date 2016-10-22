@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 
 public class SMessageHandler {
@@ -25,7 +26,7 @@ public class SMessageHandler {
 		SMessage message = new SMessage(input);
 		if(message.isValid()){
 			//Check what type of message is it
-			String command = message.getCommand();
+			String command = message.getCommandName();
 			
 			if (command.equals("CNNCL")){ //connect client
 				ParseConnectCommand(receivePacket, message);
@@ -33,8 +34,11 @@ public class SMessageHandler {
 			else if (command.equals("DSCCL")){ //connect client
 				ParseDisConnectCommand(receivePacket, message);
 			}
-			else if (command.equals("PNGRQ")){ //connect client
+			else if (command.equals("PNGRQ")){ //ping request from server
 				ParsePingRequest(message);
+			}
+			else if (command.equals("PNGAN")){ //ping answer from client
+				ParsePingAnswer(message);
 			}
 		}
 	}
@@ -64,7 +68,27 @@ public class SMessageHandler {
 	}
 	
 	private void ParsePingRequest(SMessage message){
+		SUDPClient client = SMain.getUDPClient();
+		if (client!=null){
+			message.setCommandName("PNGAN");
+			try {
+				client.SendMessage(message);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		
+	}
+	
+	private void ParsePingAnswer(SMessage message){
+		SClient client = getClientById(message.getId());
+		if (client!=null){
+			int length = Integer.parseInt(message.content.substring(0, 2));
+			String nanoTimeS = message.content.substring(3,3+length);
+			long nanoTime = Long.parseUnsignedLong(nanoTimeS);
+			client.setPing(SServerTimer.GetNanoTime()-nanoTime);
+		}
 	}
 	
 	private SClient getClientById(UUID Id){
@@ -75,6 +99,5 @@ public class SMessageHandler {
 		}
 		return null;
 	}
-	
 	
 }

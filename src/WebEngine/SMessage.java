@@ -33,8 +33,11 @@ public class SMessage {
 	public boolean isValid(){
 		return !this.Invalid;
 	}
-	public String getCommand() {
+	public String getCommandName() {
 		return commandName;
+	}
+	public void setCommandName(String commandName) {
+		this.commandName = commandName;
 	}
 
 	public String getContent() {
