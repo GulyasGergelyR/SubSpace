@@ -32,13 +32,21 @@ public class SGameInstance {
 	public void addEntity(SEntity entity){
 		Entities.add(entity);
 	}
+	public boolean removeEntity(UUID Id){
+		SEntity entity = getEntityById(Id);
+		if (entity != null){
+			Entities.remove(entity);
+			return true;
+		}
+		else return false;
+	}
 	
 	protected SEntity getEntityById(UUID Id){
 		for(SEntity entity : Entities){
 			if (entity.getId().equals(Id))
 				return entity;
 		}
-		System.out.println("Entity not found, with Id: "+Id);
+		System.out.println("Entity was not found, with Id: "+Id);
 		return null;
 	}
 	

@@ -8,10 +8,13 @@ public class SClient {
 	private UUID Id;
 	private float ping;
 	private ClientState state = ClientState.Init;
+	private String name;
 	
-	public SClient(InetAddress IPAddress, int port){
+	public SClient(InetAddress IPAddress, int port, UUID Id, String name){
 		this.IPAddress = IPAddress;
 		this.port = port;
+		this.Id = Id;
+		this.name = name;
 	}
 
 	public InetAddress getIPAddress() {
@@ -36,6 +39,14 @@ public class SClient {
 
 	public void setPing(float ping) {
 		this.ping = ping;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public ClientState getState() {

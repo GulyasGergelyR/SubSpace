@@ -80,7 +80,7 @@ public class SUDPServer {
                 
                 SMessage message = new SMessage(receivePacket.getData());
                 
-                if (!message.isInvalid()){
+                if (message.isValid()){
                 	boolean new_client = true;
                     for(SClient client : clients){
                     	if (client.getId().equals(message.getId())){
@@ -88,12 +88,9 @@ public class SUDPServer {
                     		break;
                     	}
                     }
-                    
-                    
-                    
                     if (new_client){
                     	// TODO add client side creation
-                    	SClient client = new SClient(IPAddress, port);
+                    	SClient client = new SClient(IPAddress, port, message.getId(), "Player");
                     	SEntity entity = new SEntity();
                     	entity.setController(new SDistantHumanControl(entity));
                     	entity.setId(message.getId());

@@ -30,8 +30,8 @@ public class SMessage {
 	public UUID getId() {
 		return Id;
 	}
-	public boolean isInvalid(){
-		return this.Invalid;
+	public boolean isValid(){
+		return !this.Invalid;
 	}
 	public String getCommand() {
 		return commandName;
