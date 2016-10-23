@@ -29,6 +29,7 @@ import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.SUDPClient;
 import WebEngine.SUDPServer;
+import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SMessage;
 
 public class SMain {
@@ -38,6 +39,7 @@ public class SMain {
 	}
 	
 	private static SGameInstance gameInstance;
+	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
 	
 	
@@ -64,7 +66,7 @@ public class SMain {
 			nodeState = NodeState.Server;
 			try {
 				InitServer();
-				server = new SUDPServer(9090);
+				server = new SUDPServer(9090,9089);
 				StartServer(server);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -80,7 +82,7 @@ public class SMain {
 			nodeState = NodeState.Client;
 			try {
 				InitClient();
-				client = new SUDPClient(9090);
+				client = new SUDPClient(9089,9090);
 				StartClient();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -96,9 +98,11 @@ public class SMain {
 
 	private static void InitServer(){
 		gameInstance = new SGameInstance();
+		communicationHandler = new SCommunicationHandler();
 	}
 	private static void InitClient(){
 		gameInstance = new SGameInstance();
+		communicationHandler = new SCommunicationHandler();
 		renderer = new SRenderer(gameInstance);
 		try {
             Display.setDisplayMode(new DisplayMode(1024, 768));
@@ -162,6 +166,10 @@ public class SMain {
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;
+	}
+	
+	public static SCommunicationHandler getCommunicationHandler(){
+		return communicationHandler;
 	}
 	
 	private static void updateDelta(){

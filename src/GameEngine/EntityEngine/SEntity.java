@@ -18,7 +18,6 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 0.1f;
 		this.setController(new SHumanControl(this));
-		
 	}
 
 	@Override

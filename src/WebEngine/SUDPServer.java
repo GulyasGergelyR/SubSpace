@@ -20,40 +20,62 @@ public class SUDPServer {
 	private Handler handler;
 	private List<SClient> clients;
 	
-	public SUDPServer(int port) throws Exception{
-		DatagramSocket serverSocket = new DatagramSocket(port);
+	public SUDPServer(int receivePort, int transmitPort) throws Exception{
+		DatagramSocket clientSocket = new DatagramSocket();
+        handler = new Handler(clientSocket, transmitPort);
+        DatagramSocket serverSocket = new DatagramSocket(receivePort);
+        listener = new Listener(serverSocket, receivePort);
+		/*DatagramSocket serverSocket = new DatagramSocket(port);
         listener = new Listener(serverSocket, port);
-        handler = new Handler(serverSocket, port);
+        handler = new Handler(serverSocket, port);*/
         clients = new ArrayList<SClient>();
         listener.start();
-        handler.start();
 	}
 	
 	protected void StopListener(){
 		listener.StopThread();
 	}
-	protected void StopHandler(){
-		handler.StopThread();
-	}
 	
 	public void Close(){
-		StopListener();
-		StopHandler();
 		listener.socket.close();
+		StopListener();
 	}
 	
-	private class Handler extends SCommunicationThread{
-		
-		public Handler(DatagramSocket socket, int port){
-			super(socket, port);
+	public void SendMessage(SMessage message, SClient c) throws Exception{
+		if(c == null){ // It is a broadcast
+			for(SClient client : SMain.getCommunicationHandler().getClients()){
+				handler.SendMessage(client, message);
+			}
 		}
+		else 
+			handler.SendMessage(c, message);
+	}
+	
+	private class Handler {
+		protected DatagramSocket socket;
+		protected int port;
+		InetAddress ServerAddress;
 		
+		public Handler(DatagramSocket socket, int port) throws Exception{
+			this.socket = socket;
+			this.port = port;
+			ServerAddress = InetAddress.getByName("localhost");
+		}
+		public void SendMessage(SClient client, SMessage message) throws Exception{
+			
+			byte[] sendData = message.getData();
+			
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, client.getIPAddress(), port);
+		    socket.send(sendPacket);
+		    System.out.println("Data Sent "+message.getContent());
+		}
 	}
 	
 	private class Listener extends SCommunicationThread{
-        
+		
         public Listener(DatagramSocket socket, int port) {
             super(socket, port);
+            
         }
 
 		@Override

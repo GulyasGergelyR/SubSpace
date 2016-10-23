@@ -15,7 +15,7 @@ public class SCommunicationHandler {
 	private List<SClient> clients;
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
-	private static final List<String> EntityCommands = Arrays.asList("ENTIN","ENSUP","ENTDE");
+	private static final List<String> EntityCommands = Arrays.asList("ENTIN","ENTUP","ENTDE");
 	private static final List<String> ObjectCommands = Arrays.asList("OBJUP","OBJDE");
 	
 	public SCommunicationHandler(){
@@ -129,6 +129,10 @@ public class SCommunicationHandler {
 	}
 	public SMessage popObjectMessage(){
 		return ObjectMessages.pop();
+	}
+	
+	public List<SClient> getClients(){
+		return clients;
 	}
 	
 }
