@@ -1,4 +1,4 @@
-package WebEngine;
+package WebEngine.ComEngine;
 
 import java.net.DatagramPacket;
 import java.util.ArrayList;
@@ -9,12 +9,14 @@ import java.util.UUID;
 
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
+import WebEngine.SUDPClient;
 
 public class SCommunicationHandler {
 	private List<SClient> clients;
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
-	
+	private static final List<String> EntityCommands = Arrays.asList("ENTIN","ENSUP","ENTDE");
+	private static final List<String> ObjectCommands = Arrays.asList("OBJUP","OBJDE");
 	
 	public SCommunicationHandler(){
 		clients = new ArrayList<SClient>();
@@ -40,6 +42,23 @@ public class SCommunicationHandler {
 			else if (command.equals("PNGAN")){ //ping answer from client
 				ParsePingAnswer(message);
 			}
+			else{
+				for (String s : EntityCommands){
+					if(command.equals(s)){
+						EntityMessages.add(message);
+						return;
+					}
+				}
+				for (String s : ObjectCommands){
+					if(command.equals(s)){
+						ObjectMessages.add(message);
+						return;
+					}
+				}
+			System.out.println("Unknown commad: "+command);
+			}
+		} else{
+			System.out.println("Received invalid message: \n\t"+new String(input));
 		}
 	}
 	
@@ -78,7 +97,6 @@ public class SCommunicationHandler {
 				e.printStackTrace();
 			}
 		}
-		
 	}
 	
 	private void ParsePingAnswer(SMessage message){
@@ -98,6 +116,19 @@ public class SCommunicationHandler {
 			}
 		}
 		return null;
+	}
+	
+	public int getEntityMessageLength(){
+		return EntityMessages.size();
+	}
+	public int getObjectMessageLength(){
+		return ObjectMessages.size();
+	}
+	public SMessage popEntityMessage(){
+		return EntityMessages.pop();
+	}
+	public SMessage popObjectMessage(){
+		return ObjectMessages.pop();
 	}
 	
 }

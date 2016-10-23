@@ -14,6 +14,7 @@ import org.newdawn.slick.opengl.Texture;
 
 import GameEngine.SGameInstance;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SEntity.EntityState;
 
 public class SRenderer {
 	SGameInstance GameInstance;
@@ -28,8 +29,10 @@ public class SRenderer {
 	private void DrawEntities(){
 		List<SEntity> Entities = GameInstance.getEntities();
 		for (SEntity entity : Entities){
-			for(SRenderObject draw : entity.Draw()){
-				Draw(draw);
+			if (entity.getState() == EntityState.Active){
+				for(SRenderObject draw : entity.Draw()){
+					Draw(draw);
+				}
 			}
 		}
 	}

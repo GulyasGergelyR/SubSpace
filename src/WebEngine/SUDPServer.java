@@ -11,6 +11,8 @@ import GameEngine.Specifications;
 import GameEngine.EntityEngine.SDistantHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import Main.SMain;
+import WebEngine.ComEngine.SClient;
+import WebEngine.ComEngine.SMessage;
 
 public class SUDPServer {
 	
@@ -20,39 +22,38 @@ public class SUDPServer {
 	
 	public SUDPServer(int port) throws Exception{
 		DatagramSocket serverSocket = new DatagramSocket(port);
-        listener = new Listener(serverSocket);
-        handler = new Handler(serverSocket);
+        listener = new Listener(serverSocket, port);
+        handler = new Handler(serverSocket, port);
         clients = new ArrayList<SClient>();
         listener.start();
         handler.start();
 	}
 	
-	public void StopListener(){
+	protected void StopListener(){
 		listener.StopThread();
 	}
-	public void StopHandler(){
+	protected void StopHandler(){
 		handler.StopThread();
 	}
 	
 	public void Close(){
-		listener.serverSocket.close();
 		StopListener();
 		StopHandler();
+		listener.socket.close();
 	}
 	
-	private class Handler extends CommunicationThread{
+	private class Handler extends SCommunicationThread{
 		
-		public Handler(DatagramSocket socket){
-			super(socket);
+		public Handler(DatagramSocket socket, int port){
+			super(socket, port);
 		}
 		
 	}
 	
-	private class Listener extends CommunicationThread{
+	private class Listener extends SCommunicationThread{
         
-        
-        public Listener(DatagramSocket socket) {
-            super(socket);
+        public Listener(DatagramSocket socket, int port) {
+            super(socket, port);
         }
 
 		@Override
@@ -61,10 +62,13 @@ public class SUDPServer {
             while(running){
             	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
-					serverSocket.receive(receivePacket);
+					socket.receive(receivePacket);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
+					System.out.println("Receive failed, server shutting down");
 					e.printStackTrace();
+					running = false;
+					break;
 				}
                 
                 String sentence = new String( receivePacket.getData());
@@ -95,37 +99,13 @@ public class SUDPServer {
                     	clients.add(client);
                     }
                     else{
-                    	//System.out.println("RECEIVED: " + message.getId());
-                        //System.out.println("RECEIVED: " + message.getCommand());
-                        //System.out.println("RECEIVED: " + message.getContent());
                     	SMain.getGameInstance().AddClientMessage(new SMessage(receivePacket.getData()));
                     }
                 }
                 
-                /*
-                String capitalizedSentence = sentence.toUpperCase();
-                sendData = capitalizedSentence.getBytes();
-                DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-                try {
-					serverSocket.send(sendPacket);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
             }
 		}
 	}
 	
-	private abstract class CommunicationThread extends Thread{
-		protected boolean running = true;
-		protected DatagramSocket serverSocket;
-		
-		public CommunicationThread(DatagramSocket socket){
-			serverSocket = socket;
-		}
-		
-		public void StopThread(){
-        	this.running = false;
-        }
-	}
+	
 }

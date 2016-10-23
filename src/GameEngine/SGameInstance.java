@@ -8,14 +8,14 @@ import java.util.UUID;
 import GameEngine.EntityEngine.SDistantHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SFPS;
-import WebEngine.SMessage;
+import WebEngine.ComEngine.SMessage;
 
 public class SGameInstance {
 	private List<SEntity> Entities = new ArrayList<SEntity>();
 	private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
 	private SFPS FPS;
-	
+	private static int delta;
 	
 	public SGameInstance(){
 		FPS = new SFPS();
@@ -27,6 +27,15 @@ public class SGameInstance {
 	
 	public SFPS getFPS(){
 		return FPS;
+	}
+	public void updateDelta(){
+		delta = FPS.getDelta();
+	}
+	public int getDelta(){
+		return delta;
+	}
+	public float getDeltaRatio(){
+		return ((float)delta)/FPS.getFPS_M();
 	}
 	
 	public void addEntity(SEntity entity){

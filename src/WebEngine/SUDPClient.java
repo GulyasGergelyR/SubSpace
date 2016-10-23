@@ -4,6 +4,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+import WebEngine.ComEngine.SMessage;
+
 
 
 public class SUDPClient {
@@ -15,16 +17,16 @@ public class SUDPClient {
 	public SUDPClient(int port) throws Exception{
 		DatagramSocket clientSocket = new DatagramSocket();
         handler = new Handler(clientSocket, port);
-        listener = new Listener(clientSocket);
+        listener = new Listener(clientSocket, port);
         listener.start();
 	}
 	
 	public void Close(){
-		listener.clientSocket.close();
 		StopListener();
+		listener.socket.close();
 	}
 	
-	public void StopListener(){
+	protected void StopListener(){
 		listener.StopThread();
 	}
 	
@@ -51,22 +53,9 @@ public class SUDPClient {
 		}
 	}
 	
-	private class Listener extends CommunicationThread{
-		public Listener(DatagramSocket socket){
-			super(socket);
+	private class Listener extends SCommunicationThread{
+		public Listener(DatagramSocket socket, int port){
+			super(socket, port);
 		}
-	}
-	
-	private abstract class CommunicationThread extends Thread{
-		protected boolean running = true;
-		protected DatagramSocket clientSocket;
-		
-		public CommunicationThread(DatagramSocket socket){
-			clientSocket = socket;
-		}
-		
-		public void StopThread(){
-        	this.running = false;
-        }
 	}
 }

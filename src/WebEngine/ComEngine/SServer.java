@@ -1,4 +1,4 @@
-package WebEngine;
+package WebEngine.ComEngine;
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -8,11 +8,11 @@ import java.net.ServerSocket;
  * connection with that client.  Arguably just about the simplest
  * server you can write.
  */
-public class Server {
+public class SServer {
 	private int port;
 	private ServerSocket listener;
 	
-	public Server(int port){
+	public SServer(int port){
 		this.port = port;
 	}
 	

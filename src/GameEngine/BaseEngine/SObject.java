@@ -80,7 +80,6 @@ public abstract class SObject {
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
 		list.add(new SRenderObject(texture, pos, lookDir.getAngle(), scale, 1.0f));
 		return list;
-	}
-	
+	}	
 	
 }

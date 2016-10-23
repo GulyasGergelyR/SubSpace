@@ -7,12 +7,18 @@ import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 
 public class SEntity extends GameEngine.BaseEngine.SMobile{
+	public enum EntityState{
+		Active, Respawning, Ghost
+	}
+	protected EntityState entityState = EntityState.Ghost;
+	
 	public SEntity(){
 		super();
 		this.pos = new SVector(250.0f,250.0f);
 		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 0.1f;
 		this.setController(new SHumanControl(this));
+		
 	}
 
 	@Override
@@ -21,6 +27,10 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		List<SRenderObject> list = super.Draw();
 		list.add(new SRenderObject("res/dot.png", pos, 0.0f, 0.5f, 1.0f));
 		return list;
+	}
+
+	public EntityState getState(){
+		return entityState;
 	}
 	
 }

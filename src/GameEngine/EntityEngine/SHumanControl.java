@@ -3,7 +3,7 @@ package GameEngine.EntityEngine;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import WebEngine.SMessage;
+import WebEngine.ComEngine.SMessage;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;

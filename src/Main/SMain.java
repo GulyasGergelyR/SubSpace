@@ -27,18 +27,24 @@ import GameEngine.SResLoader;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
-import WebEngine.SMessage;
 import WebEngine.SUDPClient;
 import WebEngine.SUDPServer;
+import WebEngine.ComEngine.SMessage;
 
 public class SMain {
 	
+	public enum NodeState{
+		Server, Client 
+	}
+	
 	private static SGameInstance gameInstance;
 	private static SRenderer renderer;
-	private static int delta;
+	
 	
 	private static SUDPServer server;
 	private static SUDPClient client;
+	
+	private static NodeState nodeState;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -55,7 +61,7 @@ public class SMain {
 		
 		if (n == 0){
 			// Start server
-			
+			nodeState = NodeState.Server;
 			try {
 				InitServer();
 				server = new SUDPServer(9090);
@@ -71,6 +77,7 @@ public class SMain {
 			}
 		}
 		else{
+			nodeState = NodeState.Client;
 			try {
 				InitClient();
 				client = new SUDPClient(9090);
@@ -140,8 +147,6 @@ public class SMain {
 		Display.destroy();
 	}
 	
-	
-	
 	public static void SendClientMessage(SMessage message){
 		try {
 			client.SendMessage(message);
@@ -160,15 +165,19 @@ public class SMain {
 	}
 	
 	private static void updateDelta(){
-		delta = gameInstance.getFPS().getDelta();
+		gameInstance.updateDelta();
 	}
 	
 	public static int getDelta(){
-		return delta;
+		return gameInstance.getDelta();
 	}
 	
 	public static float getDeltaRatio(){
-		return ((float)delta)/gameInstance.getFPS().getFPS_M();
+		return gameInstance.getDeltaRatio();
+	}
+	
+	public static NodeState getNodeState(){
+		return nodeState;
 	}
 	
 	public static void initGL() {
