@@ -25,7 +25,6 @@ public class SUDPServer {
         clients = new ArrayList<SClient>();
         listener.start();
         handler.start();
-        
 	}
 	
 	public void StopListener(){
