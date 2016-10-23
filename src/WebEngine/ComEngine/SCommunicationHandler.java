@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import GameEngine.Specifications;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPClient;
@@ -15,15 +16,13 @@ public class SCommunicationHandler {
 	private List<SClient> clients;
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
-	private static final List<String> EntityCommands = Arrays.asList("ENTIN","ENTUP","ENTDE");
-	private static final List<String> ObjectCommands = Arrays.asList("OBJUP","OBJDE");
 	
 	public SCommunicationHandler(){
 		clients = new ArrayList<SClient>();
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
 	}
-	public void ParseMessageFromByte(DatagramPacket receivePacket){
+	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
 		byte[] input = receivePacket.getData();
 		SMessage message = new SMessage(input);
 		if(message.isValid()){
@@ -43,13 +42,13 @@ public class SCommunicationHandler {
 				ParsePingAnswer(message);
 			}
 			else{
-				for (String s : EntityCommands){
+				for (String s : Specifications.EntityCommands){
 					if(command.equals(s)){
 						EntityMessages.add(message);
 						return;
 					}
 				}
-				for (String s : ObjectCommands){
+				for (String s : Specifications.ObjectCommands){
 					if(command.equals(s)){
 						ObjectMessages.add(message);
 						return;
@@ -89,6 +88,7 @@ public class SCommunicationHandler {
 	private void ParsePingRequest(SMessage message){
 		SUDPClient client = SMain.getUDPClient();
 		if (client!=null){
+			//TODO add previous ping parsing
 			message.setCommandName("PNGAN");
 			try {
 				client.SendMessage(message);

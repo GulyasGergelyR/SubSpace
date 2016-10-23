@@ -24,6 +24,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import GameEngine.SGameInstance;
 import GameEngine.SResLoader;
+import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
@@ -97,13 +98,17 @@ public class SMain {
 	}
 
 	private static void InitServer(){
+		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
 		communicationHandler = new SCommunicationHandler();
 	}
 	private static void InitClient(){
+		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
 		communicationHandler = new SCommunicationHandler();
+		
 		renderer = new SRenderer(gameInstance);
+		
 		try {
             Display.setDisplayMode(new DisplayMode(1024, 768));
             Display.create();

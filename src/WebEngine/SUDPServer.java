@@ -25,11 +25,9 @@ public class SUDPServer {
         handler = new Handler(clientSocket, transmitPort);
         DatagramSocket serverSocket = new DatagramSocket(receivePort);
         listener = new Listener(serverSocket, receivePort);
-		/*DatagramSocket serverSocket = new DatagramSocket(port);
-        listener = new Listener(serverSocket, port);
-        handler = new Handler(serverSocket, port);*/
-        clients = new ArrayList<SClient>();
         listener.start();
+        
+        clients = new ArrayList<SClient>();
 	}
 	
 	protected void StopListener(){
@@ -92,7 +90,9 @@ public class SUDPServer {
 					running = false;
 					break;
 				}
+                SMain.getCommunicationHandler().ParseMessageFromDatagramPacket(receivePacket);
                 
+                ///////////////// TODO Remove junk below
                 String sentence = new String( receivePacket.getData());
                 if(sentence.length()>0)
                 	System.out.println("RECEIVED: " + sentence);
@@ -101,7 +101,7 @@ public class SUDPServer {
                 int port = receivePacket.getPort();
                 
                 SMessage message = new SMessage(receivePacket.getData());
-                
+
                 if (message.isValid()){
                 	boolean new_client = true;
                     for(SClient client : clients){

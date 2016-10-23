@@ -8,6 +8,8 @@ import java.util.UUID;
 import GameEngine.EntityEngine.SDistantHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SFPS;
+import Main.SMain;
+import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SMessage;
 
 public class SGameInstance {
@@ -65,6 +67,22 @@ public class SGameInstance {
 				entity.update();
 			}
 	}
+	
+	public void CheckServerMessages2(){
+		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
+		// Check Entity messages (server do not receive Obj message, yet)
+		int current_length = communicationHandler.getEntityMessageLength();
+		int i = 0;
+		while(i<current_length){
+			SMessage message = communicationHandler.popEntityMessage();
+			if(message.getCommandName().equals("ENTIN")){  // Entity input - user event
+				
+			}
+			
+			i++;
+		}
+	}
+	
 	
 	public void CheckServerMessages(){
 		int current_length = ServerMessages.size();

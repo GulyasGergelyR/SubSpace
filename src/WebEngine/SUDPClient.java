@@ -70,7 +70,7 @@ public class SUDPClient {
 					socket.receive(receivePacket);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					System.out.println("Receive failed, server shutting down");
+					System.out.println("Receive failed, client shutting down");
 					//e.printStackTrace();
 					running = false;
 					break;
