@@ -10,13 +10,13 @@ import java.util.UUID;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 
-public class SMessageHandler {
+public class SCommunicationHandler {
 	private List<SClient> clients;
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
 	
 	
-	public SMessageHandler(){
+	public SCommunicationHandler(){
 		clients = new ArrayList<SClient>();
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
@@ -32,7 +32,7 @@ public class SMessageHandler {
 				ParseConnectCommand(receivePacket, message);
 			}
 			else if (command.equals("DSCCL")){ //connect client
-				ParseDisConnectCommand(receivePacket, message);
+				ParseDisconnectCommand(receivePacket, message);
 			}
 			else if (command.equals("PNGRQ")){ //ping request from server
 				ParsePingRequest(message);
@@ -56,7 +56,7 @@ public class SMessageHandler {
 		}
 	}
 	
-	private void ParseDisConnectCommand(DatagramPacket receivePacket, SMessage message){
+	private void ParseDisconnectCommand(DatagramPacket receivePacket, SMessage message){
 		SClient client = getClientById(message.getId());
 		if(client==null){
 			System.out.println("User who wants to disconnect was not found: "+message.getId());

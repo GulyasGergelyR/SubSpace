@@ -5,10 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import javax.xml.crypto.Data;
 
 import GameEngine.Specifications;
 import GameEngine.EntityEngine.SDistantHumanControl;
