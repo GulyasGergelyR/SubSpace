@@ -9,6 +9,8 @@ public class TestScript1 {
 		test2();
 		test3();
 		test4();
+		long l = Long.parseUnsignedLong("9223372036854775807")*2;
+		System.out.println(Long.toUnsignedString(l));
 	}
 	private static void test1(){
 		System.out.println("-------------------test1-------------------------");

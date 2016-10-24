@@ -11,10 +11,9 @@ public class SNode {
 	private UUID Id;
 	//////////Interface
 	private NodeState state = NodeState.NotConnected;
-	private float ping;
+	private float ping = 1.0f;
 	//////////Game
 	private SPlayer player;
-	
 	
 	public SNode(InetAddress IPAddress, int port, UUID Id, String name){
 		this.IPAddress = IPAddress;
