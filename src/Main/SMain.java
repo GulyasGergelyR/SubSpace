@@ -16,7 +16,6 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
-import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -33,10 +32,7 @@ import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
-import WebEngine.SUDPClient;
-import WebEngine.SUDPServer;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SNode;
 
 public class SMain {
@@ -44,10 +40,6 @@ public class SMain {
 	private static SGameInstance gameInstance;
 	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
-	
-	
-	private static SUDPServer server;
-	private static SUDPClient client;
 	
 	
 	public static void main(String[] args) {
@@ -67,10 +59,9 @@ public class SMain {
 			// Start server
 			try {
 				InitServer();
-				//server = new SUDPServer(9090,9089);
-				StartServer(server);
+				StartServer();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
@@ -80,10 +71,10 @@ public class SMain {
 		else{
 			try {
 				InitClient();
-				//client = new SUDPClient(9089,9090);
+				
 				StartClient();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				
 				communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
@@ -156,7 +147,7 @@ public class SMain {
 		SResLoader.addSpriteArray(res);
 	}
 
-	private static void StartServer(SUDPServer server){
+	private static void StartServer(){
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
@@ -179,18 +170,6 @@ public class SMain {
 		Display.destroy();
 	}
 	
-	public static void SendClientMessage(SMessage message){
-		try {
-			client.SendMessage(message);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static SUDPClient getUDPClient(){
-		return client;
-	}
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;

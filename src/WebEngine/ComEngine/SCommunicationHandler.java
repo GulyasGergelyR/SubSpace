@@ -7,12 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import GameEngine.SPlayer;
 import GameEngine.EntityEngine.SDistantHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
-import WebEngine.SUDPClient;
 import WebEngine.SUDPNode;
 import WebEngine.ComEngine.SNode.NodeState;
 
@@ -176,6 +174,7 @@ public class SCommunicationHandler {
 					nodes.add(client);
 					System.out.println("User added: "+client.getName());
 				}
+				//TODO add normal entity creation
 				SEntity entity = new SEntity();
             	entity.setController(new SDistantHumanControl(entity));
             	entity.setId(client.getId());
@@ -195,12 +194,11 @@ public class SCommunicationHandler {
 		if(client==null){
 			System.out.println("User who wants to disconnect was not found: "+message.getId());
 		}else{
-			// TODO Look here if there is a client nullpointer problem
 			synchronized (nodes) {
 				nodes.remove(client);
 				System.out.println("size of clients: "+nodes.size());
 			}
-			//TODO remove this insecure delete
+			//TODO look here if there is an entity nullpointer error
 			SMain.getGameInstance().removeEntity(client.getId());
 			SMessage deleteentity = new SMessage(client.getId(),"DELEN","");
 			SendMessage(deleteentity);
