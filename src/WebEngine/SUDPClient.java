@@ -48,7 +48,7 @@ public class SUDPClient {
 		}
 		public void SendMessage(SMessage message) throws Exception{
 			
-			byte[] sendData = message.getData();
+			byte[] sendData = message.createRawData();
 			
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, ServerAddress, port);
 		    socket.send(sendPacket);

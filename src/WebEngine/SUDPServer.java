@@ -59,7 +59,7 @@ public class SUDPServer {
 		}
 		public void SendMessage(SClient client, SMessage message) throws Exception{
 			
-			byte[] sendData = message.getData();
+			byte[] sendData = message.createRawData();
 			
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, client.getIPAddress(), port);
 		    socket.send(sendPacket);

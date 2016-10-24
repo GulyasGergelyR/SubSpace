@@ -17,6 +17,7 @@ public abstract class SMessageParser {
 	static SMatcher mCommand = new SMatcher(pCommandHead+".*", 0);
 	static SMatcher mId = new SMatcher(pCommandHead, 1);
 	static SMatcher mCommandName = new SMatcher(pCommandHead, 2);
+	static SMatcher mContent = new SMatcher(pCommandHead+"([^"+new String(new byte[1])+"]*)", 3);
 	
 	static SMatcher mConnectCommand = new SMatcher(pCommandHead+"[a-zA-Z]{5,20};"+nullCh, 0);
 	static SMatcher mConnectCommandName = new SMatcher(pCommandHead+"([a-zA-Z]{5,20});"+nullCh, 3);
@@ -38,18 +39,17 @@ public abstract class SMessageParser {
 	static SMatcher mPingCommandPrevPing = new SMatcher(";([0-9]{1,20});([0-9]{1,3});", 2);
 	
 	//IsValid
+	public static boolean IsMessageValid(byte[] input){
+		if (mCommand.matches(new String(input))){
+			return true;
+		}
+		else {
+			System.out.println("Invalid message");
+			return false;
+		}
+	}
 	public static boolean IsMessageValid(SMessage message){
-		String input = message.getMessageString();
-		if (mCommand.matches(input)){
-			/*String command = mCommandName.getMatch(input);
-			if (Specifications.EntityCommands.contains(command))
-				return true;
-			if (Specifications.PingCommands.contains(command))
-				return IsPingMessageValid(message);
-			if(command.equals("CNNCL"))
-				return IsConnectMessageValid(message);
-			System.out.println("Invalid command");
-			return false;*/
+		if (mCommand.matches(message.getMessageString())){
 			return true;
 		}
 		else {
@@ -72,6 +72,9 @@ public abstract class SMessageParser {
 	}
 	public static String getId(SMessage message){
 		return mId.getMatch(message.getMessageString());
+	}
+	public static String getContent(SMessage message){
+		return mContent.getMatch(message.getMessageString());
 	}
 	// Connect Message
 	public static String getConnectCommandName(SMessage message){
@@ -217,6 +220,7 @@ public abstract class SMessageParser {
 		System.out.println("lookdiry: "+getLookDirY(message));
 		System.out.println("movedirx: "+getMoveDirX(message));
 		System.out.println("movediry: "+getMoveDirY(message));
+		System.out.println("content: "+getContent(message));
 		System.out.println("-------------------------------------------------\n");
 	}
 }

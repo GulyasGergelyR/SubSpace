@@ -6,7 +6,7 @@ import java.util.UUID;
 import GameEngine.Specifications;
 
 public class SMessage {
-	protected byte[] input;
+	protected byte[] rawData;
 	protected String messageString;
 	protected UUID Id;
 	protected String commandName;
@@ -14,25 +14,25 @@ public class SMessage {
 	protected boolean Invalid;
 	
 	public SMessage(byte[] input){
-		this.input = input;
+		this.rawData = input;
 		this.messageString = new String(input);
-		String uuid = new String(Arrays.copyOfRange(input, 0,36));
-		if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
-			this.Id = UUID.fromString(uuid);
-		}else
-			this.Invalid = true;
-		this.commandName = new String(Arrays.copyOfRange(input, 36,41));
-		this.content = new String(Arrays.copyOfRange(input, 41,Specifications.DataLength));
+		if (SMessageParser.IsMessageValid(input)){
+			this.Id = UUID.fromString(SMessageParser.getId(this));
+			this.commandName = SMessageParser.getCommand(this);
+			this.content = SMessageParser.getContent(this);
+		}
 	}
 	
 	public SMessage(UUID Id, String commandName, String content){
 		this.Id = Id;
 		this.commandName = commandName;
 		this.content = content;
+		this.rawData = createRawData();
+		this.messageString = new String(rawData);
 	}
 
-	public byte[] getInput(){
-		return input;
+	public byte[] getRawData(){
+		return rawData;
 	}
 	public String getMessageString(){
 		return messageString;
@@ -42,7 +42,9 @@ public class SMessage {
 		return Id;
 	}
 	public boolean isValid(){
-		return !this.Invalid;
+		this.rawData = createRawData();
+		this.messageString = new String(rawData);
+		return SMessageParser.IsMessageValid(this);
 	}
 	public String getCommandName() {
 		return commandName;
@@ -54,8 +56,12 @@ public class SMessage {
 	public String getContent() {
 		return content;
 	}
-	public byte[] getData(){
-		byte[] temp = concat(Id.toString().getBytes(),commandName.getBytes());
+	
+	public void addContent(String s){
+		this.content += s +";";
+	}
+	public byte[] createRawData(){
+		byte[] temp = concat((Id.toString()+";").getBytes(),(commandName+";").getBytes());
 		temp = concat(temp, content.getBytes());
 		if(temp.length<Specifications.DataLength){
 			temp = concat(temp, new byte[Specifications.DataLength-temp.length]);
