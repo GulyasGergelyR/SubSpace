@@ -14,7 +14,7 @@ public class TestScript1 {
 	}
 	private static void test1(){
 		System.out.println("-------------------test1-------------------------");
-		System.out.println("Should Succeed:"); test11("HElloBello");
+		System.out.println("Should Succeed:"); test11("HElloBello"+new String(new byte[2]));
 		System.out.println("Should Fail: (Too short)"); test11("HEll");
 		System.out.println("Should Fail: (Too long)"); test11("HElloooooooooooooooooooooooo");
 		System.out.println("Should Fail: (wrong character)"); test11("HElloBe111");

@@ -16,6 +16,10 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.swing.JOptionPane;
 
 import org.lwjgl.LWJGLException;
@@ -23,6 +27,7 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 import GameEngine.SGameInstance;
+import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
@@ -32,6 +37,7 @@ import WebEngine.SUDPClient;
 import WebEngine.SUDPServer;
 import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SMessage;
+import WebEngine.ComEngine.SNode;
 
 public class SMain {
 	
@@ -61,44 +67,68 @@ public class SMain {
 			// Start server
 			try {
 				InitServer();
-				server = new SUDPServer(9090,9089);
+				//server = new SUDPServer(9090,9089);
 				StartServer(server);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				if (server != null)
-					server.Close();
+				communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
-				if (server != null)
-					server.Close();
+				communicationHandler.CloseUDPNode();
 			}
 		}
 		else{
 			try {
 				InitClient();
-				client = new SUDPClient(9089,9090);
+				//client = new SUDPClient(9089,9090);
 				StartClient();
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				if(client!=null)
-					client.Close();
+				communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
-				if(client!=null)
-					client.Close();
+				communicationHandler.CloseUDPNode();
 			}
 		}
 	}
-
-	private static void InitServer(){
+	
+	private static void Init(){
 		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
 		communicationHandler = new SCommunicationHandler();
 	}
+	
+	private static void InitServer(){
+		Init();
+		
+		SNode node;
+		try {
+			node = new SNode(InetAddress.getLocalHost(), 0);
+			communicationHandler.setLocalNode(node);
+			communicationHandler.createUDPNodeAsServer(9090, 9089);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	private static void InitClient(){
-		Specifications.InitSpecifications();
-		gameInstance = new SGameInstance();
-		communicationHandler = new SCommunicationHandler();
+		Init();
+		SNode node;
+		SPlayer player;
+		SEntity entity;
+		try {
+			node = new SNode(InetAddress.getLocalHost(), 0);
+			player = new SPlayer(node, "Gergo");
+			entity = new SEntity();
+			player.setEntity(entity);
+			communicationHandler.setLocalNode(node);
+			communicationHandler.createUDPNodeAsClient(9089, 9090);
+			communicationHandler.ConnectToServer(node);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		renderer = new SRenderer(gameInstance);
 		
@@ -130,7 +160,8 @@ public class SMain {
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
-			gameInstance.CheckClientMessages();
+			//gameInstance.CheckClientMessages();
+			communicationHandler.RequestPingDataFromClients();
 			gameInstance.UpdateEntities();
 			//write outputs
 			timer.SleepIfRequired();

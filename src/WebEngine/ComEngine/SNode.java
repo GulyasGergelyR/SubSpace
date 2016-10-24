@@ -7,7 +7,7 @@ import GameEngine.SPlayer;
 public class SNode {
 	//////////Communication
 	private InetAddress IPAddress;
-	private int port;
+	//private int port;
 	private UUID Id;
 	//////////Interface
 	private NodeState state = NodeState.NotConnected;
@@ -17,14 +17,14 @@ public class SNode {
 	
 	public SNode(InetAddress IPAddress, int port, UUID Id, String name){
 		this.IPAddress = IPAddress;
-		this.port = port;
+		//this.port = port;
 		this.Id = Id;
 		this.player = new SPlayer(this, name);
 	}
 	public SNode(InetAddress IPAddress, int port){
 		this.IPAddress = IPAddress;
-		this.port = port;
-		this.Id = null;
+		//this.port = port;
+		this.Id = UUID.randomUUID();
 		this.player = null;
 	}
 
@@ -32,9 +32,9 @@ public class SNode {
 		return IPAddress;
 	}
 
-	public int getPort() {
-		return port;
-	}
+	//public int getPort() {
+	//	return port;
+	//}
 
 	public UUID getId() {
 		return Id;
@@ -72,7 +72,7 @@ public class SNode {
 		Connected, NotConnected
 	}
 
-	public void addPlayer(SPlayer player) {
+	public void setPlayer(SPlayer player) {
 		this.player = player;
 		
 	}

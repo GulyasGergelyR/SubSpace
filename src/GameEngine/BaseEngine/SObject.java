@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.newdawn.slick.opengl.Texture;
-
-import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 

@@ -67,7 +67,7 @@ private static final int numberofkeys = 4;
 		if (command.length()>0){
 			System.out.println(command);
 			SMessage message = new SMessage(Owner.getId(), "CCCCC", command);
-			SMain.SendClientMessage(message);
+			//SMain.SendClientMessage(message);
 		}
 		
 		if(acclDir.l()==0){

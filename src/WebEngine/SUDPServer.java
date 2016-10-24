@@ -93,7 +93,7 @@ public class SUDPServer {
                 ///////////////// TODO Remove junk below
                 String sentence = new String( receivePacket.getData());
                 if(sentence.length()>0)
-                	System.out.println("RECEIVED: " + sentence);
+                	System.out.println("RECEIVED2: " + sentence);
                 
                 InetAddress IPAddress = receivePacket.getAddress();
                 int port = receivePacket.getPort();

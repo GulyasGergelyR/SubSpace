@@ -78,7 +78,6 @@ public class SGameInstance {
 			if(message.getCommandName().equals("ENTIN")){  // Entity input - user event
 				
 			}
-			
 			i++;
 		}
 	}

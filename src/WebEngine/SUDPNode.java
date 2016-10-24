@@ -66,9 +66,9 @@ public class SUDPNode {
 					running = false;
 					break;
 				}
-                
+                System.out.println("start parsing message...");
                 communicationHandler.ParseMessageFromDatagramPacket(receivePacket);
-                // TODO remove junk below
+                // TODO Remove junk below
                 String sentence = new String( receivePacket.getData());
                 if(sentence.length()>0)
                 	System.out.println("RECEIVED: " + sentence);

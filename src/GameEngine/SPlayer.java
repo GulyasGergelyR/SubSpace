@@ -8,10 +8,14 @@ public class SPlayer {
 	private SEntity entity;
 	private String name;
 	
+	//TODO implement scores
+	private int kills;
+	private int deaths;
+	
 	public SPlayer(SNode client, String name){
 		this.client = client;
 		this.name = name;
-		client.addPlayer(this);
+		client.setPlayer(this);
 	}
 	
 	public String getName(){

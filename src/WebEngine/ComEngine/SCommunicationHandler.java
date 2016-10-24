@@ -2,10 +2,14 @@ package WebEngine.ComEngine;
 
 import java.net.DatagramPacket;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
+import GameEngine.SPlayer;
+import GameEngine.EntityEngine.SDistantHumanControl;
+import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPClient;
@@ -20,16 +24,26 @@ public class SCommunicationHandler {
 	private SNode localNode;
 	private UDPNodeRole udpNodeRole;
 	
+	private LinkedList<DatagramPacket> MessagePipeLine;
+	
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
 	
 	public SCommunicationHandler(){
-		nodes = new ArrayList<SNode>();
+		nodes = Collections.synchronizedList(new ArrayList<SNode>());
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
 	}
 	public enum UDPNodeRole{
 		Server, Client 
+	}
+	
+	public void CloseUDPNode(){
+		if(localNode.getState().equals(NodeState.Connected)){
+			DisconnectFromServer();
+		}
+		if (udpNode != null)
+			udpNode.Close();
 	}
 	
 	public SNode getLocalNode(){
@@ -62,7 +76,8 @@ public class SCommunicationHandler {
 	public void ConnectToServer(SNode server){
 		udpNodeRole = UDPNodeRole.Client;
 		this.server = server;
-		SMessage message = new SMessage(localNode.getId(), "CNNCL", localNode.getName());
+		SMessage message = new SMessage(localNode.getId(), "CNNCL", "");
+		message.addContent(localNode.getName());
 		udpNode.SendMessage(message, server);
 	}
 	public void DisconnectFromServer(){
@@ -71,14 +86,20 @@ public class SCommunicationHandler {
 		udpNode.SendMessage(message, server);
 	}
 	public void RequestPingDataFromClients(){
-		for(SNode node : nodes){
-			RequestPingDataFromClient(node);
+		synchronized (nodes) {
+			for(SNode node : nodes){
+				RequestPingDataFromClient(node);
+			}
 		}
 	}
 	private void RequestPingDataFromClient(SNode client){
 		SMessage message = new SMessage(client.getId(), "PNGRQ", "");
 		message.addContent(Long.toUnsignedString(SServerTimer.GetNanoTime()));
-		message.addContent(Integer.toUnsignedString((int)client.getPing()));
+		if (client.getPing()>999){
+			message.addContent("999");
+		}else{
+			message.addContent(Integer.toUnsignedString((int)client.getPing()));
+		}
 		udpNode.SendMessage(message, client);
 	}
 	public void SendMessage(SMessage message){
@@ -87,8 +108,10 @@ public class SCommunicationHandler {
 				udpNode.SendMessage(message, server);
 		}
 		else if(udpNodeRole.equals(UDPNodeRole.Server)){
-			for(SNode node : nodes){
-				udpNode.SendMessage(message, node);
+			synchronized (nodes) {
+				for(SNode node : nodes){
+					udpNode.SendMessage(message, node);
+				}
 			}
 		}
 	}
@@ -104,6 +127,7 @@ public class SCommunicationHandler {
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
 		byte[] input = receivePacket.getData();
 		SMessage message = new SMessage(input);
+		System.out.println("parsing message...");
 		if(message.isValid()){
 			String command = message.getCommandName();
 			
@@ -148,7 +172,15 @@ public class SCommunicationHandler {
 			else{
 				client = new SNode(receivePacket.getAddress(), receivePacket.getPort(),
 						message.getId(), name);
-				nodes.add(client);
+				synchronized (nodes) {
+					nodes.add(client);
+					System.out.println("User added: "+client.getName());
+				}
+				SEntity entity = new SEntity();
+            	entity.setController(new SDistantHumanControl(entity));
+            	entity.setId(client.getId());
+				client.getPlayer().setEntity(entity);
+				SMain.getGameInstance().addEntity(entity);
 				SMessage connectallowed = new SMessage(client.getId(),"CNNAP","");
 				udpNode.SendMessage(connectallowed, client);
 				RequestPingDataFromClient(client);
@@ -163,8 +195,12 @@ public class SCommunicationHandler {
 		if(client==null){
 			System.out.println("User who wants to disconnect was not found: "+message.getId());
 		}else{
-			// TODO remove might cause nullpointer exception
-			nodes.remove(client);
+			// TODO Look here if there is a client nullpointer problem
+			synchronized (nodes) {
+				nodes.remove(client);
+				System.out.println("size of clients: "+nodes.size());
+			}
+			//TODO remove this insecure delete
 			SMain.getGameInstance().removeEntity(client.getId());
 			SMessage deleteentity = new SMessage(client.getId(),"DELEN","");
 			SendMessage(deleteentity);
@@ -189,16 +225,19 @@ public class SCommunicationHandler {
 	private void ParsePingAnswer(SMessage message){
 		SNode client = getNodeById(message.getId());
 		if (client!=null){
-			int length = Integer.parseInt(message.content.substring(0, 2));
-			String nanoTimeS = message.content.substring(3,3+length);
-			long nanoTime = Long.parseUnsignedLong(nanoTimeS);
-			client.setPing(SServerTimer.GetNanoTime()-nanoTime);
+			String time = SMessageParser.getPingCommandTime(message);
+			long nanoTime = Long.parseUnsignedLong(time);
+			long ping = SServerTimer.GetNanoTime()-nanoTime;
+			client.setPing((SServerTimer.GetNanoTime()-nanoTime)/1000/1000);
+			System.out.println("ping: "+ping/1000/1000);
 		}
 	}
 	private SNode getNodeById(UUID Id){
-		for(SNode node : nodes){
-			if(node.getId().equals(Id)){
-				return node;
+		synchronized (nodes) {
+			for(SNode node : nodes){
+				if(node.getId().equals(Id)){
+					return node;
+				}
 			}
 		}
 		return null;
@@ -217,7 +256,9 @@ public class SCommunicationHandler {
 		return ObjectMessages.pop();
 	}
 	public List<SNode> getClients(){
-		return nodes;
+		synchronized (nodes){
+			return nodes;
+		}
 	}
 	
 }
