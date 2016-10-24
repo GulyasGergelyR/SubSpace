@@ -52,12 +52,10 @@ public class SUDPServer {
 	private class Handler {
 		protected DatagramSocket socket;
 		protected int port;
-		InetAddress ServerAddress;
 		
 		public Handler(DatagramSocket socket, int port) throws Exception{
 			this.socket = socket;
 			this.port = port;
-			ServerAddress = InetAddress.getByName("localhost");
 		}
 		public void SendMessage(SClient client, SMessage message) throws Exception{
 			

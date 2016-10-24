@@ -141,9 +141,8 @@ public class SMain {
 			gameInstance.UpdateEntities();
 			//write outputs
 			timer.SleepIfRequired();
+			updateDelta();
 		}
-		
-		
 	}
 	private static void StartClient(){
 		while (!Display.isCloseRequested()) {

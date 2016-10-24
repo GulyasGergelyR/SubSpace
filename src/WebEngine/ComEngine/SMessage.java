@@ -6,12 +6,16 @@ import java.util.UUID;
 import GameEngine.Specifications;
 
 public class SMessage {
+	protected byte[] input;
+	protected String messageString;
 	protected UUID Id;
 	protected String commandName;
 	protected String content;
 	protected boolean Invalid;
 	
 	public SMessage(byte[] input){
+		this.input = input;
+		this.messageString = new String(input);
 		String uuid = new String(Arrays.copyOfRange(input, 0,36));
 		if (uuid.matches("[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}")) {
 			this.Id = UUID.fromString(uuid);
@@ -27,6 +31,13 @@ public class SMessage {
 		this.content = content;
 	}
 
+	public byte[] getInput(){
+		return input;
+	}
+	public String getMessageString(){
+		return messageString;
+	}
+	
 	public UUID getId() {
 		return Id;
 	}

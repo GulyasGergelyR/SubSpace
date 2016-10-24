@@ -10,6 +10,7 @@ public final class Specifications {
 	public static final List<String> EntityCommands = Arrays.asList("ENTIN","ENTUP","ENTDE");
 	public static final List<String> ObjectCommands = Arrays.asList("OBJUP","OBJDE");
 	public static final List<String> ServerCommands = Arrays.asList("CNNCL","DSCCL","PNGRQ","PNGAN");
+	public static final List<String> PingCommands = Arrays.asList("PNGRQ","PNGAN");
 	public static final List<String> ComCommands = new ArrayList<>(EntityCommands.size()+
 												ObjectCommands.size()+ServerCommands.size());
 	
