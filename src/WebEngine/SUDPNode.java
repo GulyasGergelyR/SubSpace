@@ -6,6 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import GameEngine.Specifications;
+import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SNode;
 import WebEngine.ComEngine.SMessage;
 
@@ -17,8 +18,10 @@ public class SUDPNode {
 	private InetAddress ServerAddress;
 	private DatagramSocket transmitSocket;
 	private int transmitPort;
+	private SCommunicationHandler communicationHandler;
 	
-	public SUDPNode(int receivePort, int transmitPort) throws Exception{
+	public SUDPNode(SCommunicationHandler communicationHandler, int receivePort, int transmitPort) throws Exception{
+		this.communicationHandler = communicationHandler;
 		this.transmitSocket = new DatagramSocket();
         this.transmitPort = transmitPort;
         DatagramSocket receiveSocket = new DatagramSocket(receivePort);
@@ -35,10 +38,14 @@ public class SUDPNode {
 		listener.StopThread();
 	}
 	
-	public void SendMessage(SMessage message, SNode node) throws Exception{
+	public void SendMessage(SMessage message, SNode node){
 		byte[] sendData = message.createRawData();
 		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, node.getIPAddress(), transmitPort);
-	    transmitSocket.send(sendPacket);
+	    try {
+			transmitSocket.send(sendPacket);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	    System.out.println("Data Sent "+message.getContent());
 	}
 	
@@ -55,13 +62,13 @@ public class SUDPNode {
                 try {
 					socket.receive(receivePacket);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					System.out.println("Receive failed, client shutting down");
-					//e.printStackTrace();
+					System.out.println("Receive failed, node shutting down");
 					running = false;
 					break;
 				}
                 
+                communicationHandler.ParseMessageFromDatagramPacket(receivePacket);
+                // TODO remove junk below
                 String sentence = new String( receivePacket.getData());
                 if(sentence.length()>0)
                 	System.out.println("RECEIVED: " + sentence);

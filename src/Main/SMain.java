@@ -35,10 +35,6 @@ import WebEngine.ComEngine.SMessage;
 
 public class SMain {
 	
-	public enum NodeState{
-		Server, Client 
-	}
-	
 	private static SGameInstance gameInstance;
 	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
@@ -47,7 +43,6 @@ public class SMain {
 	private static SUDPServer server;
 	private static SUDPClient client;
 	
-	private static NodeState nodeState;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -64,7 +59,6 @@ public class SMain {
 		
 		if (n == 0){
 			// Start server
-			nodeState = NodeState.Server;
 			try {
 				InitServer();
 				server = new SUDPServer(9090,9089);
@@ -80,7 +74,6 @@ public class SMain {
 			}
 		}
 		else{
-			nodeState = NodeState.Client;
 			try {
 				InitClient();
 				client = new SUDPClient(9089,9090);
@@ -186,10 +179,6 @@ public class SMain {
 	
 	public static float getDeltaRatio(){
 		return gameInstance.getDeltaRatio();
-	}
-	
-	public static NodeState getNodeState(){
-		return nodeState;
 	}
 	
 	public static void initGL() {

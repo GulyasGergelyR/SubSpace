@@ -109,7 +109,6 @@ public class SUDPServer {
                     	}
                     }
                     if (new_client){
-                    	// TODO add client side creation
                     	SNode client = new SNode(IPAddress, port, message.getId(), "Player");
                     	SEntity entity = new SEntity();
                     	entity.setController(new SDistantHumanControl(entity));

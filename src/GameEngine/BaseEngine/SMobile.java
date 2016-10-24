@@ -115,8 +115,6 @@ public abstract class SMobile extends SObject{
 	}
 	// functions
 	public void Move(){
-		// TODO add fps dependency
-		
 		moveDir = moveDir.add(acclDir.m(SMain.getDeltaRatio()));
 		
 		if (moveDir.l()>maxSpeed){

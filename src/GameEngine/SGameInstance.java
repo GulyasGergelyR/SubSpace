@@ -100,7 +100,6 @@ public class SGameInstance {
 		while(i<current_length){
 			i += 1;
 			SMessage message = ClientMessages.poll();
-			//TODO add command check as not only entity can get a refresh!
 			
 			SEntity entity = getEntityById(message.getId());
 			

@@ -5,12 +5,14 @@ import java.util.UUID;
 import GameEngine.SPlayer;
 
 public class SNode {
+	//////////Communication
 	private InetAddress IPAddress;
 	private int port;
 	private UUID Id;
+	//////////Interface
+	private NodeState state = NodeState.NotConnected;
 	private float ping;
-	private ClientState state = ClientState.Init;
-	
+	//////////Game
 	private SPlayer player;
 	
 	
@@ -59,20 +61,23 @@ public class SNode {
 		this.player.setName(name);
 	}
 
-	public ClientState getState() {
+	public NodeState getState() {
 		return state;
 	}
 
-	public void setState(ClientState state) {
+	public void setState(NodeState state) {
 		this.state = state;
 	}
 
-	public enum ClientState{
-		Init, Online, Offline 
+	public enum NodeState{
+		Connected, NotConnected
 	}
 
 	public void addPlayer(SPlayer player) {
 		this.player = player;
 		
+	}
+	public SPlayer getPlayer(){
+		return player;
 	}
 }
