@@ -8,17 +8,18 @@ import java.util.List;
 import java.util.UUID;
 
 import GameEngine.Specifications;
+import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPClient;
 
 public class SCommunicationHandler {
-	private List<SClient> clients;
+	private List<SNode> clients;
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
 	
 	public SCommunicationHandler(){
-		clients = new ArrayList<SClient>();
+		clients = new ArrayList<SNode>();
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
 	}
@@ -57,16 +58,20 @@ public class SCommunicationHandler {
 			System.out.println("Unknown commad: "+command);
 			}
 		} else{
+			//TODO Send back error
 			System.out.println("Received invalid message: \n\t"+new String(input));
 		}
 	}
 	
 	private void ParseConnectCommand(DatagramPacket receivePacket, SMessage message){
-		SClient client = getClientById(message.getId());
+		SNode client = getClientById(message.getId());
 		if(client==null){
-			int length = Integer.parseInt(message.content.substring(0, 2));
-			String name = message.content.substring(3,3+length);
-			client = new SClient(receivePacket.getAddress(), receivePacket.getPort(),
+			String name = SMessageParser.getConnectCommandName(message);
+			if(name == null){
+				System.out.println("User tried to join with invalid name: "+message.getContent());
+				return;
+			}
+			client = new SNode(receivePacket.getAddress(), receivePacket.getPort(),
 					message.getId(), name);
 			clients.add(client);
 		}else{
@@ -75,7 +80,7 @@ public class SCommunicationHandler {
 	}
 	
 	private void ParseDisconnectCommand(DatagramPacket receivePacket, SMessage message){
-		SClient client = getClientById(message.getId());
+		SNode client = getClientById(message.getId());
 		if(client==null){
 			System.out.println("User who wants to disconnect was not found: "+message.getId());
 		}else{
@@ -100,7 +105,7 @@ public class SCommunicationHandler {
 	}
 	
 	private void ParsePingAnswer(SMessage message){
-		SClient client = getClientById(message.getId());
+		SNode client = getClientById(message.getId());
 		if (client!=null){
 			int length = Integer.parseInt(message.content.substring(0, 2));
 			String nanoTimeS = message.content.substring(3,3+length);
@@ -109,8 +114,8 @@ public class SCommunicationHandler {
 		}
 	}
 	
-	private SClient getClientById(UUID Id){
-		for(SClient client : clients){
+	private SNode getClientById(UUID Id){
+		for(SNode client : clients){
 			if(client.getId().equals(Id)){
 				return client;
 			}
@@ -131,7 +136,7 @@ public class SCommunicationHandler {
 		return ObjectMessages.pop();
 	}
 	
-	public List<SClient> getClients(){
+	public List<SNode> getClients(){
 		return clients;
 	}
 	

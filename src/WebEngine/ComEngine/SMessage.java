@@ -11,7 +11,7 @@ public class SMessage {
 	protected UUID Id;
 	protected String commandName;
 	protected String content;
-	protected boolean Invalid;
+	protected boolean valid;
 	
 	public SMessage(byte[] input){
 		this.rawData = input;
@@ -19,7 +19,8 @@ public class SMessage {
 		if (SMessageParser.IsMessageValid(input)){
 			this.Id = UUID.fromString(SMessageParser.getId(this));
 			this.commandName = SMessageParser.getCommand(this);
-			this.content = SMessageParser.getContent(this);
+			this.content = SMessageParser.getContent(this); //not really used, parser has its own functions
+			valid = true;
 		}
 	}
 	
@@ -42,9 +43,7 @@ public class SMessage {
 		return Id;
 	}
 	public boolean isValid(){
-		this.rawData = createRawData();
-		this.messageString = new String(rawData);
-		return SMessageParser.IsMessageValid(this);
+		return valid;
 	}
 	public String getCommandName() {
 		return commandName;
@@ -69,6 +68,7 @@ public class SMessage {
 		return temp;
 	}
 	
+	//Code from the Internet blame them...
 	private byte[] concat(byte[] a, byte[] b) {
 		   int aLen = a.length;
 		   int bLen = b.length;

@@ -11,14 +11,14 @@ import GameEngine.Specifications;
 import GameEngine.EntityEngine.SDistantHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import Main.SMain;
-import WebEngine.ComEngine.SClient;
+import WebEngine.ComEngine.SNode;
 import WebEngine.ComEngine.SMessage;
 
 public class SUDPServer {
 	
 	private Listener listener;
 	private Handler handler;
-	private List<SClient> clients;
+	private List<SNode> clients;
 	
 	public SUDPServer(int receivePort, int transmitPort) throws Exception{
 		DatagramSocket clientSocket = new DatagramSocket();
@@ -27,7 +27,7 @@ public class SUDPServer {
         listener = new Listener(serverSocket, receivePort);
         listener.start();
         
-        clients = new ArrayList<SClient>();
+        clients = new ArrayList<SNode>();
 	}
 	
 	protected void StopListener(){
@@ -39,9 +39,9 @@ public class SUDPServer {
 		StopListener();
 	}
 	
-	public void SendMessage(SMessage message, SClient c) throws Exception{
+	public void SendMessage(SMessage message, SNode c) throws Exception{
 		if(c == null){ // It is a broadcast
-			for(SClient client : SMain.getCommunicationHandler().getClients()){
+			for(SNode client : SMain.getCommunicationHandler().getClients()){
 				handler.SendMessage(client, message);
 			}
 		}
@@ -57,7 +57,7 @@ public class SUDPServer {
 			this.socket = socket;
 			this.port = port;
 		}
-		public void SendMessage(SClient client, SMessage message) throws Exception{
+		public void SendMessage(SNode client, SMessage message) throws Exception{
 			
 			byte[] sendData = message.createRawData();
 			
@@ -102,7 +102,7 @@ public class SUDPServer {
 
                 if (message.isValid()){
                 	boolean new_client = true;
-                    for(SClient client : clients){
+                    for(SNode client : clients){
                     	if (client.getId().equals(message.getId())){
                     		new_client = false;
                     		break;
@@ -110,7 +110,7 @@ public class SUDPServer {
                     }
                     if (new_client){
                     	// TODO add client side creation
-                    	SClient client = new SClient(IPAddress, port, message.getId(), "Player");
+                    	SNode client = new SNode(IPAddress, port, message.getId(), "Player");
                     	SEntity entity = new SEntity();
                     	entity.setController(new SDistantHumanControl(entity));
                     	entity.setId(message.getId());

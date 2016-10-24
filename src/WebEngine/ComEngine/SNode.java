@@ -2,19 +2,29 @@ package WebEngine.ComEngine;
 import java.net.InetAddress;
 import java.util.UUID;
 
-public class SClient {
+import GameEngine.SPlayer;
+
+public class SNode {
 	private InetAddress IPAddress;
 	private int port;
 	private UUID Id;
 	private float ping;
 	private ClientState state = ClientState.Init;
-	private String name;
 	
-	public SClient(InetAddress IPAddress, int port, UUID Id, String name){
+	private SPlayer player;
+	
+	
+	public SNode(InetAddress IPAddress, int port, UUID Id, String name){
 		this.IPAddress = IPAddress;
 		this.port = port;
 		this.Id = Id;
-		this.name = name;
+		this.player = new SPlayer(this, name);
+	}
+	public SNode(InetAddress IPAddress, int port){
+		this.IPAddress = IPAddress;
+		this.port = port;
+		this.Id = null;
+		this.player = null;
 	}
 
 	public InetAddress getIPAddress() {
@@ -42,11 +52,11 @@ public class SClient {
 	}
 	
 	public String getName() {
-		return name;
+		return player.getName();
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.player.setName(name);
 	}
 
 	public ClientState getState() {
@@ -59,5 +69,10 @@ public class SClient {
 
 	public enum ClientState{
 		Init, Online, Offline 
+	}
+
+	public void addPlayer(SPlayer player) {
+		this.player = player;
+		
 	}
 }

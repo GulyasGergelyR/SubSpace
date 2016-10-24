@@ -19,7 +19,7 @@ public abstract class SMessageParser {
 	static SMatcher mCommandName = new SMatcher(pCommandHead, 2);
 	static SMatcher mContent = new SMatcher(pCommandHead+"([^"+new String(new byte[1])+"]*)", 3);
 	
-	static SMatcher mConnectCommand = new SMatcher(pCommandHead+"[a-zA-Z]{5,20};"+nullCh, 0);
+	static SMatcher mConnectCommand = new SMatcher(pCommandHead+"([a-zA-Z]{5,20});"+nullCh, 0);
 	static SMatcher mConnectCommandName = new SMatcher(pCommandHead+"([a-zA-Z]{5,20});"+nullCh, 3);
 	
 	static SMatcher mEntityCommand = new SMatcher(pCommandHead+"(([PR]M[LRM];)|([PR][WASD];)|(K[0-9];))*"+nullCh, 0);
@@ -222,5 +222,6 @@ public abstract class SMessageParser {
 		System.out.println("movediry: "+getMoveDirY(message));
 		System.out.println("content: "+getContent(message));
 		System.out.println("-------------------------------------------------\n");
+		System.out.println("abcdefghijklmnopqrstuvwxyz".toUpperCase());
 	}
 }
