@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.glu.GLU;
 
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
@@ -61,11 +62,12 @@ public class SMain {
 				InitServer();
 				StartServer();
 			} catch (Exception e) {
-				
-				communicationHandler.CloseUDPNode();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
-				communicationHandler.CloseUDPNode();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 			}
 		}
 		else{
@@ -74,11 +76,12 @@ public class SMain {
 				
 				StartClient();
 			} catch (Exception e) {
-				
-				communicationHandler.CloseUDPNode();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
-				communicationHandler.CloseUDPNode();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 			}
 		}
 	}
@@ -138,13 +141,7 @@ public class SMain {
 	}
 	
 	private static void initResources() {
-		// TODO Auto-generated method stub
-		String[] res = new String[4];
-		res[0] = "res/entity/spaceshipv1.png";
-		res[1] = "res/entity/prob.png";
-		res[2] = "res/dot.png";
-		res[3] = "res/entity/spaceshipv2.png";
-		SResLoader.addSpriteArray(res);
+		SResLoader.addSpriteArray(Specifications.resourcePathStrings);
 	}
 
 	private static void StartServer(){

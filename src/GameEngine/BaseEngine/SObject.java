@@ -12,16 +12,16 @@ public abstract class SObject {
 	protected SVector lookDir;
 	protected String texture;
 	protected float scale;
-	private UUID Id = UUID.randomUUID();
+	protected UUID Id = UUID.randomUUID();
+	protected boolean posUpdated;
+	
 	// TODO add hitbox
 
-	
-	
 	//Initialize
 	public SObject()
 	{
 		this.pos = new SVector();
-		this.lookDir = new SVector();
+		this.lookDir = new SVector(1,0);
 		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 1.0f;
 		this.Id = UUID.randomUUID();
@@ -72,8 +72,14 @@ public abstract class SObject {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+	public boolean IsPosUpdated(){
+		return posUpdated;
+	}
+	public void setPosUpdated(){
+		posUpdated = true;
+	}
 	// functions
-	public List<SRenderObject> Draw(){
+	public List<SRenderObject> getDrawables(){
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
 		list.add(new SRenderObject(texture, pos, lookDir.getAngle(), scale, 1.0f));
 		return list;

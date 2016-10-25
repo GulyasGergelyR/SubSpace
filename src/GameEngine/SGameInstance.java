@@ -5,8 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import GameEngine.EntityEngine.SDistantHumanControl;
+import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -16,11 +17,15 @@ public class SGameInstance {
 	private List<SEntity> Entities = new ArrayList<SEntity>();
 	private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
+	private SBackGround backGround = new SBackGround();
+	
 	private SFPS FPS;
 	private static int delta;
 	
+	
 	public SGameInstance(){
 		FPS = new SFPS();
+		backGround.setTexture("res/object/background/bg1.png");
 	}
 	
 	public List<SEntity> getEntities(){
@@ -38,6 +43,10 @@ public class SGameInstance {
 	}
 	public float getDeltaRatio(){
 		return ((float)delta)/FPS.getFPS_M();
+	}
+	
+	public SBackGround getBackGround(){
+		return backGround;
 	}
 	
 	public void addEntity(SEntity entity){
@@ -115,7 +124,7 @@ public class SGameInstance {
 					// P-Pressed or R-Released
 					
 					boolean state;
-					SDistantHumanControl control = (SDistantHumanControl)entity.getController();
+					SHumanControl control = (SHumanControl)entity.getController();
 					if(sub.substring(0, 1) == "P"){
 						state = true;
 					}else{

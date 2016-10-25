@@ -32,6 +32,8 @@ public abstract class SMessageParser {
 	static SMatcher mLookDirY = new SMatcher(";ld;"+pVector+pVector,2);
 	static SMatcher mMoveDirX = new SMatcher(";md;"+pVector+pVector,1);
 	static SMatcher mMoveDirY = new SMatcher(";md;"+pVector+pVector,2);
+	static SMatcher mAcclDirX = new SMatcher(";ad;"+pVector+pVector,1);
+	static SMatcher mAcclDirY = new SMatcher(";ad;"+pVector+pVector,2);
 	
 	//static SMatcher mPingCommand = new SMatcher(pCommandHead+"([0-9]{1,20});([0-9]{0,3});?"+nullCh, 0);
 	static SMatcher mPingCommandTime = new SMatcher(";([0-9]{1,20});([0-9]{0,3});?", 1);
@@ -99,6 +101,12 @@ public abstract class SMessageParser {
 	}
 	public static String getMoveDirY(SMessage message){
 		return mMoveDirY.getMatch(message.getMessageString());
+	}
+	public static String getAcclDirX(SMessage message){
+		return mAcclDirX.getMatch(message.getMessageString());
+	}
+	public static String getAcclDirY(SMessage message){
+		return mAcclDirY.getMatch(message.getMessageString());
 	}
 	// Ping Message
 	public static String getPingCommandTime(SMessage message){

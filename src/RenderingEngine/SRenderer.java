@@ -1,5 +1,10 @@
 package RenderingEngine;
 
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
@@ -9,6 +14,7 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
@@ -17,28 +23,44 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.EntityState;
 
 public class SRenderer {
-	SGameInstance GameInstance;
+	SGameInstance gameInstance;
 	public SRenderer(SGameInstance GameInstance){
-		this.GameInstance = GameInstance;
+		this.gameInstance = GameInstance;
 	}
 	
 	public void DrawObjects(){
+		DrawBackGround();
 		DrawEntities();
 	}
 	
+	private void DrawBackGround(){
+		Draw(gameInstance.getBackGround().getDrawables());
+	}
+	
 	private void DrawEntities(){
-		List<SEntity> Entities = GameInstance.getEntities();
+		List<SEntity> Entities = gameInstance.getEntities();
 		for (SEntity entity : Entities){
 			if (entity.getState() == EntityState.Active){
-				for(SRenderObject draw : entity.Draw()){
-					Draw(draw);
-				}
+				Draw(entity.getDrawables());
+				float x = entity.getPos().getX();
+				float y = entity.getPos().getY();
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glOrtho(x-512, x+512, y-384, y+384, -1, 1);
+				glMatrixMode(GL_MODELVIEW);
 			}
+		}
+	}
+	
+	private static void Draw(List<SRenderObject> drawables){
+		for(SRenderObject draw : drawables){
+			Draw(draw);
 		}
 	}
 	
 	private static void Draw(SRenderObject SRO)
 	{
+		
 		float x = SRO.v.getX();
 		float y = SRO.v.getY();
 		float scale = SRO.scale;

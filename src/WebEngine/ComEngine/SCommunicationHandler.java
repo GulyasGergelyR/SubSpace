@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import GameEngine.EntityEngine.SDistantHumanControl;
+import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
@@ -20,9 +20,11 @@ public class SCommunicationHandler {
 	
 	private SUDPNode udpNode;
 	private SNode localNode;
-	private UDPNodeRole udpNodeRole;
 	
-	private LinkedList<DatagramPacket> MessagePipeLine;
+	private UDPNodeRole udpNodeRole;
+	public enum UDPNodeRole{
+		Server, Client 
+	}
 	
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
@@ -31,9 +33,6 @@ public class SCommunicationHandler {
 		nodes = Collections.synchronizedList(new ArrayList<SNode>());
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
-	}
-	public enum UDPNodeRole{
-		Server, Client 
 	}
 	
 	public void CloseUDPNode(){
@@ -59,8 +58,11 @@ public class SCommunicationHandler {
 		udpNodeRole = UDPNodeRole.Server;
 		createUDPNode(receivePort, transmitPort);
 	}
-	
 	private void createUDPNode(int receivePort, int transmitPort){
+		if(receivePort==transmitPort){
+			System.out.println("Ports must be different");
+			return;
+		}
 		if(udpNode != null){
 			udpNode.Close();
 		}
@@ -176,7 +178,7 @@ public class SCommunicationHandler {
 				}
 				//TODO add normal entity creation
 				SEntity entity = new SEntity();
-            	entity.setController(new SDistantHumanControl(entity));
+            	entity.setController(new SHumanControl(entity));
             	entity.setId(client.getId());
 				client.getPlayer().setEntity(entity);
 				SMain.getGameInstance().addEntity(entity);
@@ -194,14 +196,20 @@ public class SCommunicationHandler {
 		if(client==null){
 			System.out.println("User who wants to disconnect was not found: "+message.getId());
 		}else{
-			synchronized (nodes) {
-				nodes.remove(client);
-				System.out.println("size of clients: "+nodes.size());
-			}
-			//TODO look here if there is an entity nullpointer error
-			SMain.getGameInstance().removeEntity(client.getId());
-			SMessage deleteentity = new SMessage(client.getId(),"DELEN","");
-			SendMessage(deleteentity);
+			Thread deleteNodeThread = new Thread(){
+				@Override
+				public void run() {
+					synchronized (nodes) {
+						nodes.remove(client);
+						System.out.println("size of clients: "+nodes.size());
+					}
+					//TODO look here if there is an entity nullpointer error
+					SMain.getGameInstance().removeEntity(client.getId());
+					SMessage deleteentity = new SMessage(client.getId(),"DELEN","");
+					SendMessage(deleteentity);
+				}
+			};
+			deleteNodeThread.start();
 		}
 	}
 	private void ParseConnectApprovedCommand(SMessage message){
@@ -240,6 +248,11 @@ public class SCommunicationHandler {
 		}
 		return null;
 	}
+	public List<SNode> getNodes(){
+		synchronized (nodes){
+			return nodes;
+		}
+	}
 	
 	public int getEntityMessageLength(){
 		return EntityMessages.size();
@@ -253,10 +266,6 @@ public class SCommunicationHandler {
 	public SMessage popObjectMessage(){
 		return ObjectMessages.pop();
 	}
-	public List<SNode> getClients(){
-		synchronized (nodes){
-			return nodes;
-		}
-	}
+	
 	
 }
