@@ -29,12 +29,12 @@ public class SHumanControlLocal extends SHumanControl{
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			if (setKeyTo("S", true)) command  = command+"PS;";
 		}else if (setKeyTo("S", false)) command  = command+"RS;";
-		super.Think();
-
+		
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
-		Owner.setLookDir(new SVector(M_x,M_y).sub(Owner.getPos()));
+		Owner.setAimLookDir(new SVector(M_x-512,M_y-386));
 		
+		super.Think();
 		if (command.length()>0){
 			SMessage message = new SMessage(Owner.getId(), "ENTIN", command);
 			SMain.getCommunicationHandler().SendMessage(message);

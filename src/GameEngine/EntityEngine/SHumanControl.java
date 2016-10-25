@@ -39,8 +39,15 @@ public class SHumanControl extends SControl{
 		if(acclDir.l()==0){
 			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/4.0f));
 		}else{
-			Owner.setAcclDir(acclDir.setLength(Owner.getMaxAcceleration()));
+			float accl = Owner.getMaxAcceleration();
+			float factor = 1/(1+Owner.getLookDir().getAbsAngleBetween(acclDir)/4.0f);
+			Owner.setAcclDir(acclDir.setLength(accl*factor));
 		}
+		float angle = Owner.getAimLookDir().getAngle() - Owner.getLookDir().getAngle();
+		float rotdir = 0;
+		if (angle<0.0f)	{if (Math.abs(angle)<180.0f) rotdir = 1; else rotdir = -1;}
+		else			{if (Math.abs(angle)<180.0f) rotdir = -1; else rotdir = 1;}
+		Owner.setRotAcceleration(Owner.getMaxRotAcceleration()*rotdir);
 	}
 	
 }

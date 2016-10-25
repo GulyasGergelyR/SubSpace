@@ -61,6 +61,12 @@ public class SVector {
 	{
 		return (float) (Math.atan2(y,x)*180/Math.PI);
 	}
+	public float getAbsAngleBetween(SVector v)
+	{
+		float alpha = Math.abs(v.getAngle()-this.getAngle());
+		if(alpha>180) alpha = 360-alpha;
+		return alpha;
+	}
 	public SVector rotate(float f)	//rotating by 
 	{
 		float alpha = f*(float)Math.PI/180;

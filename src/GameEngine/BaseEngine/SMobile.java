@@ -7,12 +7,13 @@ import Main.SMain;
 public abstract class SMobile extends SObject{
 	protected SVector moveDir; // movement direction, length is speed
 	protected SVector acclDir; 
-	protected float maxSpeed = 15.0f;
+	protected SVector aimLookDir;
+	protected float maxSpeed = 45.0f;
 	protected float rotSpeed = 0.0f;         
-	protected float maxRotSpeed = 1.0f;
-	protected float maxAcceleration = 0.5f;     
+	protected float maxRotSpeed = 15.0f;
+	protected float maxAcceleration = 5.0f;     
 	protected float rotAcceleration = 0.0f;  
-	protected float maxRotAcceleration = 1.0f;
+	protected float maxRotAcceleration = 3.0f;
 	private SControl controller;
 	
 	//Initialize
@@ -21,6 +22,7 @@ public abstract class SMobile extends SObject{
 		super();
 		moveDir = new SVector();
 		acclDir = new SVector();
+		aimLookDir = new SVector(lookDir);
 		controller = new SControl(this);
 	}
 	public SMobile(SVector pos, SVector look_dir, String texture)
@@ -32,6 +34,7 @@ public abstract class SMobile extends SObject{
 		super(m);
 		this.moveDir = new SVector(m.moveDir);
 		this.acclDir = new SVector(m.acclDir);
+		this.aimLookDir = new SVector(m.lookDir);
 		this.maxSpeed = m.maxSpeed;
 		this.rotSpeed = m.rotSpeed;  
 		this.maxRotSpeed = m.maxRotSpeed;
@@ -57,8 +60,8 @@ public abstract class SMobile extends SObject{
 		return rotSpeed;
 	}
 	public void setRotSpeed(float rotSpeed) {
-		if (rotSpeed>maxRotSpeed){
-			rotSpeed = maxRotSpeed;
+		if (Math.abs(rotSpeed)>maxRotSpeed){
+			rotSpeed = maxRotSpeed*Integer.signum((int)rotSpeed);
 		}
 		this.rotSpeed = rotSpeed;
 	}
@@ -79,6 +82,12 @@ public abstract class SMobile extends SObject{
 	}
 	public void setMaxRotAcceleration(float maxRotAcceleration) {
 		this.maxRotAcceleration = maxRotAcceleration;
+	}
+	public SVector getAimLookDir() {
+		return aimLookDir;
+	}
+	public void setAimLookDir(SVector aimLookDir) {
+		this.aimLookDir = aimLookDir;
 	}
 	public SVector getMoveDir() {
 		return moveDir;
@@ -102,8 +111,8 @@ public abstract class SMobile extends SObject{
 		return rotAcceleration;
 	}
 	public void setRotAcceleration(float rotAcceleration) {
-		if (rotAcceleration>maxRotAcceleration){
-			rotAcceleration = maxRotAcceleration;
+		if (Math.abs(rotAcceleration)>maxRotAcceleration){
+			rotAcceleration = maxRotAcceleration*Integer.signum((int)rotAcceleration);
 		}
 		this.rotAcceleration = rotAcceleration;
 	}
@@ -124,9 +133,12 @@ public abstract class SMobile extends SObject{
 	public void Rotate(){
 		rotSpeed += rotAcceleration*SMain.getDeltaRatio();
 		if(Math.abs(rotSpeed)>maxRotSpeed){
-			rotSpeed = maxRotSpeed;
+			rotSpeed = maxRotSpeed*Integer.signum((int)rotSpeed);
 		}
-		lookDir = lookDir.rotate(rotSpeed);
+		float angle = lookDir.getAbsAngleBetween(aimLookDir);
+		if(angle<rotSpeed*SMain.getDeltaRatio())
+			lookDir = new SVector(aimLookDir);
+		else lookDir = lookDir.rotate(rotSpeed*SMain.getDeltaRatio());
 	}
 	
 	public void update(){

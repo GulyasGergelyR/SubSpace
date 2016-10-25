@@ -11,6 +11,7 @@ public class TestScript1 {
 		test4();
 		long l = Long.parseUnsignedLong("9223372036854775807")*2;
 		System.out.println(Long.toUnsignedString(l));
+		System.out.println(Integer.signum(-10));
 	}
 	private static void test1(){
 		System.out.println("-------------------test1-------------------------");
