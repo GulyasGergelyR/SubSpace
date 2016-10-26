@@ -22,6 +22,7 @@ public class SGameInstance {
 	private SFPS FPS;
 	private static int delta;
 	
+	private SPlayer localPlayer;
 	
 	public SGameInstance(){
 		FPS = new SFPS();
@@ -45,6 +46,15 @@ public class SGameInstance {
 		return ((float)delta)/FPS.getFPS_M();
 	}
 	
+	public SPlayer getLocalPlayer() {
+		return localPlayer;
+	}
+
+	public void setLocalPlayer(SPlayer localPlayer) {
+		this.localPlayer = localPlayer;
+		addEntity(localPlayer.getEntity());
+	}
+
 	public SBackGround getBackGround(){
 		return backGround;
 	}

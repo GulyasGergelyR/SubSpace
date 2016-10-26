@@ -7,15 +7,15 @@ import java.net.InetAddress;
 
 import GameEngine.Specifications;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SNode;
+import WebEngine.ComEngine.SCommunicationHandler.UDPNodeRole;
 import WebEngine.ComEngine.SMessage;
+import WebEngine.ComEngine.SNode;
 
 
 
 public class SUDPNode {
 
 	private Listener listener;
-	private InetAddress ServerAddress;
 	private DatagramSocket transmitSocket;
 	private int transmitPort;
 	private SCommunicationHandler communicationHandler;
@@ -46,7 +46,7 @@ public class SUDPNode {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    System.out.println("Data Sent "+message.getContent());
+	    //System.out.println("Data Sent "+message.getContent());
 	}
 	
 	private class Listener extends SCommunicationThread{
@@ -62,7 +62,10 @@ public class SUDPNode {
                 try {
 					socket.receive(receivePacket);
 				} catch (IOException e) {
-					System.out.println("Receive failed, node shutting down");
+					if(communicationHandler.getUDPNodeRole().equals(UDPNodeRole.Server))
+						System.out.println("Server listener is shutting down, because:\n\t"+e.getMessage());
+					else if(communicationHandler.getUDPNodeRole().equals(UDPNodeRole.Client))
+						System.out.println("Client listener is shutting down, because:\n\t"+e.getMessage());
 					running = false;
 					break;
 				}

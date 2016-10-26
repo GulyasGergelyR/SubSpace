@@ -1,7 +1,7 @@
 package testScripts;
 
 import WebEngine.ComEngine.SMessage;
-import WebEngine.ComEngine.SMessageParser;
+import WebEngine.ComEngine.SMessagePatterns;
 
 public class TestScript1 {
 	public static void main(String[] args) {
@@ -29,8 +29,8 @@ public class TestScript1 {
 		String testInput = testId+";"+testCommand+";"+testName+";";
 		SMessage message = new SMessage(testInput.getBytes());
 		System.out.println(testInput);
-		System.out.println(SMessageParser.IsMessageValid(message));
-		System.out.println("name: "+SMessageParser.getConnectCommandName(message));
+		System.out.println(SMessagePatterns.IsMessageValid(message));
+		System.out.println("name: "+SMessagePatterns.getConnectCommandName(message));
 		System.out.println("------------------\n");
 	}
 	private static void test2(){
@@ -41,10 +41,10 @@ public class TestScript1 {
 		String testInput = testId+";"+testCommand+";"+testContent;
 		SMessage message = new SMessage(testInput.getBytes());
 		System.out.println(testInput);
-		System.out.println(SMessageParser.IsMessageValid(message));
-		System.out.println(SMessageParser.getEntityCommandWASD(message));
-		System.out.println(SMessageParser.getEntityCommandMouse(message));
-		System.out.println(SMessageParser.getEntityCommandNums(message));
+		System.out.println(SMessagePatterns.IsMessageValid(message));
+		System.out.println(SMessagePatterns.getEntityCommandWASD(message));
+		System.out.println(SMessagePatterns.getEntityCommandMouse(message));
+		System.out.println(SMessagePatterns.getEntityCommandNums(message));
 		System.out.println("-------------------------------------------------\n");
 	}
 	private static void test3(){
@@ -55,9 +55,9 @@ public class TestScript1 {
 		String testInput = testId+";"+testCommand+";"+testContent;
 		SMessage message = new SMessage(testInput.getBytes());
 		System.out.println(testInput);
-		System.out.println(SMessageParser.IsMessageValid(message));
-		System.out.println(SMessageParser.getPingCommandTime(message));
-		System.out.println(SMessageParser.getPingCommandPrevPing(message));
+		System.out.println(SMessagePatterns.IsMessageValid(message));
+		System.out.println(SMessagePatterns.getPingCommandTime(message));
+		System.out.println(SMessagePatterns.getPingCommandPrevPing(message));
 		System.out.println("-------------------------------------------------\n");
 	}
 	private static void test4(){
@@ -68,14 +68,14 @@ public class TestScript1 {
 		String testInput = testId+";"+testCommand+";"+testContent;
 		SMessage message = new SMessage(testInput.getBytes());
 		System.out.println(testInput);
-		System.out.println(SMessageParser.IsMessageValid(message));
-		System.out.println("posx: "+SMessageParser.getPosX(message));
-		System.out.println("posy: "+SMessageParser.getPosY(message));
-		System.out.println("lookdirx: "+SMessageParser.getLookDirX(message));
-		System.out.println("lookdiry: "+SMessageParser.getLookDirY(message));
-		System.out.println("movedirx: "+SMessageParser.getMoveDirX(message));
-		System.out.println("movediry: "+SMessageParser.getMoveDirY(message));
-		System.out.println("content: "+SMessageParser.getContent(message));
+		System.out.println(SMessagePatterns.IsMessageValid(message));
+		System.out.println("posx: "+SMessagePatterns.getPosX(message));
+		System.out.println("posy: "+SMessagePatterns.getPosY(message));
+		System.out.println("lookdirx: "+SMessagePatterns.getLookDirX(message));
+		System.out.println("lookdiry: "+SMessagePatterns.getLookDirY(message));
+		System.out.println("movedirx: "+SMessagePatterns.getMoveDirX(message));
+		System.out.println("movediry: "+SMessagePatterns.getMoveDirY(message));
+		System.out.println("content: "+SMessagePatterns.getContent(message));
 		System.out.println("-------------------------------------------------\n");
 	}
 }

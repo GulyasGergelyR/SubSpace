@@ -16,10 +16,10 @@ public class SMessage {
 	public SMessage(byte[] input){
 		this.rawData = input;
 		this.messageString = new String(input);
-		if (SMessageParser.IsMessageValid(input)){
-			this.Id = UUID.fromString(SMessageParser.getId(this));
-			this.commandName = SMessageParser.getCommand(this);
-			this.content = SMessageParser.getContent(this); //not really used, parser has its own functions
+		if (SMessagePatterns.IsMessageValid(input)){
+			this.Id = UUID.fromString(SMessagePatterns.getId(this));
+			this.commandName = SMessagePatterns.getCommand(this);
+			this.content = SMessagePatterns.getContent(this); //not really used, parser has its own functions
 			valid = true;
 		}
 	}

@@ -116,6 +116,7 @@ public class SMain {
 			player = new SPlayer(node, "Gergo");
 			entity = new SEntity();
 			player.setEntity(entity);
+			gameInstance.setLocalPlayer(player);
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
 			communicationHandler.ConnectToServer(node);
@@ -127,7 +128,7 @@ public class SMain {
 		renderer = new SRenderer(gameInstance);
 		
 		try {
-            Display.setDisplayMode(new DisplayMode(1024, 768));
+            Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
             Display.create();
         } catch (LWJGLException e) {
             e.printStackTrace();
@@ -136,8 +137,6 @@ public class SMain {
  
         initGL(); // init OpenGL
         initResources();
-        
-        gameInstance.addEntity(new SEntity());
 	}
 	
 	private static void initResources() {
@@ -191,7 +190,7 @@ public class SMain {
 	public static void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 1024, 0, 768, -1, 1);
+		glOrtho(0, Specifications.WindowWidth, 0, Specifications.WindowHeight, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND); 

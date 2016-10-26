@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class SMessageParser {
+public abstract class SMessagePatterns {
 	
 	static String nullCh = new String(new byte[1])+"*";
 	

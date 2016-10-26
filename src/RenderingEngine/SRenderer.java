@@ -14,21 +14,28 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
 import GameEngine.SGameInstance;
+import GameEngine.SPlayer;
+import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.EntityState;
 
+//TODO create SDrawObject and replace texture
+
 public class SRenderer {
-	SGameInstance gameInstance;
+	private SGameInstance gameInstance;
+	// TODO recalculate Mouse positions based on viewport
+	private boolean followLocalPlayer = true;
+	
 	public SRenderer(SGameInstance GameInstance){
 		this.gameInstance = GameInstance;
 	}
 	
 	public void DrawObjects(){
+		if(followLocalPlayer) FollowLocalPlayer();
 		DrawBackGround();
 		DrawEntities();
 	}
@@ -42,13 +49,28 @@ public class SRenderer {
 		for (SEntity entity : Entities){
 			if (entity.getState() == EntityState.Active){
 				Draw(entity.getDrawables());
-				float x = entity.getPos().getX();
-				float y = entity.getPos().getY();
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				glOrtho(x-512, x+512, y-384, y+384, -1, 1);
-				glMatrixMode(GL_MODELVIEW);
 			}
+		}
+	}
+	
+	private void setFollowLocalPlayer(boolean follow){
+		this.followLocalPlayer = follow;
+	}
+	
+	private void FollowLocalPlayer(){
+		SPlayer localPlayer = gameInstance.getLocalPlayer();
+		SEntity entity = localPlayer.getEntity();
+		if(entity.getState().equals(EntityState.Active) 
+				|| entity.getState().equals(EntityState.Ghost)){
+			float x = entity.getPos().getX();
+			float y = entity.getPos().getY();
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(x-Specifications.WindowWidth/2,
+					x+Specifications.WindowWidth/2,
+					y-Specifications.WindowHeight/2,
+					y+Specifications.WindowHeight/2, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
 		}
 	}
 	

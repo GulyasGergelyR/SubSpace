@@ -50,6 +50,10 @@ public class SCommunicationHandler {
 		this.localNode = localNode;
 	}
 	
+	public UDPNodeRole getUDPNodeRole(){
+		return udpNodeRole;
+	}
+	
 	public void createUDPNodeAsClient(int receivePort, int transmitPort){
 		udpNodeRole = UDPNodeRole.Client;
 		createUDPNode(receivePort, transmitPort);
@@ -164,7 +168,7 @@ public class SCommunicationHandler {
 	private void ParseConnectCommand(DatagramPacket receivePacket, SMessage message){
 		SNode client = getNodeById(message.getId());
 		if(client==null){
-			String name = SMessageParser.getConnectCommandName(message);
+			String name = SMessagePatterns.getConnectCommandName(message);
 			if(name == null){
 				System.out.println("User tried to join with invalid name: "+message.getContent());
 				return;
@@ -221,7 +225,7 @@ public class SCommunicationHandler {
 	}
 	
 	private void ParsePingRequest(SMessage message){
-		String ping = SMessageParser.getPingCommandPrevPing(message);
+		String ping = SMessagePatterns.getPingCommandPrevPing(message);
 		localNode.setPing(Float.parseFloat(ping));
 		//Send back the same message to the server
 		message.setCommandName("PNGAN");
@@ -231,7 +235,7 @@ public class SCommunicationHandler {
 	private void ParsePingAnswer(SMessage message){
 		SNode client = getNodeById(message.getId());
 		if (client!=null){
-			String time = SMessageParser.getPingCommandTime(message);
+			String time = SMessagePatterns.getPingCommandTime(message);
 			long nanoTime = Long.parseUnsignedLong(time);
 			long ping = SServerTimer.GetNanoTime()-nanoTime;
 			client.setPing((SServerTimer.GetNanoTime()-nanoTime)/1000/1000);

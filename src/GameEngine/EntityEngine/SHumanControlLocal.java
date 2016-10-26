@@ -3,6 +3,7 @@ package GameEngine.EntityEngine;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
@@ -32,7 +33,8 @@ public class SHumanControlLocal extends SHumanControl{
 		
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
-		Owner.setAimLookDir(new SVector(M_x-512,M_y-386));
+		Owner.setAimLookDir(new SVector(M_x-Specifications.WindowWidth/2,
+				M_y-Specifications.WindowHeight/2));
 		
 		super.Think();
 		if (command.length()>0){

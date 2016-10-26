@@ -27,6 +27,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 
 	@Override
 	public List<SRenderObject> getDrawables() {
+		//TODO Add movement and life specific drawings
 		List<SRenderObject> list = super.getDrawables();
 		//list.add(new SRenderObject("res/dot.png", pos, 0.0f, 0.5f, 1.0f));
 		return list;
