@@ -3,6 +3,7 @@ package GameEngine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import GameEngine.BaseEngine.SObject;
@@ -85,14 +86,31 @@ public class SGameInstance {
 	public void UpdateEntities(){
 		if(Entities.size()>0){
 			int maxLength = SMain.getCommunicationHandler().getEntityMessageLength();
+			
 			for(SEntity entity : Entities){
 				for(SMessage message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
-					SMessageParser.ParseEntityMessage(message, entity);
+					if(message.getCommandName().equals("ENTUP"))
+						SMessageParser.ParseEntityUpdateMessage(message, entity);
+					else if(message.getCommandName().equals("CLIIN"))
+						SMessageParser.ParseClientInputMessage(message, entity);
 				}
 				entity.update();
 			}
 		}
-			
+	}
+	
+	public void SendGameDataToClients(){
+		SendEntityData();
+	}
+	private void SendEntityData(){
+		for(SEntity entity: Entities){
+			SMessage message = new SMessage(entity.getId(), "ENTUP", "");
+			message.addContent("p;"+entity.getPos().getString());
+			message.addContent("md;"+entity.getMoveDir().getString());
+			message.addContent("ld;"+entity.getLookDir().getString());
+			message.addContent("ad;"+entity.getAcclDir().getString());
+			SMain.getCommunicationHandler().SendMessage(message);
+		}
 	}
 	
 	public void CheckEntityMessages(){

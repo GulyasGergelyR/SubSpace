@@ -46,7 +46,12 @@ public class SUDPNode {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    //System.out.println("Data Sent "+message.getContent());
+	    /*
+	    if(communicationHandler.getUDPNodeRole().equals(UDPNodeRole.Server))
+	    	System.out.println("Data Sent from Server "+message.getContent());
+	    if(communicationHandler.getUDPNodeRole().equals(UDPNodeRole.Client))
+	    	System.out.println("Data Sent from Client "+message.getContent());
+	    	*/
 	}
 	
 	private class Listener extends SCommunicationThread{
@@ -72,9 +77,9 @@ public class SUDPNode {
                 //System.out.println("start parsing message...");
                 communicationHandler.ParseMessageFromDatagramPacket(receivePacket);
                 // TODO Remove junk below
-                //String sentence = new String( receivePacket.getData());
-                //if(sentence.length()>0)
-                //	System.out.println("RECEIVED: " + sentence);
+               /* String sentence = new String( receivePacket.getData());
+                if(sentence.length()>0)
+                	System.out.println("RECEIVED: " + sentence);*/
             }
 		}
 	}

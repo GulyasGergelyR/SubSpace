@@ -46,7 +46,8 @@ public abstract class SObject {
 		return pos;
 	}
 	public void setPos(SVector pos) {
-		this.pos = pos;
+		if(pos!=null)
+			this.pos = pos;
 	}
 	public UUID getId() {
 		return Id;
@@ -64,7 +65,8 @@ public abstract class SObject {
 		return lookDir;
 	}
 	public void setLookDir(SVector lookDir) {
-		this.lookDir = lookDir;
+		if(lookDir!=null)
+			this.lookDir = lookDir;
 	}
 	public float getScale() {
 		return scale;

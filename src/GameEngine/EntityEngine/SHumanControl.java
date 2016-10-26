@@ -37,7 +37,7 @@ public class SHumanControl extends SControl{
 		if(keyStates.get("D")) acclDir = acclDir.add(1,0);
 		
 		if(acclDir.l()==0){
-			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/4.0f));
+			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/10.0f));
 		}else{
 			float accl = Owner.getMaxAcceleration();
 			float factor = 1/(1+Owner.getLookDir().getAbsAngleBetween(acclDir)/4.0f);

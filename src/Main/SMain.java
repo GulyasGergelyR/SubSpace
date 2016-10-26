@@ -94,12 +94,13 @@ public class SMain {
 	
 	private static void InitServer(){
 		Init();
-		
+		System.out.println("Starting server...");
 		SNode node;
 		try {
 			node = new SNode(InetAddress.getLocalHost(), 0);
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsServer(9090, 9089);
+			System.out.println("Server is running...");
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -116,6 +117,8 @@ public class SMain {
 			player = new SPlayer(node, "Gergo");
 			entity = new SEntity();
 			player.setEntity(entity);
+			//TODO Id sharing, make it normal
+			entity.setId(node.getId());
 			gameInstance.setLocalPlayer(player);
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
@@ -147,10 +150,9 @@ public class SMain {
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
-			
 			communicationHandler.RequestPingDataFromClients();
 			gameInstance.UpdateEntities();
-			//write outputs
+			gameInstance.SendGameDataToClients();
 			timer.SleepIfRequired();
 			updateDelta();
 		}

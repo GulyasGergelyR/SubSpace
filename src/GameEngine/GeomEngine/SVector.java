@@ -1,5 +1,7 @@
 package GameEngine.GeomEngine;
 
+import java.util.Locale;
+
 
 public class SVector {
 	private float x;
@@ -71,5 +73,9 @@ public class SVector {
 	{
 		float alpha = f*(float)Math.PI/180;
 		return(new SVector((float)(Math.cos(alpha)*x+Math.sin(alpha)*y),(float)(Math.sin(alpha)*(-x)+Math.cos(alpha)*y)));
+	}
+	
+	public String getString(){
+		return String.format(Locale.ROOT,"%.2f;%.2f", x,y);
 	}
 }

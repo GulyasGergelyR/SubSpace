@@ -24,9 +24,13 @@ public abstract class SMessagePatterns {
 	static SMatcher mConnectCommandName = new SMatcher(pCommandHead+"([a-zA-Z]{5,20});"+nullCh, 3);
 	
 	//static SMatcher mEntityCommand = new SMatcher(pCommandHead+"(([PR]M[LRM];)|([PR][WASD];)|(K[0-9];))*"+nullCh, 0);
-	static SMatcher mEntityCommandWASD = new SMatcher(";([PR][WASD]);",1);
-	static SMatcher mEntityCommandNums = new SMatcher(";(K[0-9]);",1);
-	static SMatcher mEntityCommandMouse = new SMatcher(";([PR]M[LRM]);",1);
+	static SMatcher mWASD = new SMatcher(";([PR][WASD]);",1);
+	static SMatcher mWASDPressed = new SMatcher("([PR])([WASD])",1);
+	static SMatcher mWASDKey = new SMatcher("([PR])([WASD])",2);
+	static SMatcher mNums = new SMatcher(";(K[0-9]);",1);
+	static SMatcher mMouse = new SMatcher(";([PR]M[LRM]);",1);
+	static SMatcher mMousePosX = new SMatcher(";mp;"+pVector+pVector,1);
+	static SMatcher mMousePosY = new SMatcher(";mp;"+pVector+pVector,2);
 	
 	static SMatcher mPosX = new SMatcher(";p;"+pVector+pVector,1);
 	static SMatcher mPosY = new SMatcher(";p;"+pVector+pVector,2);
@@ -77,13 +81,19 @@ public abstract class SMessagePatterns {
 	
 	// Entity Message
 	public static LinkedList<String> getEntityCommandWASD(SMessage message){
-		return mEntityCommandWASD.getMatches(message.getMessageString());
+		return mWASD.getMatches(message.getMessageString());
+	}
+	public static String getEntityCommandWASDKey(String command){
+		return mWASDKey.getMatch(command);
+	}
+	public static String getEntityCommandWASDPressed(String command){
+		return mWASDPressed.getMatch(command);
 	}
 	public static LinkedList<String> getEntityCommandNums(SMessage message){
-		return mEntityCommandNums.getMatches(message.getMessageString());
+		return mNums.getMatches(message.getMessageString());
 	}
 	public static LinkedList<String> getEntityCommandMouse(SMessage message){
-		return mEntityCommandMouse.getMatches(message.getMessageString());
+		return mMouse.getMatches(message.getMessageString());
 	}
 	// Obj Message
 	public static String getPosX(SMessage message){
@@ -95,7 +105,7 @@ public abstract class SMessagePatterns {
 	public static SVector getPos(SMessage message){
 		String x = getPosX(message);
 		String y = getPosY(message);
-		if(x==nullCh || y==null)
+		if(x==null || y==null)
 			return null;
 		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
 	}
@@ -108,7 +118,7 @@ public abstract class SMessagePatterns {
 	public static SVector getLookDir(SMessage message){
 		String x = getLookDirX(message);
 		String y = getLookDirY(message);
-		if(x==nullCh || y==null)
+		if(x==null || y==null)
 			return null;
 		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
 	}
@@ -121,7 +131,7 @@ public abstract class SMessagePatterns {
 	public static SVector getMoveDir(SMessage message){
 		String x = getMoveDirX(message);
 		String y = getMoveDirY(message);
-		if(x==nullCh || y==null)
+		if(x==null || y==null)
 			return null;
 		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
 	}
@@ -134,7 +144,20 @@ public abstract class SMessagePatterns {
 	public static SVector getAcclDir(SMessage message){
 		String x = getAcclDirX(message);
 		String y = getAcclDirY(message);
-		if(x==nullCh || y==null)
+		if(x==null || y==null)
+			return null;
+		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
+	}
+	public static String getMousePosX(SMessage message){
+		return mMousePosX.getMatch(message.getMessageString());
+	}
+	public static String getMousePosY(SMessage message){
+		return mMousePosY.getMatch(message.getMessageString());
+	}
+	public static SVector getMousePos(SMessage message){
+		String x = getMousePosX(message);
+		String y = getMousePosY(message);
+		if(x==null || y==null)
 			return null;
 		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
 	}

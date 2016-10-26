@@ -34,6 +34,7 @@ public class SCommunicationHandler {
 		nodes = Collections.synchronizedList(new ArrayList<SNode>());
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
+		entitylock = new Object();
 	}
 	
 	public SNode getLocalNode(){
@@ -80,6 +81,7 @@ public class SCommunicationHandler {
 			List<SMessage> messages = new ArrayList<SMessage>(5);
 			int i = 0;
 			for(SMessage message: EntityMessages){
+				
 				if(i<maxLength){
 					if(message.getId().equals(entity.getId())){
 						messages.add(message);

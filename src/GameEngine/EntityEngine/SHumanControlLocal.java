@@ -25,17 +25,18 @@ public class SHumanControlLocal extends SHumanControl{
 			if (setKeyTo("D", true)) command  = command+"PD;";
 		}else if (setKeyTo("D", false)) command  = command+"RD;";
 		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			if (setKeyTo("W", true)) command  = command+"PD;";
-		}else if (setKeyTo("W", false)) command  = command+"RD;";
+			if (setKeyTo("W", true)) command  = command+"PW;";
+		}else if (setKeyTo("W", false)) command  = command+"RW;";
 		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
 			if (setKeyTo("S", true)) command  = command+"PS;";
 		}else if (setKeyTo("S", false)) command  = command+"RS;";
 		
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
+		
 		Owner.setAimLookDir(new SVector(M_x-Specifications.WindowWidth/2,
 				M_y-Specifications.WindowHeight/2));
-		
+		command += "mp;"+Owner.getAimLookDir().getString()+";";
 		super.Think();
 		if (command.length()>0){
 			SMessage message = new SMessage(Owner.getId(), "CLIIN", command);

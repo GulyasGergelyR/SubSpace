@@ -1,5 +1,7 @@
 package testScripts;
 
+import java.util.Locale;
+
 import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessagePatterns;
 
@@ -12,6 +14,8 @@ public class TestScript1 {
 		long l = Long.parseUnsignedLong("9223372036854775807")*2;
 		System.out.println(Long.toUnsignedString(l));
 		System.out.println(Integer.signum(-10));
+		
+		System.out.println(String.format(Locale.ROOT,"%.2f;%.2f", 10f,123.1234f));
 	}
 	private static void test1(){
 		System.out.println("-------------------test1-------------------------");
