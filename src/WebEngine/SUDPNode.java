@@ -69,12 +69,12 @@ public class SUDPNode {
 					running = false;
 					break;
 				}
-                System.out.println("start parsing message...");
+                //System.out.println("start parsing message...");
                 communicationHandler.ParseMessageFromDatagramPacket(receivePacket);
                 // TODO Remove junk below
-                String sentence = new String( receivePacket.getData());
-                if(sentence.length()>0)
-                	System.out.println("RECEIVED: " + sentence);
+                //String sentence = new String( receivePacket.getData());
+                //if(sentence.length()>0)
+                //	System.out.println("RECEIVED: " + sentence);
             }
 		}
 	}

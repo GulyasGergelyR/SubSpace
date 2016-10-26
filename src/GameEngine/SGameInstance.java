@@ -5,13 +5,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import GameEngine.EntityEngine.SHumanControl;
+import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SMessage;
+import WebEngine.ComEngine.SMessageParser;
 
 public class SGameInstance {
 	private List<SEntity> Entities = new ArrayList<SEntity>();
@@ -81,20 +83,26 @@ public class SGameInstance {
 	}
 	
 	public void UpdateEntities(){
-		if(Entities.size()>0)
+		if(Entities.size()>0){
+			int maxLength = SMain.getCommunicationHandler().getEntityMessageLength();
 			for(SEntity entity : Entities){
+				for(SMessage message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
+					SMessageParser.ParseEntityMessage(message, entity);
+				}
 				entity.update();
 			}
+		}
+			
 	}
 	
-	public void CheckServerMessages2(){
+	public void CheckEntityMessages(){
 		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
 		// Check Entity messages (server do not receive Obj message, yet)
 		int current_length = communicationHandler.getEntityMessageLength();
 		int i = 0;
 		while(i<current_length){
 			SMessage message = communicationHandler.popEntityMessage();
-			if(message.getCommandName().equals("ENTIN")){  // Entity input - user event
+			if(message.getCommandName().equals("CLIIN")){  // Client input
 				
 			}
 			i++;

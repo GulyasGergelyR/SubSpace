@@ -38,7 +38,7 @@ public class SHumanControlLocal extends SHumanControl{
 		
 		super.Think();
 		if (command.length()>0){
-			SMessage message = new SMessage(Owner.getId(), "ENTIN", command);
+			SMessage message = new SMessage(Owner.getId(), "CLIIN", command);
 			SMain.getCommunicationHandler().SendMessage(message);
 		}
 	}

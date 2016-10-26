@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import GameEngine.GeomEngine.SVector;
+
 public abstract class SMessagePatterns {
 	
 	static String nullCh = new String(new byte[1])+"*";
@@ -90,11 +92,25 @@ public abstract class SMessagePatterns {
 	public static String getPosY(SMessage message){
 		return mPosY.getMatch(message.getMessageString());
 	}
+	public static SVector getPos(SMessage message){
+		String x = getPosX(message);
+		String y = getPosY(message);
+		if(x==nullCh || y==null)
+			return null;
+		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
+	}
 	public static String getLookDirX(SMessage message){
 		return mLookDirX.getMatch(message.getMessageString());
 	}
 	public static String getLookDirY(SMessage message){
 		return mLookDirY.getMatch(message.getMessageString());
+	}
+	public static SVector getLookDir(SMessage message){
+		String x = getLookDirX(message);
+		String y = getLookDirY(message);
+		if(x==nullCh || y==null)
+			return null;
+		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
 	}
 	public static String getMoveDirX(SMessage message){
 		return mMoveDirX.getMatch(message.getMessageString());
@@ -102,11 +118,25 @@ public abstract class SMessagePatterns {
 	public static String getMoveDirY(SMessage message){
 		return mMoveDirY.getMatch(message.getMessageString());
 	}
+	public static SVector getMoveDir(SMessage message){
+		String x = getMoveDirX(message);
+		String y = getMoveDirY(message);
+		if(x==nullCh || y==null)
+			return null;
+		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
+	}
 	public static String getAcclDirX(SMessage message){
 		return mAcclDirX.getMatch(message.getMessageString());
 	}
 	public static String getAcclDirY(SMessage message){
 		return mAcclDirY.getMatch(message.getMessageString());
+	}
+	public static SVector getAcclDir(SMessage message){
+		String x = getAcclDirX(message);
+		String y = getAcclDirY(message);
+		if(x==nullCh || y==null)
+			return null;
+		return new SVector(Float.parseFloat(x),Float.parseFloat(y));
 	}
 	// Ping Message
 	public static String getPingCommandTime(SMessage message){

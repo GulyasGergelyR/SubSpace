@@ -10,9 +10,10 @@ public final class Specifications {
 	public static final int WindowWidth = 1280;
 	public static final int WindowHeight = 768;
 	
-	public static final List<String> EntityCommands = Arrays.asList("ENTIN","ENTUP","ENTDE");
+	public static final List<String> EntityCommands = Arrays.asList("CLIIN","ENTUP","ENTDE");
 	public static final List<String> ObjectCommands = Arrays.asList("OBJCR","OBJUP","OBJDE");
-	public static final List<String> ServerCommands = Arrays.asList("CNNCL","CNNAP","CNNNA","DSCCL","PNGRQ","PNGAN");
+	public static final List<String> ServerCommands = Arrays.asList("CNNCL","CNNAP","CNNNA",
+																	"DSCCL","PNGRQ","PNGAN");
 	public static final List<String> PingCommands = Arrays.asList("PNGRQ","PNGAN");
 	public static final List<String> ComCommands = new ArrayList<>(EntityCommands.size()+
 												ObjectCommands.size()+ServerCommands.size());

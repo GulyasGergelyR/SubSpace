@@ -147,7 +147,7 @@ public class SMain {
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
-			//gameInstance.CheckClientMessages();
+			
 			communicationHandler.RequestPingDataFromClients();
 			gameInstance.UpdateEntities();
 			//write outputs

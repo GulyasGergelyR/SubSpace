@@ -25,7 +25,7 @@ public class SNode {
 		this.IPAddress = IPAddress;
 		//this.port = port;
 		this.Id = UUID.randomUUID();
-		this.player = null;
+		this.player = new SPlayer(this, "noname");
 	}
 
 	public InetAddress getIPAddress() {

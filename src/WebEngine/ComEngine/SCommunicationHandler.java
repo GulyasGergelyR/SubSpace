@@ -28,19 +28,12 @@ public class SCommunicationHandler {
 	
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
+	private Object entitylock;
 	
 	public SCommunicationHandler(){
 		nodes = Collections.synchronizedList(new ArrayList<SNode>());
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
-	}
-	
-	public void CloseUDPNode(){
-		if(localNode.getState().equals(NodeState.Connected)){
-			DisconnectFromServer();
-		}
-		if (udpNode != null)
-			udpNode.Close();
 	}
 	
 	public SNode getLocalNode(){
@@ -50,10 +43,69 @@ public class SCommunicationHandler {
 		this.localNode = localNode;
 	}
 	
+	public SNode getNodeById(UUID Id){
+		synchronized (nodes) {
+			for(SNode node : nodes){
+				if(node.getId().equals(Id)){
+					return node;
+				}
+			}
+		}
+		return null;
+	}
+	public List<SNode> getNodes(){
+		synchronized (nodes){
+			return nodes;
+		}
+	}
+	private void addEntityMessage(SMessage message){
+		synchronized (entitylock) {
+			EntityMessages.add(message);
+		}
+	}
+	public int getEntityMessageLength(){
+		return EntityMessages.size();
+	}
+	public int getObjectMessageLength(){
+		return ObjectMessages.size();
+	}
+	public SMessage popEntityMessage(){
+		return EntityMessages.pop();
+	}
+	public SMessage popObjectMessage(){
+		return ObjectMessages.pop();
+	}
+	public List<SMessage> getEntityMessagesForEntity(SEntity entity, int maxLength){
+		synchronized (entitylock) {
+			List<SMessage> messages = new ArrayList<SMessage>(5);
+			int i = 0;
+			for(SMessage message: EntityMessages){
+				if(i<maxLength){
+					if(message.getId().equals(entity.getId())){
+						messages.add(message);
+					}
+					i++;
+				}else break;
+				
+			}
+			EntityMessages.removeAll(messages);
+			return messages;
+		}
+		
+	}
+	
+	////////////////////////UDPNode\\\\\\\\\\\\\\\\\\\\\\
 	public UDPNodeRole getUDPNodeRole(){
 		return udpNodeRole;
 	}
 	
+	public void CloseUDPNode(){
+		if(localNode.getState().equals(NodeState.Connected)){
+			DisconnectFromServer();
+		}
+		if (udpNode != null)
+			udpNode.Close();
+	}
 	public void createUDPNodeAsClient(int receivePort, int transmitPort){
 		udpNodeRole = UDPNodeRole.Client;
 		createUDPNode(receivePort, transmitPort);
@@ -77,6 +129,7 @@ public class SCommunicationHandler {
 		}
 	}
 	
+	////////////////////////Connect-Disconnect\\\\\\\\\\\\\\\\\\\\\\
 	public void ConnectToServer(SNode server){
 		udpNodeRole = UDPNodeRole.Client;
 		this.server = server;
@@ -89,6 +142,8 @@ public class SCommunicationHandler {
 		SMessage message = new SMessage(localNode.getId(), "DSCCL", "");
 		udpNode.SendMessage(message, server);
 	}
+	
+	/////////////////////////////Ping\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void RequestPingDataFromClients(){
 		synchronized (nodes) {
 			for(SNode node : nodes){
@@ -106,6 +161,8 @@ public class SCommunicationHandler {
 		}
 		udpNode.SendMessage(message, client);
 	}
+	
+	////////////////////////////Message\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void SendMessage(SMessage message){
 		if(udpNodeRole.equals(UDPNodeRole.Client)){
 			if (localNode.getState().equals(NodeState.Connected))
@@ -127,41 +184,66 @@ public class SCommunicationHandler {
 		}
 	}
 	
-	
+	/////////////////////////////Parsing\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
 		byte[] input = receivePacket.getData();
 		SMessage message = new SMessage(input);
-		System.out.println("parsing message...");
+		//System.out.println("parsing message...");
 		if(message.isValid()){
 			String command = message.getCommandName();
 			
 			////////////////////////SERVER\\\\\\\\\\\\\\\\\\\\\\
 			if(udpNodeRole.equals(UDPNodeRole.Server)){
-				if (command.equals("CNNCL")){ //connect client
+				if (command.equals("CNNCL")){ 		//connect client
 					ParseConnectCommand(receivePacket, message);
 				}
-				else if (command.equals("DSCCL")){ //disconnect client
+				else if (command.equals("DSCCL")){ 	//disconnect client
 					ParseDisconnectCommand(message);
 				}
-				else if (command.equals("PNGAN")){ //ping answer from client
+				else if (command.equals("PNGAN")){ 	//ping answer from client
 					ParsePingAnswer(message);
 				}
+				else if (command.equals("CLIIN")){ 	//Client input (pressed key, mouse click)
+					addEntityMessage(message);
+				}
+				else{
+					System.out.println("Server received unknown message: \n\t"+new String(input));
+				}
+				
 			}
 			////////////////////////CLIENT\\\\\\\\\\\\\\\\\\\\\\
 			else if(udpNodeRole.equals(UDPNodeRole.Client)){
-				if (command.equals("CNNNA")){ //connect not allowed
+				if (command.equals("CNNNA")){ 		//connection is not allowed
 					ParseConnectNotAllowedCommand(message);
 				}
-				else if (command.equals("CNNAP")){ //connect approved
+				else if (command.equals("CNNAP")){ 	//connection is approved
 					ParseConnectApprovedCommand(message);
 				}
-				else if (command.equals("PNGRQ")){ //ping request from server
+				else if (command.equals("PNGRQ")){ 	//ping request from server
 					ParsePingRequest(message);
+				}
+				else if (command.equals("ENTUP")){ 	//Server updates Entity information
+					addEntityMessage(message);
+				}
+				else if (command.equals("ENTDE")){ 	//Server deleted an Entity
+					addEntityMessage(message);
+				}
+				else if (command.equals("OBJCR")){ 	//Server created Object
+					ObjectMessages.add(message);
+				}
+				else if (command.equals("OBJUP")){ 	//Server updates Object information
+					ObjectMessages.add(message);
+				}
+				else if (command.equals("OBJDE")){ 	//Server deleted Object
+					ObjectMessages.add(message);
+				}
+				else{
+					System.out.println("Received unknown message: \n\t"+new String(input));
 				}
 			}
 		} else{
 			//TODO Send back error
-			System.out.println("Received invalid message: \n\t"+new String(input));
+			System.out.println("Client received invalid message: \n\t"+new String(input));
 		}
 	}
 	
@@ -170,7 +252,7 @@ public class SCommunicationHandler {
 		if(client==null){
 			String name = SMessagePatterns.getConnectCommandName(message);
 			if(name == null){
-				System.out.println("User tried to join with invalid name: "+message.getContent());
+				System.out.println("Client tried to join with invalid name: "+message.getContent());
 				return;
 			}
 			else{
@@ -178,7 +260,7 @@ public class SCommunicationHandler {
 						message.getId(), name);
 				synchronized (nodes) {
 					nodes.add(client);
-					System.out.println("User added: "+client.getName());
+					System.out.println("Client added: "+client.getName());
 				}
 				//TODO add normal entity creation
 				SEntity entity = new SEntity();
@@ -191,21 +273,21 @@ public class SCommunicationHandler {
 				RequestPingDataFromClient(client);
 			}
 		}else{
-			System.out.println("User already joined: "+client.getName());
+			System.out.println("Client already joined: "+client.getName());
 		}
 	}
 	
 	private void ParseDisconnectCommand(SMessage message){
 		SNode client = getNodeById(message.getId());
 		if(client==null){
-			System.out.println("User who wants to disconnect was not found: "+message.getId());
+			System.out.println("Client who wants to disconnect was not found: "+message.getId());
 		}else{
 			Thread deleteNodeThread = new Thread(){
 				@Override
 				public void run() {
 					synchronized (nodes) {
 						nodes.remove(client);
-						System.out.println("size of clients: "+nodes.size());
+						System.out.println("Client removed: "+client.getName());
 					}
 					//TODO look here if there is an entity nullpointer error
 					SMain.getGameInstance().removeEntity(client.getId());
@@ -239,37 +321,10 @@ public class SCommunicationHandler {
 			long nanoTime = Long.parseUnsignedLong(time);
 			long ping = SServerTimer.GetNanoTime()-nanoTime;
 			client.setPing((SServerTimer.GetNanoTime()-nanoTime)/1000/1000);
-			System.out.println("ping: "+ping/1000/1000);
-		}
-	}
-	private SNode getNodeById(UUID Id){
-		synchronized (nodes) {
-			for(SNode node : nodes){
-				if(node.getId().equals(Id)){
-					return node;
-				}
-			}
-		}
-		return null;
-	}
-	public List<SNode> getNodes(){
-		synchronized (nodes){
-			return nodes;
+			//System.out.println("ping: "+ping/1000/1000);
 		}
 	}
 	
-	public int getEntityMessageLength(){
-		return EntityMessages.size();
-	}
-	public int getObjectMessageLength(){
-		return ObjectMessages.size();
-	}
-	public SMessage popEntityMessage(){
-		return EntityMessages.pop();
-	}
-	public SMessage popObjectMessage(){
-		return ObjectMessages.pop();
-	}
 	
 	
 }

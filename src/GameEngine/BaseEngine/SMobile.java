@@ -93,19 +93,23 @@ public abstract class SMobile extends SObject{
 		return moveDir;
 	}
 	public void setMoveDir(SVector moveDir) {
-		if (moveDir.l()>maxSpeed){
-			moveDir = moveDir.setLength(maxSpeed);
+		if(moveDir!=null){
+			if (moveDir.l()>maxSpeed){
+				moveDir = moveDir.setLength(maxSpeed);
+			}
+			this.moveDir = moveDir;
 		}
-		this.moveDir = moveDir;
 	}
 	public SVector getAcclDir() {
 		return acclDir;
 	}
 	public void setAcclDir(SVector acclDir) {
-		if (acclDir.l()>maxAcceleration){
-			acclDir = acclDir.setLength(maxAcceleration);
+		if(acclDir!=null){
+			if (acclDir.l()>maxAcceleration){
+				acclDir = acclDir.setLength(maxAcceleration);
+			}
+			this.acclDir = acclDir;
 		}
-		this.acclDir = acclDir;
 	}
 	public float getRotAcceleration() {
 		return rotAcceleration;
