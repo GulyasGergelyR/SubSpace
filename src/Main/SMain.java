@@ -18,6 +18,7 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
@@ -31,6 +32,7 @@ import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -90,6 +92,15 @@ public class SMain {
 		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
 		communicationHandler = new SCommunicationHandler();
+		
+		SEntity Ghost = new SEntity();
+		Ghost.setId(UUID.fromString("06732ac0-51c6-4ba1-a45e-41e82d107847"));
+		Ghost.setController(new SHumanControl(Ghost));
+		gameInstance.addEntity(Ghost);
+	}
+	
+	private static void InitGhost(){
+		
 	}
 	
 	private static void InitServer(){
