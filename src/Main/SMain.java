@@ -92,15 +92,13 @@ public class SMain {
 		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
 		communicationHandler = new SCommunicationHandler();
-		
+	}
+	
+	private static void InitGhost(){
 		SEntity Ghost = new SEntity();
 		Ghost.setId(UUID.fromString("06732ac0-51c6-4ba1-a45e-41e82d107847"));
 		Ghost.setController(new SHumanControl(Ghost));
 		gameInstance.addEntity(Ghost);
-	}
-	
-	private static void InitGhost(){
-		
 	}
 	
 	private static void InitServer(){
