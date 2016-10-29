@@ -8,12 +8,15 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 import WebEngine.ComEngine.SMessage;
+import WebEngine.ComEngine.SCommunicationHandler.UDPNodeRole;
 
 public class SHumanControlLocal extends SHumanControl{
 	
 	public SHumanControlLocal(SMobile mobile) {
 		super(mobile);
 	}
+	
+	public void stuff(){}
 	
 	@Override
 	protected void Think() {
@@ -37,7 +40,10 @@ public class SHumanControlLocal extends SHumanControl{
 		Owner.setAimLookDir(new SVector(M_x-Specifications.WindowWidth/2,
 				M_y-Specifications.WindowHeight/2));
 		command += "mp;"+Owner.getAimLookDir().getString()+";";
-		super.Think();
+		
+		//if(SMain.getCommunicationHandler().getUDPNodeRole().equals(UDPNodeRole.Server))
+		//	super.Think();
+		
 		if (command.length()>0){
 			SMessage message = new SMessage(Owner.getId(), "CLIIN", command);
 			SMain.getCommunicationHandler().SendMessage(message);

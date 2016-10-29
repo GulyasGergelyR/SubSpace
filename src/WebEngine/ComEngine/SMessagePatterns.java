@@ -8,6 +8,8 @@ import GameEngine.GeomEngine.SVector;
 
 public abstract class SMessagePatterns {
 	
+	//TODO rewrite everything... bitparsing not string...
+	
 	static String nullCh = new String(new byte[1])+"*";
 	
 	static String pId = "([0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12});";
@@ -44,6 +46,8 @@ public abstract class SMessagePatterns {
 	//static SMatcher mPingCommand = new SMatcher(pCommandHead+"([0-9]{1,20});([0-9]{0,3});?"+nullCh, 0);
 	static SMatcher mPingCommandTime = new SMatcher(";([0-9]{1,20});([0-9]{0,3});?", 1);
 	static SMatcher mPingCommandPrevPing = new SMatcher(";([0-9]{1,20});([0-9]{1,3});", 2);
+	
+	int i1;
 	
 	//IsValid
 	public static boolean IsMessageValid(byte[] input){

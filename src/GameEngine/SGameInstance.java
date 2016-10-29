@@ -13,6 +13,7 @@ import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
+import WebEngine.ComEngine.SCommunicationHandler.UDPNodeRole;
 import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessageParser;
 
@@ -94,6 +95,7 @@ public class SGameInstance {
 					else if(message.getCommandName().equals("CLIIN"))
 						SMessageParser.ParseClientInputMessage(message, entity);
 				}
+				
 				entity.update();
 			}
 		}

@@ -119,6 +119,7 @@ public class SMain {
 	private static void InitClient(){
 		Init();
 		SNode node;
+		SNode server;
 		SPlayer player;
 		SEntity entity;
 		try {
@@ -131,7 +132,9 @@ public class SMain {
 			gameInstance.setLocalPlayer(player);
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
-			communicationHandler.ConnectToServer(node);
+			byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 103};
+			server = new SNode(InetAddress.getByAddress(ipAddr), 0);
+			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

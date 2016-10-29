@@ -22,6 +22,7 @@ import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.EntityState;
+import WebEngine.ComEngine.SMessagePatterns;
 
 //TODO create SDrawObject and replace texture
 
@@ -52,6 +53,8 @@ public class SRenderer {
 			}
 		}
 	}
+	
+	
 	
 	private void setFollowLocalPlayer(boolean follow){
 		this.followLocalPlayer = follow;
