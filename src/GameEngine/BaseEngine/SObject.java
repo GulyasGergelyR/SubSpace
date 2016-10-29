@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import GameEngine.GeomEngine.SHitbox;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 
@@ -15,7 +16,8 @@ public abstract class SObject {
 	protected UUID Id = UUID.randomUUID();
 	protected boolean posUpdated;
 	
-	// TODO add hitbox
+	// TODO
+	protected SHitbox hitbox;
 
 	//Initialize
 	public SObject()
@@ -73,6 +75,12 @@ public abstract class SObject {
 	}
 	public void setScale(float scale) {
 		this.scale = scale;
+	}
+	public SHitbox getHitbox() {
+		return hitbox;
+	}
+	public void setHitbox(SHitbox hitbox) {
+		this.hitbox = hitbox;
 	}
 	public boolean IsPosUpdated(){
 		return posUpdated;
