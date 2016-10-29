@@ -49,5 +49,4 @@ public class SHumanControl extends SControl{
 		else			{if (Math.abs(angle)<180.0f) rotdir = -1; else rotdir = 1;}
 		Owner.setRotAcceleration(Owner.getMaxRotAcceleration()*rotdir);
 	}
-	
 }

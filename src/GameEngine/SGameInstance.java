@@ -64,15 +64,19 @@ public class SGameInstance {
 	}
 	
 	public void addEntity(SEntity entity){
-		Entities.add(entity);
+		synchronized (Entities) {
+			Entities.add(entity);
+		}
 	}
 	public boolean removeEntity(UUID Id){
-		SEntity entity = getEntityById(Id);
-		if (entity != null){
-			Entities.remove(entity);
-			return true;
+		synchronized (Entities) {
+			SEntity entity = getEntityById(Id);
+			if (entity != null){
+				Entities.remove(entity);
+				return true;
+			}
+			else return false;
 		}
-		else return false;
 	}
 	
 	protected SEntity getEntityById(UUID Id){
@@ -98,6 +102,13 @@ public class SGameInstance {
 				
 				entity.update();
 			}
+			//get rest of the messages
+			for(SMessage message : SMain.getCommunicationHandler().getEntityMessages()){
+				if(message.getCommandName().equals("ENTCR"))
+					SMessageParser.ParseEntityCreateMessage(message);
+			}
+			
+			
 		}
 	}
 	
@@ -105,13 +116,16 @@ public class SGameInstance {
 		SendEntityData();
 	}
 	private void SendEntityData(){
-		for(SEntity entity: Entities){
-			SMessage message = new SMessage(entity.getId(), "ENTUP", "");
-			message.addContent("p;"+entity.getPos().getString());
-			message.addContent("md;"+entity.getMoveDir().getString());
-			message.addContent("ld;"+entity.getLookDir().getString());
-			message.addContent("ad;"+entity.getAcclDir().getString());
-			SMain.getCommunicationHandler().SendMessage(message);
+		synchronized (Entities) {
+			for(SEntity entity: Entities){
+				SMessage message = new SMessage(entity.getId(), "ENTUP", "");
+				message.addContent("p;"+entity.getPos().getString());
+				message.addContent("md;"+entity.getMoveDir().getString());
+				message.addContent("ld;"+entity.getLookDir().getString());
+				message.addContent("ad;"+entity.getAcclDir().getString());
+				SMain.getCommunicationHandler().SendMessage(message);
+			}
+			
 		}
 	}
 	

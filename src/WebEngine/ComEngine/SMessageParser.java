@@ -1,10 +1,13 @@
 package WebEngine.ComEngine;
 
 import java.util.LinkedList;
+import java.util.UUID;
 
 import GameEngine.EntityEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
+import Main.SMain;
 
 
 public class SMessageParser {
@@ -21,6 +24,19 @@ public class SMessageParser {
 		entity.setAcclDir(SMessagePatterns.getAcclDir(message));
 		entity.setPosUpdated();
 		
+		return true;
+	}
+	public static boolean ParseEntityCreateMessage(SMessage message){
+		SEntity entity = new SEntity();
+		entity.setController(new SHumanControl(entity));
+		entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
+		entity.setPos(SMessagePatterns.getPos(message));
+		entity.setLookDir(SMessagePatterns.getLookDir(message));
+		entity.setMoveDir(SMessagePatterns.getMoveDir(message));
+		entity.setAcclDir(SMessagePatterns.getAcclDir(message));
+		entity.setPosUpdated();
+		
+		SMain.getGameInstance().addEntity(entity);
 		return true;
 	}
 	public static boolean ParseClientInputMessage(SMessage message, SEntity entity){

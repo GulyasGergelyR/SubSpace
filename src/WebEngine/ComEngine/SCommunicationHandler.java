@@ -7,8 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SHumanControl;
+import GameEngine.GeomEngine.SVector;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPNode;
@@ -92,6 +93,11 @@ public class SCommunicationHandler {
 			}
 			EntityMessages.removeAll(messages);
 			return messages;
+		}
+	}
+	public List<SMessage> getEntityMessages(){
+		synchronized (entitylock) {
+			return EntityMessages;
 		}
 		
 	}
@@ -185,6 +191,14 @@ public class SCommunicationHandler {
 			System.out.println("Trying to send to itself");
 		}
 	}
+	public void SendMessageExceptToNode(SMessage message, SNode notNode){
+		synchronized (nodes) {
+			for(SNode node : nodes){
+				if(!node.equals(notNode))
+					udpNode.SendMessage(message, node);
+			}
+		}
+	}
 	
 	/////////////////////////////Parsing\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
@@ -225,6 +239,9 @@ public class SCommunicationHandler {
 					ParsePingRequest(message);
 				}
 				else if (command.equals("ENTUP")){ 	//Server updates Entity information
+					addEntityMessage(message);
+				}
+				else if (command.equals("ENTCR")){ 	//Server updates Entity information
 					addEntityMessage(message);
 				}
 				else if (command.equals("ENTDE")){ 	//Server deleted an Entity
@@ -272,7 +289,14 @@ public class SCommunicationHandler {
 				SMain.getGameInstance().addEntity(entity);
 				SMessage connectallowed = new SMessage(client.getId(),"CNNAP","");
 				udpNode.SendMessage(connectallowed, client);
-				RequestPingDataFromClient(client);
+				//RequestPingDataFromClient(client);
+				//Send to other clients
+				SMessage createEntity = new SMessage(client.getId(),"ENTCR","");
+				createEntity.addContent("p;"+(new SVector(251,250)).getString());
+				createEntity.addContent("md;"+(new SVector(0,0)).getString());
+				createEntity.addContent("ld;"+(new SVector(0,0)).getString());
+				createEntity.addContent("ad;"+(new SVector(0,0)).getString());
+				SendMessageExceptToNode(createEntity, client);
 			}
 		}else{
 			System.out.println("Client already joined: "+client.getName());
