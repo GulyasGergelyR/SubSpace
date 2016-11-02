@@ -75,7 +75,6 @@ public class SMain {
 		else{
 			try {
 				InitClient();
-				
 				StartClient();
 			} catch (Exception e) {
 				if (communicationHandler != null)
