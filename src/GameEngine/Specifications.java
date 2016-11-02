@@ -6,7 +6,7 @@ import java.util.List;
 
 public final class Specifications {
 	public static final int FPS_M = 60;
-	public static final int DataLength = 128;
+	public static final int DataLength = 32;
 	public static final int WindowWidth = 1280;
 	public static final int WindowHeight = 768;
 	
