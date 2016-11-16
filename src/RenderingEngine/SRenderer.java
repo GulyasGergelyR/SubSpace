@@ -20,8 +20,8 @@ import org.newdawn.slick.opengl.Texture;
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
 import GameEngine.Specifications;
+import GameEngine.BaseEngine.SObject.OjectState;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SEntity.EntityState;
 
 //TODO create SDrawObject and replace texture
 
@@ -47,7 +47,7 @@ public class SRenderer {
 	private void DrawEntities(){
 		List<SEntity> Entities = gameInstance.getEntities();
 		for (SEntity entity : Entities){
-			if (entity.getState() == EntityState.Active){
+			if (entity.getObjectState() == OjectState.Active){
 				Draw(entity.getDrawables());
 			}
 		}
@@ -60,8 +60,8 @@ public class SRenderer {
 	private void FollowLocalPlayer(){
 		SPlayer localPlayer = gameInstance.getLocalPlayer();
 		SEntity entity = localPlayer.getEntity();
-		if(entity.getState().equals(EntityState.Active) 
-				|| entity.getState().equals(EntityState.Ghost)){
+		if(entity.getObjectState().equals(OjectState.Active) 
+				|| entity.getObjectState().equals(OjectState.Ghost)){
 			float x = entity.getPos().getX();
 			float y = entity.getPos().getY();
 			glMatrixMode(GL_PROJECTION);

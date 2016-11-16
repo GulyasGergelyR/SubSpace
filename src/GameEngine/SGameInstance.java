@@ -29,7 +29,6 @@ public class SGameInstance {
 	
 	public SGameInstance(){
 		FPS = new SFPS();
-		backGround.setTexture("res/object/background/bg1.png");
 	}
 	
 	public List<SEntity> getEntities(){

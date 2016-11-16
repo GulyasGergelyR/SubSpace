@@ -14,5 +14,9 @@ public class SHitboxSpherical extends SHitbox {
 	public void setRadius(float radius) {
 		this.radius = radius;
 	}
-	
+	@Override
+	public SHitboxSpherical SHCopy(SObject owner) {
+		return new SHitboxSpherical(owner, this.radius);
+	}
+		
 }
