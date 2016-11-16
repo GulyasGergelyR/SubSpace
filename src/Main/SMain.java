@@ -126,12 +126,12 @@ public class SMain {
 		SEntity entity;
 		try {
 			node = new SNode(InetAddress.getLocalHost(), 0);
-			player = new SPlayer(node, "Gergo");
-			entity = new SEntity();
-			player.setEntity(entity);
+			//player = new SPlayer(node, "Gergo");
+			//entity = new SEntity();
+			//player.setEntity(entity);
 			//TODO Id sharing, make it normal
-			entity.setId(node.getId());
-			gameInstance.setLocalPlayer(player);
+			//entity.set(node.getId());
+			//gameInstance.setLocalPlayer(player);
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
 			byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 103};

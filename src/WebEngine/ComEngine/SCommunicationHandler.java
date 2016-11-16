@@ -14,6 +14,7 @@ import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPNode;
 import WebEngine.ComEngine.SNode.ConnectionState;
+import WebEngine.MessageEngine.SM;
 
 public class SCommunicationHandler {
 	private List<SNode> nodes;
@@ -27,15 +28,15 @@ public class SCommunicationHandler {
 		Server, Client 
 	}
 	
-	private LinkedList<SMessage> ObjectMessages;
-	private LinkedList<SMessage> EntityMessages;
+	private LinkedList<SM> ObjectMessages;
+	private LinkedList<SM> EntityMessages;
 	private Object entitylock;
 	private Object objectlock;
 	
 	public SCommunicationHandler(){
 		nodes = Collections.synchronizedList(new ArrayList<SNode>());
-		ObjectMessages = new LinkedList<SMessage>();
-		EntityMessages = new LinkedList<SMessage>();
+		ObjectMessages = new LinkedList<SM>();
+		EntityMessages = new LinkedList<SM>();
 		entitylock = new Object();
 		objectlock = new Object();
 	}
@@ -47,7 +48,7 @@ public class SCommunicationHandler {
 		this.localNode = localNode;
 	}
 	
-	public SNode getNodeById(UUID Id){
+	public SNode getNodeById(SId Id){
 		synchronized (nodes) {
 			for(SNode node : nodes){
 				if(node.getId().equals(Id)){
@@ -294,7 +295,7 @@ public class SCommunicationHandler {
 				//TODO add normal entity creation
 				SEntity entity = new SEntity();
             	entity.setController(new SHumanControl(entity));
-            	entity.setId(client.getId());
+            	entity.set(client.getId());
 				client.getPlayer().setEntity(entity);
 				SMain.getGameInstance().addEntity(entity);
 				SMessage connectallowed = new SMessage(client.getId(),"CNNAP","");

@@ -1,15 +1,13 @@
 package WebEngine.ComEngine;
 
-import java.util.Arrays;
-import java.util.UUID;
-
+import GameEngine.SId;
 import GameEngine.Specifications;
 
 @Deprecated
 public class SMessage {
 	protected byte[] rawData;
 	protected String messageString;
-	protected int Id;
+	protected SId Id;
 	protected String commandName;
 	protected String content;
 	protected boolean valid;
@@ -25,7 +23,7 @@ public class SMessage {
 		}
 	}
 	
-	public SMessage(int Id, String commandName, String content){
+	public SMessage(SId Id, String commandName, String content){
 		this.Id = Id;
 		this.commandName = commandName;
 		this.content = content;
@@ -40,7 +38,7 @@ public class SMessage {
 		return messageString;
 	}
 	
-	public int getId() {
+	public SId getId() {
 		return Id;
 	}
 	public boolean isValid(){
@@ -61,7 +59,7 @@ public class SMessage {
 		this.content += s +";";
 	}
 	public byte[] createRawData(){
-		byte[] temp = concat((Integer.toString(Id)+";").getBytes(),(commandName+";").getBytes());
+		byte[] temp = concat((Integer.toString(Id.get())+";").getBytes(),(commandName+";").getBytes());
 		temp = concat(temp, content.getBytes());
 		if(temp.length<Specifications.DataLength){
 			temp = concat(temp, new byte[Specifications.DataLength-temp.length]);

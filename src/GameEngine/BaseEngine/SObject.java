@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import GameEngine.SId;
+import GameEngine.SIdentifiable;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 
-public abstract class SObject {
+public abstract class SObject extends SIdentifiable {
 	protected SVector pos;
 	protected SVector lookDir;
 	protected String texture;
 	protected float scale;
-	protected int Id = 0;
 	protected boolean posUpdated;
 	
 	// TODO add hitbox
@@ -20,26 +20,26 @@ public abstract class SObject {
 	//Initialize
 	public SObject()
 	{
+		super();
 		this.pos = new SVector();
 		this.lookDir = new SVector(1,0);
 		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 1.0f;
-		this.Id = SId.getNewId(this);
 	}
 	public SObject(SVector pos, SVector lookDir, String texture)
 	{
+		super();
 		this.pos = pos;
 		this.lookDir = lookDir;
-		this.Id = SId.getNewId(this);
 		this.scale = 1.0f;
 		this.texture = texture;
 	}
 	public SObject(SObject o)
 	{
+		super(o);
 		this.pos = o.pos;
 		this.lookDir = o.lookDir;
 		this.texture = o.texture;
-		this.Id = o.Id;
 	}
 	// Properties
 	public SVector getPos() {
@@ -49,11 +49,8 @@ public abstract class SObject {
 		if(pos!=null)
 			this.pos = pos;
 	}
-	public int getId() {
-		return Id;
-	}
-	public void setId(int id) {
-		Id = id;
+	public boolean equals(SObject o){
+		return this.Id.equals(o.Id);
 	}
 	public void setTexture(String s){
 		this.texture = s;

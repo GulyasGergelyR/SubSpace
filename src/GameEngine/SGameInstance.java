@@ -14,6 +14,7 @@ import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessageParser;
 
 public class SGameInstance {
+	private List<SPlayer> players = new ArrayList<SPlayer>();
 	private List<SEntity> Entities = new ArrayList<SEntity>();
 	private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
@@ -64,7 +65,7 @@ public class SGameInstance {
 			Entities.add(entity);
 		}
 	}
-	public boolean removeEntity(int Id){
+	public boolean removeEntity(SId Id){
 		synchronized (Entities) {
 			SEntity entity = getEntityById(Id);
 			if (entity != null){
@@ -75,7 +76,7 @@ public class SGameInstance {
 		}
 	}
 	
-	protected SEntity getEntityById(int Id){
+	protected SEntity getEntityById(SId Id){
 		for(SEntity entity : Entities){
 			if (entity.getId() == Id)
 				return entity;
