@@ -1,5 +1,6 @@
 package GameEngine.GeomEngine;
 
+import java.nio.ByteBuffer;
 import java.util.Locale;
 
 import org.omg.CORBA.PUBLIC_MEMBER;
@@ -77,6 +78,28 @@ public class SVector {
 		return(new SVector((float)(Math.cos(alpha)*x+Math.sin(alpha)*y),(float)(Math.sin(alpha)*(-x)+Math.cos(alpha)*y)));
 	}
 	
+	public void addToBufferAsBigVector(ByteBuffer buffer){
+		short f_x = (short)x;
+		short f_y = (short)y;
+		buffer.putShort(f_x);
+		buffer.putShort((short)((x-f_x)*10000));
+		buffer.putShort(f_y);
+		buffer.putShort((short)((y-f_y)*10000));
+	}
+	public void addToBufferAsSmallVector(ByteBuffer buffer){
+		if ((Math.abs(x) > 100)||(Math.abs(y)>100)){
+			this.norm().addToBufferAsSmallVector(buffer);
+			return;
+		}
+		short f_x = (byte)x;
+		short f_y = (byte)y;
+		buffer.putShort(f_x);
+		buffer.putShort((short)((x-f_x)*10000));
+		buffer.putShort(f_y);
+		buffer.putShort((short)((y-f_y)*10000));
+	}
+	
+	@Deprecated
 	public String getString(){
 		return String.format(Locale.ROOT,"%.2f;%.2f", x,y);
 	}

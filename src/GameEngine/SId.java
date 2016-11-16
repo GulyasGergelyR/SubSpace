@@ -34,5 +34,11 @@ public class SId {
 	public boolean equals(SId id){
 		return (this.Id == id.Id);
 	}
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return Integer.toString(Id);
+	}
+	
 	
 }

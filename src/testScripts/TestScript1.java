@@ -27,6 +27,8 @@ public class TestScript1 {
 		System.out.println(buffer.getShort(0));
 		for (byte b: data)
 			System.out.println(b);
+	
+		System.out.println((125.52432f-((byte)125.52432f))*10000);
 
 	}
 	private static void test1(){

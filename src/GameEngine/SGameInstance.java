@@ -9,17 +9,22 @@ import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
+import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessageParser;
 import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SGameInstance {
-	private List<SPlayer> players = new ArrayList<SPlayer>();
+	@Deprecated
 	private SPlayer localPlayer;
 	
-	private List<SEntity> Entities = new ArrayList<SEntity>();
-	private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
-	private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
+	//TODO decide whether to use player or entity array!
+	
+	private List<SPlayer> players = new ArrayList<SPlayer>();
+	private List<SEntity> entities = new ArrayList<SEntity>();
+	//private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
+	//private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
 	private SBackGround backGround = new SBackGround();
 	
 	private SFPS FPS;
@@ -31,7 +36,7 @@ public class SGameInstance {
 	}
 	
 	public List<SEntity> getEntities(){
-		return Entities;
+		return entities;
 	}
 	
 	public SFPS getFPS(){
@@ -66,36 +71,50 @@ public class SGameInstance {
 	}
 	
 	public void addEntity(SEntity entity){
-		synchronized (Entities) {
-			Entities.add(entity);
+		synchronized (entities) {
+			entities.add(entity);
 		}
 	}
-	public boolean removeEntity(SId Id){
-		synchronized (Entities) {
+	public void removeEntity(SId Id){
+		synchronized (entities) {
 			SEntity entity = getEntityById(Id);
 			if (entity != null){
-				Entities.remove(entity);
-				return true;
+				entities.remove(entity);
 			}
-			else return false;
+		}
+		synchronized (players) {
+			SPlayer player = getPlayerById(Id);
+			if (player != null){
+				players.remove(player);
+			}
 		}
 	}
 	
 	protected SEntity getEntityById(SId Id){
-		for(SEntity entity : Entities){
-			if (entity.getId() == Id)
+		for(SEntity entity : entities){
+			if (entity.equals(Id))
 				return entity;
 		}
 		System.out.println("Entity was not found, with Id: "+Id);
 		return null;
 	}
 	
+	protected SPlayer getPlayerById(SId Id){
+		for(SPlayer player : players){
+			if (player.equals(Id))
+				return player;
+		}
+		System.out.println("Player was not found, with Id: "+Id);
+		return null;
+	}
+	
+	
 	public void UpdateEntities(){
-		if(Entities.size()>0){
+		if(entities.size()>0){
 			int maxLength = SMain.getCommunicationHandler().getEntityMessageLength();
-			
-			for(SEntity entity : Entities){
-				for(SMessage message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
+			/*
+			for(SEntity entity : entities){
+				for(SM message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
 					if(message.getCommandName().equals("ENTUP"))
 						SMessageParser.ParseEntityUpdateMessage(message, entity);
 					else if(message.getCommandName().equals("CLIIN"))
@@ -105,10 +124,11 @@ public class SGameInstance {
 				entity.update();
 			}
 			//get rest of the messages
-			for(SMessage message : SMain.getCommunicationHandler().getEntityMessages()){
+			for(SM message : SMain.getCommunicationHandler().getEntityMessages()){
 				if(message.getCommandName().equals("ENTCR"))
 					SMessageParser.ParseEntityCreateMessage(message);
 			}
+			*/
 		}
 	}
 	
@@ -116,13 +136,9 @@ public class SGameInstance {
 		SendEntityData();
 	}
 	private void SendEntityData(){
-		synchronized (Entities) {
-			for(SEntity entity: Entities){
-				SMessage message = new SMessage(entity.getId(), "ENTUP", "");
-				message.addContent("p;"+entity.getPos().getString());
-				message.addContent("md;"+entity.getMoveDir().getString());
-				message.addContent("ld;"+entity.getLookDir().getString());
-				message.addContent("ad;"+entity.getAcclDir().getString());
+		synchronized (entities) {
+			for(SEntity entity: entities){
+				SM message = SMPatterns.getEntityUpdateMessage(entity);
 				SMain.getCommunicationHandler().SendMessage(message);
 			}
 		}
@@ -130,25 +146,62 @@ public class SGameInstance {
 	
 	public void CheckEntityMessages(){
 		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
-		// Check Entity messages (server do not receive Obj message, yet)
+		// Check Entity messages
 		int current_length = communicationHandler.getEntityMessageLength();
 		int i = 0;
-		while(i<current_length){
+		while(i < current_length){
 			SM message = communicationHandler.popEntityMessage();
-			if (true){  // Client input
-				
+			byte command = message.getCommandId();
+			if (SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){  // Client input
+				if (command == SMPatterns.CClientInput){ 	//Client input (pressed key, mouse moved, mouse click)
+					
+				}
+			}else{
+				if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
+					
+				}
+				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity
+					
+				}
+				else if (command == SMPatterns.CEntityDelete){ 	//Server deletes an Entity
+					
+				}
+				else if (command == SMPatterns.CObjectCreate){ 	//Server created Object
+					
+				}
+				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
+					
+				}
+				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
+					
+				}
 			}
 			i++;
 		}
 	}
 	
-	
-	public void CheckServerMessages(){
-		int current_length = ServerMessages.size();
+	public void CheckObjectMessages(){
+		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
+		// Check Object messages
+		int current_length = communicationHandler.getObjectMessageLength();
 		int i = 0;
-		while(i<current_length){
-			SM message = ServerMessages.poll();
-			
+		while(i < current_length){
+			SM message = communicationHandler.popObjectMessage();
+			byte command = message.getCommandId();
+			if (SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){  // Client input
+				
+			}else{
+				if (command == SMPatterns.CObjectCreate){ 	//Server created Object
+					
+				}
+				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
+					
+				}
+				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
+					
+				}
+			}
+			i++;
 		}
 	}
 }

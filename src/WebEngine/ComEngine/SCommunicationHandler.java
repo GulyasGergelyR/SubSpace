@@ -312,6 +312,7 @@ public class SCommunicationHandler {
 				//TODO add normal entity creation
 				SEntity entity = new SEntity(client.getPlayer());
 				SMain.getGameInstance().addEntity(entity);
+				SMain.getGameInstance().addPlayer(client.getPlayer());
 				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);
 				udpNode.SendMessage(connectallowed, client);
 				//RequestPingDataFromClient(client);
@@ -343,7 +344,7 @@ public class SCommunicationHandler {
 						nodes.remove(client);
 						System.out.println("Client removed: "+client.getName());
 					}
-					//TODO look here if there is an entity nullpointer error
+					//TODO look here if there is an entity nullpointer error - might have been fixed already
 					SMain.getGameInstance().removeEntity(client.getId());
 					//TODO add entity delete message:
 					/*

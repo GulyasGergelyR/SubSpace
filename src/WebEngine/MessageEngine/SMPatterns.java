@@ -2,8 +2,9 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
-import WebEngine.ComEngine.SNode;
+import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import WebEngine.ComEngine.SNode;
 
 public class SMPatterns {
 	//Message Patterns
@@ -53,17 +54,6 @@ public class SMPatterns {
 		float y =  buffer.get()+ buffer.getShort()/10000f;
 		return new SVector(x,y);
 	}
-	
-	private static byte[] getIdBytes(int id){
-		return ByteBuffer.allocate(2).putShort((short)id).array();
-	}
-	private static byte[] getShortBytes(short value){
-		return ByteBuffer.allocate(2).putShort(value).array();
-	}
-	private static byte[] getLongBytes(long value){
-		return ByteBuffer.allocate(8).putLong(value).array();
-	}
-	
 	public static SM getConnectToServerMessage(String nameString){
 		byte[] name = nameString.getBytes();
 		SM message = new SM();
@@ -104,6 +94,18 @@ public class SMPatterns {
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CConnectAllowed);
 		buffer.putShort((short)client.getId().get());
+		return message;
+	}
+	public static SM getEntityUpdateMessage(SEntity entity){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CEntityUpdate);
+		buffer.putShort((short)entity.getId().get());
+		// Add position
+		entity.getPos().addToBufferAsBigVector(buffer);
+		entity.getMoveDir().addToBufferAsBigVector(buffer);
+		entity.getLookDir().addToBufferAsBigVector(buffer);
+		entity.getAcclDir().addToBufferAsBigVector(buffer);
 		return message;
 	}
 }
