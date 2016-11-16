@@ -279,19 +279,22 @@ public class SCommunicationHandler {
 	
 	private void ParseConnectCommand(DatagramPacket receivePacket, SM message){
 		ByteBuffer buffer = message.getBuffer();
-		int id = SMPatterns.parseId(buffer);
-		SNode client = getNodeById(new SId(id));
+		SId id = new SId(SMPatterns.parseId(buffer));
+		SNode client = getNodeById(id);
 		if(client==null){
 			byte nameLength = buffer.get();
-			
-			String name = new String(buffer.get(new byte[nameLength]))
+			byte[] nameBytes = new byte[nameLength];
+			for (int i=0; i<nameLength;i++){
+				nameBytes[i] = buffer.get();
+			}
+			String name = new String(nameBytes);
 			if(name == null){
-				System.out.println("Client tried to join with invalid name: "+message.getContent());
+				System.out.println("Client tried to join with invalid name");
 				return;
 			}
 			else{
 				client = new SNode(receivePacket.getAddress(), receivePacket.getPort(),
-						message.getId(), name);
+						id, name);
 				synchronized (nodes) {
 					nodes.add(client);
 					System.out.println("Client added: "+client.getName());
