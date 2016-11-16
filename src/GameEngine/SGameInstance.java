@@ -3,17 +3,13 @@ package GameEngine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
 
-import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SCommunicationHandler.UDPNodeRole;
 import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessageParser;
 
@@ -68,7 +64,7 @@ public class SGameInstance {
 			Entities.add(entity);
 		}
 	}
-	public boolean removeEntity(UUID Id){
+	public boolean removeEntity(int Id){
 		synchronized (Entities) {
 			SEntity entity = getEntityById(Id);
 			if (entity != null){
@@ -79,9 +75,9 @@ public class SGameInstance {
 		}
 	}
 	
-	protected SEntity getEntityById(UUID Id){
+	protected SEntity getEntityById(int Id){
 		for(SEntity entity : Entities){
-			if (entity.getId().equals(Id))
+			if (entity.getId() == Id)
 				return entity;
 		}
 		System.out.println("Entity was not found, with Id: "+Id);
@@ -107,8 +103,6 @@ public class SGameInstance {
 				if(message.getCommandName().equals("ENTCR"))
 					SMessageParser.ParseEntityCreateMessage(message);
 			}
-			
-			
 		}
 	}
 	

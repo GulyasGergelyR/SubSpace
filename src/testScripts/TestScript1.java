@@ -16,6 +16,8 @@ public class TestScript1 {
 		System.out.println(Integer.signum(-10));
 		
 		System.out.println(String.format(Locale.ROOT,"%.2f;%.2f", 10f,123.1234f));
+		for (int i=0; i<10;i++)
+			System.out.println(System.nanoTime());
 	}
 	private static void test1(){
 		System.out.println("-------------------test1-------------------------");

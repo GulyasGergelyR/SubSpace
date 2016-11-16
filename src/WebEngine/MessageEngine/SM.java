@@ -2,12 +2,12 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
-public class Message2 {
+public class SM {
 	protected byte[] data;
 	protected byte commandId;
 	protected ByteBuffer buffer;
 	
-	public Message2(byte[] input){
+	public SM(byte[] input){
 		data = input;
 		buffer = ByteBuffer.wrap(input);
 		commandId = buffer.get();
@@ -16,7 +16,6 @@ public class Message2 {
 	public byte[] getData(){
 		return data;
 	}
-	
 	
 	//Code from the Internet blame them...
 	private byte[] concat(byte[] a, byte[] b) {

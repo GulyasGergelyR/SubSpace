@@ -26,8 +26,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
+import org.omg.PortableInterceptor.ServerIdHelper;
 
 import GameEngine.SGameInstance;
+import GameEngine.SId;
 import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
@@ -93,9 +95,10 @@ public class SMain {
 		communicationHandler = new SCommunicationHandler();
 	}
 	
+	@Deprecated
 	private static void InitGhost(){
 		SEntity Ghost = new SEntity();
-		Ghost.setId(UUID.fromString("06732ac0-51c6-4ba1-a45e-41e82d107847"));
+		//Ghost.setId(SId.getNewId(Ghost));
 		Ghost.setController(new SHumanControl(Ghost));
 		gameInstance.addEntity(Ghost);
 	}

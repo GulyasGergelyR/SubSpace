@@ -2,8 +2,8 @@ package GameEngine.BaseEngine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import GameEngine.SId;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 
@@ -12,7 +12,7 @@ public abstract class SObject {
 	protected SVector lookDir;
 	protected String texture;
 	protected float scale;
-	protected UUID Id = UUID.randomUUID();
+	protected int Id = 0;
 	protected boolean posUpdated;
 	
 	// TODO add hitbox
@@ -24,13 +24,13 @@ public abstract class SObject {
 		this.lookDir = new SVector(1,0);
 		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 1.0f;
-		this.Id = UUID.randomUUID();
+		this.Id = SId.getNewId(this);
 	}
 	public SObject(SVector pos, SVector lookDir, String texture)
 	{
 		this.pos = pos;
 		this.lookDir = lookDir;
-		this.Id = UUID.randomUUID();
+		this.Id = SId.getNewId(this);
 		this.scale = 1.0f;
 		this.texture = texture;
 	}
@@ -49,10 +49,10 @@ public abstract class SObject {
 		if(pos!=null)
 			this.pos = pos;
 	}
-	public UUID getId() {
+	public int getId() {
 		return Id;
 	}
-	public void setId(UUID id) {
+	public void setId(int id) {
 		Id = id;
 	}
 	public void setTexture(String s){

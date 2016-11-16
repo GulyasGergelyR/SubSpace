@@ -13,7 +13,7 @@ import GameEngine.GeomEngine.SVector;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPNode;
-import WebEngine.ComEngine.SNode.NodeState;
+import WebEngine.ComEngine.SNode.ConnectionState;
 
 public class SCommunicationHandler {
 	private List<SNode> nodes;
@@ -30,12 +30,14 @@ public class SCommunicationHandler {
 	private LinkedList<SMessage> ObjectMessages;
 	private LinkedList<SMessage> EntityMessages;
 	private Object entitylock;
+	private Object objectlock;
 	
 	public SCommunicationHandler(){
 		nodes = Collections.synchronizedList(new ArrayList<SNode>());
 		ObjectMessages = new LinkedList<SMessage>();
 		EntityMessages = new LinkedList<SMessage>();
 		entitylock = new Object();
+		objectlock = new Object();
 	}
 	
 	public SNode getLocalNode(){
@@ -66,10 +68,14 @@ public class SCommunicationHandler {
 		}
 	}
 	public int getEntityMessageLength(){
-		return EntityMessages.size();
+		synchronized (entitylock) {
+			return EntityMessages.size();
+		}
 	}
 	public int getObjectMessageLength(){
-		return ObjectMessages.size();
+		synchronized (objectlock) {
+			return ObjectMessages.size();
+		}
 	}
 	public SMessage popEntityMessage(){
 		return EntityMessages.pop();
@@ -77,6 +83,8 @@ public class SCommunicationHandler {
 	public SMessage popObjectMessage(){
 		return ObjectMessages.pop();
 	}
+	
+	@Deprecated
 	public List<SMessage> getEntityMessagesForEntity(SEntity entity, int maxLength){
 		synchronized (entitylock) {
 			List<SMessage> messages = new ArrayList<SMessage>(5);
@@ -95,6 +103,8 @@ public class SCommunicationHandler {
 			return messages;
 		}
 	}
+	
+	@Deprecated
 	public List<SMessage> getEntityMessages(){
 		synchronized (entitylock) {
 			return EntityMessages;
@@ -108,7 +118,7 @@ public class SCommunicationHandler {
 	}
 	
 	public void CloseUDPNode(){
-		if(localNode.getState().equals(NodeState.Connected)){
+		if(localNode.getState().equals(ConnectionState.Connected)){
 			DisconnectFromServer();
 		}
 		if (udpNode != null)
@@ -146,7 +156,7 @@ public class SCommunicationHandler {
 		udpNode.SendMessage(message, server);
 	}
 	public void DisconnectFromServer(){
-		localNode.setState(NodeState.NotConnected);
+		localNode.setState(ConnectionState.NotConnected);
 		SMessage message = new SMessage(localNode.getId(), "DSCCL", "");
 		udpNode.SendMessage(message, server);
 	}
@@ -173,7 +183,7 @@ public class SCommunicationHandler {
 	////////////////////////////Message\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void SendMessage(SMessage message){
 		if(udpNodeRole.equals(UDPNodeRole.Client)){
-			if (localNode.getState().equals(NodeState.Connected))
+			if (localNode.getState().equals(ConnectionState.Connected))
 				udpNode.SendMessage(message, server);
 		}
 		else if(udpNodeRole.equals(UDPNodeRole.Server)){
@@ -325,7 +335,7 @@ public class SCommunicationHandler {
 		}
 	}
 	private void ParseConnectApprovedCommand(SMessage message){
-		localNode.setState(NodeState.Connected);
+		localNode.setState(ConnectionState.Connected);
 	}
 	private void ParseConnectNotAllowedCommand(SMessage message){
 		// TODO handle not allowed connection

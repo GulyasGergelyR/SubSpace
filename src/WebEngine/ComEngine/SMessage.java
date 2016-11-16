@@ -5,10 +5,11 @@ import java.util.UUID;
 
 import GameEngine.Specifications;
 
+@Deprecated
 public class SMessage {
 	protected byte[] rawData;
 	protected String messageString;
-	protected UUID Id;
+	protected int Id;
 	protected String commandName;
 	protected String content;
 	protected boolean valid;
@@ -17,14 +18,14 @@ public class SMessage {
 		this.rawData = input;
 		this.messageString = new String(input);
 		if (SMessagePatterns.IsMessageValid(input)){
-			this.Id = UUID.fromString(SMessagePatterns.getId(this));
+			//this.Id = UUID.fromString(SMessagePatterns.getId(this));
 			this.commandName = SMessagePatterns.getCommand(this);
 			this.content = SMessagePatterns.getContent(this); //not really used, parser has its own functions
 			valid = true;
 		}
 	}
 	
-	public SMessage(UUID Id, String commandName, String content){
+	public SMessage(int Id, String commandName, String content){
 		this.Id = Id;
 		this.commandName = commandName;
 		this.content = content;
@@ -39,7 +40,7 @@ public class SMessage {
 		return messageString;
 	}
 	
-	public UUID getId() {
+	public int getId() {
 		return Id;
 	}
 	public boolean isValid(){
@@ -60,7 +61,7 @@ public class SMessage {
 		this.content += s +";";
 	}
 	public byte[] createRawData(){
-		byte[] temp = concat((Id.toString()+";").getBytes(),(commandName+";").getBytes());
+		byte[] temp = concat((Integer.toString(Id)+";").getBytes(),(commandName+";").getBytes());
 		temp = concat(temp, content.getBytes());
 		if(temp.length<Specifications.DataLength){
 			temp = concat(temp, new byte[Specifications.DataLength-temp.length]);

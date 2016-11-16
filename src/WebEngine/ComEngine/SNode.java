@@ -2,20 +2,21 @@ package WebEngine.ComEngine;
 import java.net.InetAddress;
 import java.util.UUID;
 
+import GameEngine.SId;
 import GameEngine.SPlayer;
 
 public class SNode {
 	//////////Communication
 	private InetAddress IPAddress;
 	//private int port;
-	private UUID Id;
+	private int Id;
 	//////////Interface
-	private NodeState state = NodeState.NotConnected;
+	private ConnectionState state = ConnectionState.NotConnected;
 	private float ping = 1.0f;
 	//////////Game
 	private SPlayer player;
 	
-	public SNode(InetAddress IPAddress, int port, UUID Id, String name){
+	public SNode(InetAddress IPAddress, int port, int Id, String name){
 		this.IPAddress = IPAddress;
 		//this.port = port;
 		this.Id = Id;
@@ -24,7 +25,7 @@ public class SNode {
 	public SNode(InetAddress IPAddress, int port){
 		this.IPAddress = IPAddress;
 		//this.port = port;
-		this.Id = UUID.randomUUID();
+		this.Id = SId.getNewId(this)
 		this.player = new SPlayer(this, "noname");
 	}
 
@@ -32,11 +33,7 @@ public class SNode {
 		return IPAddress;
 	}
 
-	//public int getPort() {
-	//	return port;
-	//}
-
-	public UUID getId() {
+	public int getId() {
 		return Id;
 	}
 
@@ -60,15 +57,15 @@ public class SNode {
 		this.player.setName(name);
 	}
 
-	public NodeState getState() {
+	public ConnectionState getState() {
 		return state;
 	}
 
-	public void setState(NodeState state) {
+	public void setState(ConnectionState state) {
 		this.state = state;
 	}
 
-	public enum NodeState{
+	public enum ConnectionState{
 		Connected, NotConnected
 	}
 

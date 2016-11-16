@@ -2,6 +2,7 @@ package GameEngine.EntityEngine;
 
 import java.util.List;
 
+import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
@@ -12,11 +13,13 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		Active, Ghost, Invisible, OnDeathRaw
 	}
 	protected EntityState entityState = EntityState.Active;
+	protected SPlayer player;
+	
 	
 	protected float life;
 	// TODO Create SWeapon
 	// protected List<SWeapon> weapons;
-	
+	@Deprecated
 	public SEntity(){
 		super();
 		this.pos = new SVector(250.0f,250.0f);
@@ -24,6 +27,15 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.scale = 0.05f;
 		this.setController(new SHumanControlLocal(this));
 	}
+	
+	public SEntity(SPlayer player){
+		super();
+		this.pos = new SVector(250.0f,250.0f);
+		this.texture = "res/entity/spaceshipv1.png";
+		this.scale = 0.05f;
+		this.setController(new SHumanControlLocal(this));
+	}
+		
 
 	@Override
 	public List<SRenderObject> getDrawables() {
