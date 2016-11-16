@@ -25,6 +25,8 @@ public final class Specifications {
 		ComCommands.addAll(ObjectCommands);
 		ComCommands.addAll(ServerCommands);
 		
+		
+		//TODO create automatic import
 		resourcePathStrings = new String[5];
 		resourcePathStrings[0] = "res/entity/spaceshipv1.png";
 		resourcePathStrings[1] = "res/entity/prob.png";

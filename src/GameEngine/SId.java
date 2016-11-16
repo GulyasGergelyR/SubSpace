@@ -13,7 +13,6 @@ public class SId {
 			return new SId(currentMaxDefaultObjectId++);
 		}
 	}
-	
 	private int Id;
 	public SId(int id){
 		this.Id = id;

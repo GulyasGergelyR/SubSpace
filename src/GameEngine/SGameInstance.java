@@ -15,6 +15,8 @@ import WebEngine.ComEngine.SMessageParser;
 
 public class SGameInstance {
 	private List<SPlayer> players = new ArrayList<SPlayer>();
+	private SPlayer localPlayer;
+	
 	private List<SEntity> Entities = new ArrayList<SEntity>();
 	private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
@@ -22,8 +24,6 @@ public class SGameInstance {
 	
 	private SFPS FPS;
 	private static int delta;
-	
-	private SPlayer localPlayer;
 	
 	public SGameInstance(){
 		FPS = new SFPS();
@@ -46,7 +46,12 @@ public class SGameInstance {
 	public float getDeltaRatio(){
 		return ((float)delta)/FPS.getFPS_M();
 	}
-	
+	public void addPlayer(SPlayer player){
+		players.add(player);
+	}
+	public void removePlayer(SPlayer player){
+		players.remove(player);
+	}
 	public SPlayer getLocalPlayer() {
 		return localPlayer;
 	}

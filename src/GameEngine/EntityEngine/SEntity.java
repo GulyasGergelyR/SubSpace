@@ -36,7 +36,6 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.setController(new SHumanControlLocal(this));
 	}
 		
-
 	@Override
 	public List<SRenderObject> getDrawables() {
 		//TODO Add movement and life specific drawings

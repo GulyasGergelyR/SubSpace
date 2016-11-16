@@ -1,12 +1,13 @@
 package WebEngine.ComEngine;
 
 import java.net.DatagramPacket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
+import GameEngine.SId;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
@@ -15,6 +16,8 @@ import Main.SMain;
 import WebEngine.SUDPNode;
 import WebEngine.ComEngine.SNode.ConnectionState;
 import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMParser;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SCommunicationHandler {
 	private List<SNode> nodes;
@@ -23,8 +26,9 @@ public class SCommunicationHandler {
 	private SUDPNode udpNode;
 	private SNode localNode;
 	
-	private UDPNodeRole udpNodeRole;
-	public enum UDPNodeRole{
+	private UDPRole udpRole;
+	
+	public enum UDPRole{
 		Server, Client 
 	}
 	
@@ -51,7 +55,7 @@ public class SCommunicationHandler {
 	public SNode getNodeById(SId Id){
 		synchronized (nodes) {
 			for(SNode node : nodes){
-				if(node.getId().equals(Id)){
+				if(node.equals(Id)){
 					return node;
 				}
 			}
@@ -63,9 +67,14 @@ public class SCommunicationHandler {
 			return nodes;
 		}
 	}
-	private void addEntityMessage(SMessage message){
+	private void addEntityMessage(SM message){
 		synchronized (entitylock) {
 			EntityMessages.add(message);
+		}
+	}
+	private void addObjectMessage(SM message){
+		synchronized (objectlock) {
+			ObjectMessages.add(message);
 		}
 	}
 	public int getEntityMessageLength(){
@@ -78,22 +87,22 @@ public class SCommunicationHandler {
 			return ObjectMessages.size();
 		}
 	}
-	public SMessage popEntityMessage(){
+	public SM popEntityMessage(){
 		return EntityMessages.pop();
 	}
-	public SMessage popObjectMessage(){
+	public SM popObjectMessage(){
 		return ObjectMessages.pop();
 	}
 	
 	@Deprecated
-	public List<SMessage> getEntityMessagesForEntity(SEntity entity, int maxLength){
+	public List<SM> getEntityMessagesForEntity(SEntity entity, int maxLength){
 		synchronized (entitylock) {
-			List<SMessage> messages = new ArrayList<SMessage>(5);
+			List<SM> messages = new ArrayList<SM>(5);
 			int i = 0;
-			for(SMessage message: EntityMessages){
+			for(SM message: EntityMessages){
 				
 				if(i<maxLength){
-					if(message.getId().equals(entity.getId())){
+					if(true){
 						messages.add(message);
 					}
 					i++;
@@ -106,7 +115,7 @@ public class SCommunicationHandler {
 	}
 	
 	@Deprecated
-	public List<SMessage> getEntityMessages(){
+	public List<SM> getEntityMessages(){
 		synchronized (entitylock) {
 			return EntityMessages;
 		}
@@ -114,8 +123,8 @@ public class SCommunicationHandler {
 	}
 	
 	////////////////////////UDPNode\\\\\\\\\\\\\\\\\\\\\\
-	public UDPNodeRole getUDPNodeRole(){
-		return udpNodeRole;
+	public UDPRole getUDPRole(){
+		return udpRole;
 	}
 	
 	public void CloseUDPNode(){
@@ -126,11 +135,11 @@ public class SCommunicationHandler {
 			udpNode.Close();
 	}
 	public void createUDPNodeAsClient(int receivePort, int transmitPort){
-		udpNodeRole = UDPNodeRole.Client;
+		udpRole = UDPRole.Client;
 		createUDPNode(receivePort, transmitPort);
 	}
 	public void createUDPNodeAsServer(int receivePort, int transmitPort){
-		udpNodeRole = UDPNodeRole.Server;
+		udpRole = UDPRole.Server;
 		createUDPNode(receivePort, transmitPort);
 	}
 	private void createUDPNode(int receivePort, int transmitPort){
@@ -150,15 +159,14 @@ public class SCommunicationHandler {
 	
 	////////////////////////Connect-Disconnect\\\\\\\\\\\\\\\\\\\\\\
 	public void ConnectToServer(SNode server){
-		udpNodeRole = UDPNodeRole.Client;
+		udpRole = UDPRole.Client;
 		this.server = server;
-		SMessage message = new SMessage(localNode.getId(), "CNNCL", "");
-		message.addContent(localNode.getName());
+		SM message = SMPatterns.getConnectToServerMessage(localNode.getName());
 		udpNode.SendMessage(message, server);
 	}
 	public void DisconnectFromServer(){
 		localNode.setState(ConnectionState.NotConnected);
-		SMessage message = new SMessage(localNode.getId(), "DSCCL", "");
+		SM message = SMPatterns.getDisconnectFromServerMessage(localNode);
 		udpNode.SendMessage(message, server);
 	}
 	
@@ -171,23 +179,17 @@ public class SCommunicationHandler {
 		}
 	}
 	private void RequestPingDataFromClient(SNode client){
-		SMessage message = new SMessage(client.getId(), "PNGRQ", "");
-		message.addContent(Long.toUnsignedString(SServerTimer.GetNanoTime()));
-		if (client.getPing()>999){
-			message.addContent("999");
-		}else{
-			message.addContent(Integer.toUnsignedString((int)client.getPing()));
-		}
+		SM message = SMPatterns.getRequestPingDataFromClientMessage(client, SServerTimer.GetNanoTime());
 		udpNode.SendMessage(message, client);
 	}
 	
 	////////////////////////////Message\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	public void SendMessage(SMessage message){
-		if(udpNodeRole.equals(UDPNodeRole.Client)){
+	public void SendMessage(SM message){
+		if(udpRole.equals(UDPRole.Client)){
 			if (localNode.getState().equals(ConnectionState.Connected))
 				udpNode.SendMessage(message, server);
 		}
-		else if(udpNodeRole.equals(UDPNodeRole.Server)){
+		else if(udpRole.equals(UDPRole.Server)){
 			synchronized (nodes) {
 				for(SNode node : nodes){
 					udpNode.SendMessage(message, node);
@@ -195,14 +197,14 @@ public class SCommunicationHandler {
 			}
 		}
 	}
-	public void SendMessageToNode(SMessage message, SNode node){
+	public void SendMessageToNode(SM message, SNode node){
 		if(!node.equals(localNode))
 			udpNode.SendMessage(message, node);
 		else{
 			System.out.println("Trying to send to itself");
 		}
 	}
-	public void SendMessageExceptToNode(SMessage message, SNode notNode){
+	public void SendMessageExceptToNode(SM message, SNode notNode){
 		synchronized (nodes) {
 			for(SNode node : nodes){
 				if(!node.equals(notNode))
@@ -214,57 +216,55 @@ public class SCommunicationHandler {
 	/////////////////////////////Parsing\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
 		byte[] input = receivePacket.getData();
-		SMessage message = new SMessage(input);
+		SM message = new SM(input);
 		//System.out.println("parsing message...");
 		if(message.isValid()){
-			String command = message.getCommandName();
-			
+			byte command = message.getCommandId();
 			////////////////////////SERVER\\\\\\\\\\\\\\\\\\\\\\
-			if(udpNodeRole.equals(UDPNodeRole.Server)){
-				if (command.equals("CNNCL")){ 		//connect client
+			if(udpRole.equals(UDPRole.Server)){
+				if (command == SMPatterns.CConnect){ 		//connect client
 					ParseConnectCommand(receivePacket, message);
 				}
-				else if (command.equals("DSCCL")){ 	//disconnect client
+				else if (command == SMPatterns.CDisconnect){ 	//disconnect client
 					ParseDisconnectCommand(message);
 				}
-				else if (command.equals("PNGAN")){ 	//ping answer from client
+				else if (command == SMPatterns.CPingAnswer){ 	//ping answer from client
 					ParsePingAnswer(message);
 				}
-				else if (command.equals("CLIIN")){ 	//Client input (pressed key, mouse click)
+				else if (command == SMPatterns.CClientInput){ 	//Client input (pressed key, mouse moved, mouse click)
 					addEntityMessage(message);
 				}
 				else{
 					System.out.println("Server received unknown message: \n\t"+new String(input));
 				}
-				
 			}
 			////////////////////////CLIENT\\\\\\\\\\\\\\\\\\\\\\
-			else if(udpNodeRole.equals(UDPNodeRole.Client)){
-				if (command.equals("CNNNA")){ 		//connection is not allowed
+			else if(udpRole.equals(UDPRole.Client)){
+				if (command == SMPatterns.CConnectNotAllowed){ 		//connection is not allowed
 					ParseConnectNotAllowedCommand(message);
 				}
-				else if (command.equals("CNNAP")){ 	//connection is approved
-					ParseConnectApprovedCommand(message);
+				else if (command == SMPatterns.CConnectAllowed){ 	//connection is approved
+					ParseConnectAllowedCommand(message);
 				}
-				else if (command.equals("PNGRQ")){ 	//ping request from server
+				else if (command == SMPatterns.CPingRequest){ 	//ping request from server
 					ParsePingRequest(message);
 				}
-				else if (command.equals("ENTUP")){ 	//Server updates Entity information
+				else if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
 					addEntityMessage(message);
 				}
-				else if (command.equals("ENTCR")){ 	//Server updates Entity information
+				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity
 					addEntityMessage(message);
 				}
-				else if (command.equals("ENTDE")){ 	//Server deleted an Entity
+				else if (command == SMPatterns.CEntityDelete){ 	//Server deletes an Entity
 					addEntityMessage(message);
 				}
-				else if (command.equals("OBJCR")){ 	//Server created Object
+				else if (command == SMPatterns.CObjectCreate){ 	//Server created Object
 					ObjectMessages.add(message);
 				}
-				else if (command.equals("OBJUP")){ 	//Server updates Object information
+				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
 					ObjectMessages.add(message);
 				}
-				else if (command.equals("OBJDE")){ 	//Server deleted Object
+				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
 					ObjectMessages.add(message);
 				}
 				else{
@@ -277,10 +277,14 @@ public class SCommunicationHandler {
 		}
 	}
 	
-	private void ParseConnectCommand(DatagramPacket receivePacket, SMessage message){
-		SNode client = getNodeById(message.getId());
+	private void ParseConnectCommand(DatagramPacket receivePacket, SM message){
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMPatterns.parseId(buffer);
+		SNode client = getNodeById(new SId(id));
 		if(client==null){
-			String name = SMessagePatterns.getConnectCommandName(message);
+			byte nameLength = buffer.get();
+			
+			String name = new String(buffer.get(new byte[nameLength]))
 			if(name == null){
 				System.out.println("Client tried to join with invalid name: "+message.getContent());
 				return;
@@ -335,7 +339,7 @@ public class SCommunicationHandler {
 			deleteNodeThread.start();
 		}
 	}
-	private void ParseConnectApprovedCommand(SMessage message){
+	private void ParseConnectAllowedCommand((SMessage message){
 		localNode.setState(ConnectionState.Connected);
 	}
 	private void ParseConnectNotAllowedCommand(SMessage message){

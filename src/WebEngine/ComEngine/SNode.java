@@ -1,44 +1,36 @@
 package WebEngine.ComEngine;
 import java.net.InetAddress;
-import java.util.UUID;
 
 import GameEngine.SId;
+import GameEngine.SIdentifiable;
 import GameEngine.SPlayer;
+import GameEngine.SPlayer.PlayerState;
 
-public class SNode {
+public class SNode extends SIdentifiable{
 	//////////Communication
 	private InetAddress IPAddress;
-	//private int port;
-	private int Id;
 	//////////Interface
 	private ConnectionState state = ConnectionState.NotConnected;
 	private float ping = 1.0f;
 	//////////Game
 	private SPlayer player;
 	
-	public SNode(InetAddress IPAddress, int port, int Id, String name){
+	public SNode(InetAddress IPAddress, int port, SId Id, String name){
 		this.IPAddress = IPAddress;
 		//this.port = port;
 		this.Id = Id;
-		this.player = new SPlayer(this, name);
+		this.player = new SPlayer(this, name, PlayerState.local);
 	}
+	
+	@Deprecated
 	public SNode(InetAddress IPAddress, int port){
+		super();
 		this.IPAddress = IPAddress;
-		//this.port = port;
-		this.Id = SId.getNewId(this)
-		this.player = new SPlayer(this, "noname");
+		this.player = new SPlayer(this, "noname", PlayerState.local);
 	}
 
 	public InetAddress getIPAddress() {
 		return IPAddress;
-	}
-
-	public int getId() {
-		return Id;
-	}
-
-	public void setId(UUID id) {
-		Id = id;
 	}
 	
 	public float getPing() {

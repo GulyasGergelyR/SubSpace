@@ -1,5 +1,6 @@
 package testScripts;
 
+import java.nio.ByteBuffer;
 import java.util.Locale;
 
 import WebEngine.ComEngine.SMessage;
@@ -18,6 +19,15 @@ public class TestScript1 {
 		System.out.println(String.format(Locale.ROOT,"%.2f;%.2f", 10f,123.1234f));
 		for (int i=0; i<10;i++)
 			System.out.println(System.nanoTime());
+		int id = 66000;
+		byte[] data = ByteBuffer.allocate(2).putShort((short)id).array();
+		ByteBuffer buffer = ByteBuffer.wrap(data);
+		//buffer.put((byte)10);
+		//data[1] = 11;
+		System.out.println(buffer.getShort(0));
+		for (byte b: data)
+			System.out.println(b);
+
 	}
 	private static void test1(){
 		System.out.println("-------------------test1-------------------------");

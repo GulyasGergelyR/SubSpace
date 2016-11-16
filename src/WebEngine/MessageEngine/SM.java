@@ -2,6 +2,8 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
+import GameEngine.Specifications;
+
 public class SM {
 	protected byte[] data;
 	protected byte commandId;
@@ -9,21 +11,30 @@ public class SM {
 	
 	public SM(byte[] input){
 		data = input;
-		buffer = ByteBuffer.wrap(input);
+		buffer = ByteBuffer.wrap(data);
 		commandId = buffer.get();
 	}
-
+	public SM(){
+		data = new byte[Specifications.DataLength];
+		buffer = ByteBuffer.wrap(data);
+	}
+	public void add(byte b){
+		buffer.put(b);
+	}
+	public void add(byte[] b){
+		buffer.put(b);
+	}
 	public byte[] getData(){
 		return data;
 	}
-	
-	//Code from the Internet blame them...
-	private byte[] concat(byte[] a, byte[] b) {
-		   int aLen = a.length;
-		   int bLen = b.length;
-		   byte[] c= new byte[aLen+bLen];
-		   System.arraycopy(a, 0, c, 0, aLen);
-		   System.arraycopy(b, 0, c, aLen, bLen);
-		   return c;
-		}
+	public ByteBuffer getBuffer(){
+		return buffer;
+	}
+	public byte getCommandId(){
+		return commandId;
+	}
+	public boolean isValid(){
+		return true;
+		//TODO implement CRC
+	}
 }

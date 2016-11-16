@@ -2,6 +2,7 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
+import WebEngine.ComEngine.SNode;
 import GameEngine.GeomEngine.SVector;
 
 public class SMPatterns {
@@ -20,6 +21,11 @@ public class SMPatterns {
 	public static byte CPingRequest = 0x41;
 	public static byte CPingAnswer = 0x42;
 	
+	//0011 xxxx Client input commands
+	public static byte MClientInput = 0x30;
+	public static byte CClientInput = 0x31;
+	
+	
 	//0001 xxxx Game commands
 	public static byte MGameComamnd = 0x10;
 	
@@ -35,19 +41,57 @@ public class SMPatterns {
 	public static byte CObjectUpdate = 0x12;
 	public static byte CObjectDelete = 0x1F;
 	
-	public static int getId(ByteBuffer buffer){ // 2 byte long
-		return buffer.getChar();
+	public static int parseId(ByteBuffer buffer){ // 2 byte long
+		return buffer.getShort();
 	}
-	public static SVector getBigVector(ByteBuffer buffer){ //[+-32768],[9999] - 4 byte long
-		float x =  buffer.getChar()+ buffer.getChar()/1000f-32768;
-		float y =  buffer.getChar()+ buffer.getChar()/1000f-32768;
+	public static SVector parseBigVector(ByteBuffer buffer){ //[+-32768],[9999] - 4 byte long
+		float x =  buffer.getShort()+ buffer.getShort()/10000f;
+		float y =  buffer.getShort()+ buffer.getShort()/10000f;
 		return new SVector(x,y);
 	}
-	public static SVector getSmallVector(ByteBuffer buffer){ //[255],[9999] - 3 byte long
-		float x =  buffer.get()+ buffer.getChar()/1000f;
-		float y =  buffer.get()+ buffer.getChar()/1000f;
+	public static SVector parseSmallVector(ByteBuffer buffer){ //[+-127],[9999] - 3 byte long
+		float x =  buffer.get()+ buffer.getShort()/10000f;
+		float y =  buffer.get()+ buffer.getShort()/10000f;
 		return new SVector(x,y);
 	}
+	
+	public static SM getConnectToServerMessage(String nameString){
+		byte[] name = nameString.getBytes();
+		SM message = new SM();
+		message.add(CConnect);
+		message.add(name);
+		return message;
+	}
+	private static byte[] getIdBytes(int id){
+		return ByteBuffer.allocate(4).putInt(id).array();
+	}
+	private static byte[] getShortBytes(short value){
+		return ByteBuffer.allocate(2).putShort(value).array();
+	}
+	private static byte[] getLongBytes(long value){
+		return ByteBuffer.allocate(8).putLong(value).array();
+	}
+	
+	public static SM getDisconnectFromServerMessage(SNode localNode){
+		SM message = new SM();
+		message.add(CDisconnect);
+		message.add(getIdBytes(localNode.getId().get()));
+		return message;
+	}
+	public static SM getRequestPingDataFromClientMessage(SNode client, long nanoTime){
+		SM message = new SM();
+		message.add(CPingRequest);
+		message.add(getIdBytes(client.getId().get()));
+		message.add(getLongBytes(nanoTime));
+		if (client.getPing()>999){
+			message.add(getShortBytes((short)999));
+		}else{
+			message.add(getShortBytes((short)client.getPing()));
+		}
+		return message;
+	}
+	
+	
 	
 	
 }

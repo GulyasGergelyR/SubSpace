@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 
 import GameEngine.GeomEngine.SVector;
 
+@Deprecated
 public abstract class SMessagePatterns {
 	
 	//TODO rewrite everything... bitparsing not string...
