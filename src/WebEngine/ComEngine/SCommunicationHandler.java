@@ -1,6 +1,7 @@
 package WebEngine.ComEngine;
 
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import GameEngine.SId;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.SPlayer.PlayerState;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPNode;
@@ -52,10 +54,20 @@ public class SCommunicationHandler {
 		this.localNode = localNode;
 	}
 	
-	public SNode getNodeById(SId Id){
+	public SNode getNodeById(int Id){
 		synchronized (nodes) {
 			for(SNode node : nodes){
 				if(node.equals(Id)){
+					return node;
+				}
+			}
+		}
+		return null;
+	}
+	public SNode getNodeByAddress(InetAddress address){
+		synchronized (nodes) {
+			for(SNode node : nodes){
+				if(node.getIPAddress().equals(address)){
 					return node;
 				}
 			}
@@ -179,7 +191,7 @@ public class SCommunicationHandler {
 		}
 	}
 	private void RequestPingDataFromClient(SNode client){
-		SM message = SMPatterns.getRequestPingDataFromClientMessage(client, SServerTimer.GetNanoTime());
+		SM message = SMPatterns.getPingRequestMessage(client, SServerTimer.GetNanoTime());
 		udpNode.SendMessage(message, client);
 	}
 	
@@ -215,15 +227,14 @@ public class SCommunicationHandler {
 	
 	/////////////////////////////Parsing\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
-		byte[] input = receivePacket.getData();
-		SM message = new SM(input);
+		SM message = new SM(receivePacket);
 		//System.out.println("parsing message...");
 		if(message.isValid()){
 			byte command = message.getCommandId();
 			////////////////////////SERVER\\\\\\\\\\\\\\\\\\\\\\
 			if(udpRole.equals(UDPRole.Server)){
 				if (command == SMPatterns.CConnect){ 		//connect client
-					ParseConnectCommand(receivePacket, message);
+					ParseConnectCommand(message);
 				}
 				else if (command == SMPatterns.CDisconnect){ 	//disconnect client
 					ParseDisconnectCommand(message);
@@ -235,7 +246,7 @@ public class SCommunicationHandler {
 					addEntityMessage(message);
 				}
 				else{
-					System.out.println("Server received unknown message: \n\t"+new String(input));
+					System.out.println("Server received unknown message: \n\t"+new String(message.getData()));
 				}
 			}
 			////////////////////////CLIENT\\\\\\\\\\\\\\\\\\\\\\
@@ -268,19 +279,18 @@ public class SCommunicationHandler {
 					ObjectMessages.add(message);
 				}
 				else{
-					System.out.println("Received unknown message: \n\t"+new String(input));
+					System.out.println("Received unknown message: \n\t"+new String(message.getData()));
 				}
 			}
 		} else{
 			//TODO Send back error
-			System.out.println("Client received invalid message: \n\t"+new String(input));
+			System.out.println("Client received invalid message: \n\t"+new String(message.getData()));
 		}
 	}
 	
-	private void ParseConnectCommand(DatagramPacket receivePacket, SM message){
+	private void ParseConnectCommand(SM message){
 		ByteBuffer buffer = message.getBuffer();
-		SId id = new SId(SMPatterns.parseId(buffer));
-		SNode client = getNodeById(id);
+		SNode client = getNodeByAddress(message.getAddress());
 		if(client==null){
 			byte nameLength = buffer.get();
 			byte[] nameBytes = new byte[nameLength];
@@ -288,43 +298,43 @@ public class SCommunicationHandler {
 				nameBytes[i] = buffer.get();
 			}
 			String name = new String(nameBytes);
-			if(name == null){
-				System.out.println("Client tried to join with invalid name");
+			if(name.length() == 0){
+				//TODO add proper name check
+				System.out.println("Client tried to join with invalid name "+message.getAddress().toString());
 				return;
 			}
 			else{
-				client = new SNode(receivePacket.getAddress(), receivePacket.getPort(),
-						id, name);
+				client = new SNode(message.getAddress(), message.getPort(), name, PlayerState.lan);
 				synchronized (nodes) {
 					nodes.add(client);
 					System.out.println("Client added: "+client.getName());
 				}
 				//TODO add normal entity creation
-				SEntity entity = new SEntity();
-            	entity.setController(new SHumanControl(entity));
-            	entity.set(client.getId());
-				client.getPlayer().setEntity(entity);
+				SEntity entity = new SEntity(client.getPlayer());
 				SMain.getGameInstance().addEntity(entity);
-				SMessage connectallowed = new SMessage(client.getId(),"CNNAP","");
+				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);
 				udpNode.SendMessage(connectallowed, client);
 				//RequestPingDataFromClient(client);
 				//Send to other clients
-				SMessage createEntity = new SMessage(client.getId(),"ENTCR","");
+				//TODO add other client message
+				/*
+				SM createEntity = new SMessage(client.getId(),"ENTCR","");
 				createEntity.addContent("p;"+(new SVector(251,250)).getString());
 				createEntity.addContent("md;"+(new SVector(0,0)).getString());
 				createEntity.addContent("ld;"+(new SVector(0,0)).getString());
 				createEntity.addContent("ad;"+(new SVector(0,0)).getString());
 				SendMessageExceptToNode(createEntity, client);
+				*/
 			}
 		}else{
 			System.out.println("Client already joined: "+client.getName());
 		}
 	}
 	
-	private void ParseDisconnectCommand(SMessage message){
-		SNode client = getNodeById(message.getId());
+	private void ParseDisconnectCommand(SM message){
+		SNode client = getNodeByAddress(message.getAddress());
 		if(client==null){
-			System.out.println("Client who wants to disconnect was not found: "+message.getId());
+			System.out.println("Client who wants to disconnect was not found "+message.getAddress().toString());
 		}else{
 			Thread deleteNodeThread = new Thread(){
 				@Override
@@ -335,37 +345,40 @@ public class SCommunicationHandler {
 					}
 					//TODO look here if there is an entity nullpointer error
 					SMain.getGameInstance().removeEntity(client.getId());
-					SMessage deleteentity = new SMessage(client.getId(),"DELEN","");
+					//TODO add entity delete message:
+					/*
+					SM deleteentity = new SM(client.getId(),"DELEN","");
 					SendMessage(deleteentity);
+					*/
 				}
 			};
 			deleteNodeThread.start();
 		}
 	}
-	private void ParseConnectAllowedCommand((SMessage message){
+	private void ParseConnectAllowedCommand(SM message){
 		localNode.setState(ConnectionState.Connected);
 	}
-	private void ParseConnectNotAllowedCommand(SMessage message){
+	private void ParseConnectNotAllowedCommand(SM message){
 		// TODO handle not allowed connection
 		System.out.println("Connection is not allowed");
 	}
 	
-	private void ParsePingRequest(SMessage message){
-		String ping = SMessagePatterns.getPingCommandPrevPing(message);
-		localNode.setPing(Float.parseFloat(ping));
+	private void ParsePingRequest(SM message){
+		ByteBuffer buffer = message.getBuffer();
+		long nanoTime = buffer.getLong();
+		float ping = buffer.getShort();
+		localNode.setPing(ping);
 		//Send back the same message to the server
-		message.setCommandName("PNGAN");
-		udpNode.SendMessage(message, server);
+		SM answer = SMPatterns.getPingAnswerMessage(nanoTime);
+		udpNode.SendMessage(answer, server);
 	}
 	
-	private void ParsePingAnswer(SMessage message){
-		SNode client = getNodeById(message.getId());
+	private void ParsePingAnswer(SM message){
+		SNode client = getNodeByAddress(message.getAddress());
 		if (client!=null){
-			String time = SMessagePatterns.getPingCommandTime(message);
-			long nanoTime = Long.parseUnsignedLong(time);
-			long ping = SServerTimer.GetNanoTime()-nanoTime;
+			ByteBuffer buffer = message.getBuffer();
+			long nanoTime = buffer.getLong();
 			client.setPing((SServerTimer.GetNanoTime()-nanoTime)/1000/1000);
-			//System.out.println("ping: "+ping/1000/1000);
 		}
 	}
 	

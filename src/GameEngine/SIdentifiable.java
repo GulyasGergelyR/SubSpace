@@ -9,7 +9,6 @@ public class SIdentifiable {
 	public SIdentifiable(SIdentifiable i){
 		Id = i.Id;
 	}
-	
 	public SId getId() {
 		return this.Id;
 	}
@@ -38,7 +37,7 @@ public class SIdentifiable {
 		}
 		return false;
 	}
-	public void shareId(SIdentifiable identifiable){
+	public void inheriteIdFrom(SIdentifiable identifiable){
 		this.Id = identifiable.Id;
 	}
 	

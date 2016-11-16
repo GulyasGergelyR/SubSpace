@@ -3,6 +3,7 @@ package GameEngine.EntityEngine;
 import java.util.List;
 
 import GameEngine.SPlayer;
+import GameEngine.SPlayer.PlayerState;
 import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
@@ -33,7 +34,14 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.pos = new SVector(250.0f,250.0f);
 		this.texture = "res/entity/spaceshipv1.png";
 		this.scale = 0.05f;
-		this.setController(new SHumanControlLocal(this));
+		this.player = player;
+		player.setEntity(this);
+		if (player.getPlayerState().equals(PlayerState.local)){
+			this.setController(new SHumanControlLocal(this));
+		}else{
+			this.setController(new SHumanControl(this));
+		}
+			
 	}
 		
 	@Override

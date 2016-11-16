@@ -32,7 +32,7 @@ public class SPlayer extends SIdentifiable{
 	}
 	public void setClientNode(SNode clientNode) {
 		this.clientNode = clientNode;
-		this.shareId(clientNode);
+		this.inheriteIdFrom(clientNode);
 		clientNode.setPlayer(this);
 	}
 	public String getName(){
@@ -46,6 +46,13 @@ public class SPlayer extends SIdentifiable{
 	}
 	public void setEntity(SEntity entity){
 		this.entity = entity;
-		this.entity.shareId(this);
+		this.entity.inheriteIdFrom(this);  // player inherits Id from node, now entity inherits id from player
 	}
+	public PlayerState getPlayerState() {
+		return playerState;
+	}
+	public void setPlayerState(PlayerState playerState) {
+		this.playerState = playerState;
+	}
+	
 }

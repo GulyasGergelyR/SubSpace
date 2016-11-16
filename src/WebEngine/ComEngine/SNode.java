@@ -15,11 +15,10 @@ public class SNode extends SIdentifiable{
 	//////////Game
 	private SPlayer player;
 	
-	public SNode(InetAddress IPAddress, int port, SId Id, String name){
+	public SNode(InetAddress IPAddress, int port, String name, PlayerState playerState){
 		this.IPAddress = IPAddress;
-		//this.port = port;
-		this.Id = Id;
-		this.player = new SPlayer(this, name, PlayerState.local);
+		this.Id = SId.getNewId(this);
+		this.player = new SPlayer(this, name, playerState);
 	}
 	
 	@Deprecated

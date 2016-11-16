@@ -1,13 +1,18 @@
 package GameEngine;
 
 import GameEngine.EntityEngine.SEntity;
+import WebEngine.ComEngine.SNode;
 
 public class SId {
 	static int currentMaxDefaultObjectId = 1;
 	static int currentMaxEntityId = 1;
+	static int currentMaxNodeId = 1;
 	public static SId getNewId(Object o){
 		if (o instanceof SEntity){
 			return new SId(currentMaxEntityId++);
+		}
+		else if (o instanceof SNode){
+			return new SId(currentMaxNodeId++);
 		}
 		else{
 			return new SId(currentMaxDefaultObjectId++);

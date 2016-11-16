@@ -5,13 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessageParser;
+import WebEngine.MessageEngine.SM;
 
 public class SGameInstance {
 	private List<SPlayer> players = new ArrayList<SPlayer>();
@@ -125,7 +125,6 @@ public class SGameInstance {
 				message.addContent("ad;"+entity.getAcclDir().getString());
 				SMain.getCommunicationHandler().SendMessage(message);
 			}
-			
 		}
 	}
 	
@@ -135,8 +134,8 @@ public class SGameInstance {
 		int current_length = communicationHandler.getEntityMessageLength();
 		int i = 0;
 		while(i<current_length){
-			SMessage message = communicationHandler.popEntityMessage();
-			if(message.getCommandName().equals("CLIIN")){  // Client input
+			SM message = communicationHandler.popEntityMessage();
+			if (true){  // Client input
 				
 			}
 			i++;
@@ -148,51 +147,8 @@ public class SGameInstance {
 		int current_length = ServerMessages.size();
 		int i = 0;
 		while(i<current_length){
-			SMessage message = ServerMessages.poll();
+			SM message = ServerMessages.poll();
 			
 		}
-	}
-	
-	public void CheckClientMessages(){
-		int current_length = ClientMessages.size();
-		int i = 0;
-
-		while(i<current_length){
-			i += 1;
-			SMessage message = ClientMessages.poll();
-			
-			SEntity entity = getEntityById(message.getId());
-			
-			String content = message.getContent();
-			while(content.contains(";")){
-				String sub = content.substring(0, content.indexOf(";"));
-				if (content.indexOf(";")<content.length()-1)
-					content = content.substring(content.indexOf(";")+1);
-				else content = "";
-				//System.out.println(sub+" "+sub.substring(0, 1)+" "+sub.substring(1, 2)+" "+content);
-				// Checking sub
-				if("PR".contains(sub.substring(0, 1)) &&
-						"WASD".contains(sub.substring(1, 2))){
-					// P-Pressed or R-Released
-					
-					boolean state;
-					SHumanControl control = (SHumanControl)entity.getController();
-					if(sub.substring(0, 1) == "P"){
-						state = true;
-					}else{
-						state = false;
-					}
-					
-					control.setKeyTo(sub.substring(1, 2), state);
-				}
-			}
-		}
-	}
-	
-	public void AddServerMessage(SMessage message){
-		ServerMessages.add(message);
-	}
-	public void AddClientMessage(SMessage message){
-		ClientMessages.add(message);
 	}
 }

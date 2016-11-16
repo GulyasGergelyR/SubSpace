@@ -9,7 +9,7 @@ import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 
-
+@Deprecated
 public class SMessageParser {
 	private SCommunicationHandler cHandler;
 	
@@ -29,7 +29,7 @@ public class SMessageParser {
 	public static boolean ParseEntityCreateMessage(SMessage message){
 		SEntity entity = new SEntity();
 		entity.setController(new SHumanControl(entity));
-		entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
+		//entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
 		entity.setPos(SMessagePatterns.getPos(message));
 		entity.setLookDir(SMessagePatterns.getLookDir(message));
 		entity.setMoveDir(SMessagePatterns.getMoveDir(message));

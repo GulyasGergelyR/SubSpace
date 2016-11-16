@@ -25,7 +25,6 @@ public class SMPatterns {
 	public static byte MClientInput = 0x30;
 	public static byte CClientInput = 0x31;
 	
-	
 	//0001 xxxx Game commands
 	public static byte MGameComamnd = 0x10;
 	
@@ -55,15 +54,8 @@ public class SMPatterns {
 		return new SVector(x,y);
 	}
 	
-	public static SM getConnectToServerMessage(String nameString){
-		byte[] name = nameString.getBytes();
-		SM message = new SM();
-		message.add(CConnect);
-		message.add(name);
-		return message;
-	}
 	private static byte[] getIdBytes(int id){
-		return ByteBuffer.allocate(4).putInt(id).array();
+		return ByteBuffer.allocate(2).putShort((short)id).array();
 	}
 	private static byte[] getShortBytes(short value){
 		return ByteBuffer.allocate(2).putShort(value).array();
@@ -72,26 +64,46 @@ public class SMPatterns {
 		return ByteBuffer.allocate(8).putLong(value).array();
 	}
 	
-	public static SM getDisconnectFromServerMessage(SNode localNode){
+	public static SM getConnectToServerMessage(String nameString){
+		byte[] name = nameString.getBytes();
 		SM message = new SM();
-		message.add(CDisconnect);
-		message.add(getIdBytes(localNode.getId().get()));
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CConnect);
+		buffer.put((byte)nameString.length());
+		buffer.put(name);
 		return message;
 	}
-	public static SM getRequestPingDataFromClientMessage(SNode client, long nanoTime){
+	public static SM getDisconnectFromServerMessage(SNode localNode){
 		SM message = new SM();
-		message.add(CPingRequest);
-		message.add(getIdBytes(client.getId().get()));
-		message.add(getLongBytes(nanoTime));
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CDisconnect);
+		buffer.putShort((short)localNode.getId().get());
+		return message;
+	}
+	public static SM getPingRequestMessage(SNode client, long nanoTime){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CPingRequest);
+		buffer.putLong(nanoTime);
 		if (client.getPing()>999){
-			message.add(getShortBytes((short)999));
+			buffer.putShort((short)999);
 		}else{
-			message.add(getShortBytes((short)client.getPing()));
+			buffer.putShort((short)client.getPing());
 		}
 		return message;
 	}
-	
-	
-	
-	
+	public static SM getPingAnswerMessage(long nanoTime){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CPingAnswer);
+		buffer.putLong(nanoTime);
+		return message;
+	}
+	public static SM getConnectAllowedMessage(SNode client){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CConnectAllowed);
+		buffer.putShort((short)client.getId().get());
+		return message;
+	}
 }
