@@ -126,7 +126,7 @@ public class SMain {
 			player = new SPlayer(node, "Gergo");
 			entity = new SEntity();
 			player.setEntity(entity);
-			//TODO Id sharing, make it normal
+			
 			entity.setId(node.getId());
 			gameInstance.setLocalPlayer(player);
 			communicationHandler.setLocalNode(node);

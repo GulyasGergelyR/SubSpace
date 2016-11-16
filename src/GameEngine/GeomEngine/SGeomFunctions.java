@@ -17,7 +17,6 @@ public class SGeomFunctions {
 				else{
 					return false;
 				}
-				
 			}
 		}
 		else if (hitbox1 instanceof SHitboxTriangular || hitbox2 instanceof SHitboxTriangular){

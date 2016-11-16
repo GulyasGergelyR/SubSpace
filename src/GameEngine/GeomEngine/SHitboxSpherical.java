@@ -9,7 +9,7 @@ public class SHitboxSpherical extends SHitbox {
 		this.radius = r;
 	}
 	public float getRadius() {
-		return radius;
+		return radius*owner.getBody().getScale();
 	}
 	public void setRadius(float radius) {
 		this.radius = radius;
