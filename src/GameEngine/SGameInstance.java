@@ -13,6 +13,7 @@ import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.ComEngine.SMessage;
 import WebEngine.ComEngine.SMessageParser;
 import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;
 
 public class SGameInstance {
@@ -21,8 +22,8 @@ public class SGameInstance {
 	
 	//TODO decide whether to use player or entity array!
 	
-	private List<SPlayer> players = new ArrayList<SPlayer>();
-	private List<SEntity> entities = new ArrayList<SEntity>();
+	private List<SPlayer> players;
+	private List<SEntity> entities;
 	//private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	//private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
 	private SBackGround backGround = new SBackGround();
@@ -33,6 +34,8 @@ public class SGameInstance {
 	public SGameInstance(){
 		FPS = new SFPS();
 		backGround.setTexture("res/object/background/bg1.png");
+		players = new ArrayList<SPlayer>();
+		entities = new ArrayList<SEntity>();
 	}
 	
 	public List<SEntity> getEntities(){
@@ -63,7 +66,6 @@ public class SGameInstance {
 
 	public void setLocalPlayer(SPlayer localPlayer) {
 		this.localPlayer = localPlayer;
-		addEntity(localPlayer.getEntity());
 	}
 
 	public SBackGround getBackGround(){
@@ -75,7 +77,7 @@ public class SGameInstance {
 			entities.add(entity);
 		}
 	}
-	public void removeEntity(SId Id){
+	public void removeEntity(int Id){
 		synchronized (entities) {
 			SEntity entity = getEntityById(Id);
 			if (entity != null){
@@ -90,7 +92,7 @@ public class SGameInstance {
 		}
 	}
 	
-	protected SEntity getEntityById(SId Id){
+	protected SEntity getEntityById(int Id){
 		for(SEntity entity : entities){
 			if (entity.equals(Id))
 				return entity;
@@ -99,7 +101,7 @@ public class SGameInstance {
 		return null;
 	}
 	
-	protected SPlayer getPlayerById(SId Id){
+	protected SPlayer getPlayerById(int Id){
 		for(SPlayer player : players){
 			if (player.equals(Id))
 				return player;
@@ -110,9 +112,15 @@ public class SGameInstance {
 	
 	
 	public void UpdateEntities(){
-		if(entities.size()>0){
+		if(!entities.isEmpty()){
+			for(SEntity entity : entities){
+				entity.update();
+			}
+				/*
+
+			}
 			int maxLength = SMain.getCommunicationHandler().getEntityMessageLength();
-			/*
+			
 			for(SEntity entity : entities){
 				for(SM message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
 					if(message.getCommandName().equals("ENTUP"))
@@ -154,14 +162,20 @@ public class SGameInstance {
 			byte command = message.getCommandId();
 			if (SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){  // Client input
 				if (command == SMPatterns.CClientInput){ 	//Client input (pressed key, mouse moved, mouse click)
-					
+					int id = SMParser.parseId(message.getBuffer());
+					SEntity entity = getEntityById(id);
+					if (entity != null)
+						SMParser.parseClientInputMessage(message, entity);
 				}
 			}else{
 				if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
-					
+					int id = SMParser.parseId(message.getBuffer());
+					SEntity entity = getEntityById(id);
+					if (entity != null)
+						SMParser.parseEntityUpdateMessage(message, entity);
 				}
 				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity
-					
+					SMParser.parseEntityCreateMessage(message);
 				}
 				else if (command == SMPatterns.CEntityDelete){ 	//Server deletes an Entity
 					

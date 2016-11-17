@@ -52,7 +52,7 @@ public class SMessageParser {
 			if(command.substring(0, 1).equals("P")){
 				pressed = true;
 			} //"R" - Released is default false
-			control.setKeyTo(command.substring(1, 2), pressed);
+			//control.setKeyTo(command.substring(1, 2), pressed);
 		}
 		return true;
 	}

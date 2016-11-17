@@ -9,10 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.SId;
-import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SHumanControl;
-import GameEngine.GeomEngine.SVector;
 import GameEngine.SPlayer.PlayerState;
+import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPNode;
@@ -246,7 +244,7 @@ public class SCommunicationHandler {
 					addEntityMessage(message);
 				}
 				else{
-					System.out.println("Server received unknown message: \n\t"+new String(message.getData()));
+					System.out.println("Server received unknown message: "+String.format("%02x", command & 0xff));
 				}
 			}
 			////////////////////////CLIENT\\\\\\\\\\\\\\\\\\\\\\
@@ -279,12 +277,12 @@ public class SCommunicationHandler {
 					ObjectMessages.add(message);
 				}
 				else{
-					System.out.println("Received unknown message: \n\t"+new String(message.getData()));
+					System.out.println("Received unknown message: "+String.format("%02x", command & 0xff));
 				}
 			}
 		} else{
 			//TODO Send back error
-			System.out.println("Client received invalid message: \n\t"+new String(message.getData()));
+			System.out.println("Client received invalid message");
 		}
 	}
 	
@@ -315,17 +313,13 @@ public class SCommunicationHandler {
 				SMain.getGameInstance().addPlayer(client.getPlayer());
 				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);
 				udpNode.SendMessage(connectallowed, client);
-				//RequestPingDataFromClient(client);
+				//RequestPingDataFromClient(client); TODO decide if ping request needed here
+				
+				//TODO add position initialization
 				//Send to other clients
-				//TODO add other client message
-				/*
-				SM createEntity = new SMessage(client.getId(),"ENTCR","");
-				createEntity.addContent("p;"+(new SVector(251,250)).getString());
-				createEntity.addContent("md;"+(new SVector(0,0)).getString());
-				createEntity.addContent("ld;"+(new SVector(0,0)).getString());
-				createEntity.addContent("ad;"+(new SVector(0,0)).getString());
-				SendMessageExceptToNode(createEntity, client);
-				*/
+				SM createEntity = SMPatterns.getEntityCreateMessage(client.getPlayer());
+				SendMessage(createEntity);
+				
 			}
 		}else{
 			System.out.println("Client already joined: "+client.getName());
@@ -345,7 +339,7 @@ public class SCommunicationHandler {
 						System.out.println("Client removed: "+client.getName());
 					}
 					//TODO look here if there is an entity nullpointer error - might have been fixed already
-					SMain.getGameInstance().removeEntity(client.getId());
+					SMain.getGameInstance().removeEntity(client.getId().get());
 					//TODO add entity delete message:
 					/*
 					SM deleteentity = new SM(client.getId(),"DELEN","");
@@ -358,6 +352,9 @@ public class SCommunicationHandler {
 	}
 	private void ParseConnectAllowedCommand(SM message){
 		localNode.setState(ConnectionState.Connected);
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMParser.parseId(buffer);
+		localNode.setId(new SId(id));
 	}
 	private void ParseConnectNotAllowedCommand(SM message){
 		// TODO handle not allowed connection

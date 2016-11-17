@@ -10,22 +10,24 @@ public class SNode extends SIdentifiable{
 	//////////Communication
 	private InetAddress IPAddress;
 	//////////Interface
+
+	public enum ConnectionState{
+		Connected, NotConnected
+	}
 	private ConnectionState state = ConnectionState.NotConnected;
 	private float ping = 1.0f;
-	//////////Game
+	//////////Game - Client
 	private SPlayer player;
 	
 	public SNode(InetAddress IPAddress, int port, String name, PlayerState playerState){
+		super();
 		this.IPAddress = IPAddress;
-		this.Id = SId.getNewId(this);
 		this.player = new SPlayer(this, name, playerState);
 	}
 	
-	@Deprecated
-	public SNode(InetAddress IPAddress, int port){
-		super();
+	public SNode(InetAddress IPAddress, int port, int id){
+		this.Id = new SId(id);
 		this.IPAddress = IPAddress;
-		this.player = new SPlayer(this, "noname", PlayerState.local);
 	}
 
 	public InetAddress getIPAddress() {
@@ -56,13 +58,9 @@ public class SNode extends SIdentifiable{
 		this.state = state;
 	}
 
-	public enum ConnectionState{
-		Connected, NotConnected
-	}
-
 	public void setPlayer(SPlayer player) {
 		this.player = player;
-		
+		player.inheritIdFrom(this);
 	}
 	public SPlayer getPlayer(){
 		return player;

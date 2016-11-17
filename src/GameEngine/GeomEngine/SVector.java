@@ -3,8 +3,6 @@ package GameEngine.GeomEngine;
 import java.nio.ByteBuffer;
 import java.util.Locale;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 
 public class SVector {
 	private float x;

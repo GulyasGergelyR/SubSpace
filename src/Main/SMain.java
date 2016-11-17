@@ -18,23 +18,18 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
-import org.lwjgl.util.glu.GLU;
-import org.omg.PortableInterceptor.ServerIdHelper;
 
 import GameEngine.SGameInstance;
-import GameEngine.SId;
-import GameEngine.SPlayer;
+import GameEngine.SPlayer.PlayerState;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -45,7 +40,6 @@ public class SMain {
 	private static SGameInstance gameInstance;
 	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
-	
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -95,20 +89,12 @@ public class SMain {
 		communicationHandler = new SCommunicationHandler();
 	}
 	
-	@Deprecated
-	private static void InitGhost(){
-		SEntity Ghost = new SEntity();
-		//Ghost.setId(SId.getNewId(Ghost));
-		Ghost.setController(new SHumanControl(Ghost));
-		gameInstance.addEntity(Ghost);
-	}
-	
 	private static void InitServer(){
 		Init();
 		System.out.println("Starting server...");
 		SNode node;
 		try {
-			node = new SNode(InetAddress.getLocalHost(), 0);
+			node = new SNode(InetAddress.getLocalHost(), 0, 1); // server hets special id 1
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsServer(9090, 9089);
 			System.out.println("Server is running...");
@@ -116,26 +102,18 @@ public class SMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	private static void InitClient(){
 		Init();
 		SNode node;
 		SNode server;
-		SPlayer player;
-		SEntity entity;
 		try {
-			node = new SNode(InetAddress.getLocalHost(), 0);
-			//player = new SPlayer(node, "Gergo");
-			//entity = new SEntity();
-			//player.setEntity(entity);
-			//TODO Id sharing, make it normal
-			//entity.set(node.getId());
-			//gameInstance.setLocalPlayer(player);
+			node = new SNode(InetAddress.getLocalHost(), 0, "Gergo", PlayerState.local);
+			gameInstance.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
-			byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 103};
-			server = new SNode(InetAddress.getByAddress(ipAddr), 0);
+			byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 104};
+			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server hets special id 1
 			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -165,6 +143,7 @@ public class SMain {
 		while(true){
 			timer.StartTimer();
 			communicationHandler.RequestPingDataFromClients();
+			gameInstance.CheckEntityMessages();
 			gameInstance.UpdateEntities();
 			gameInstance.SendGameDataToClients();
 			timer.SleepIfRequired();
@@ -173,6 +152,7 @@ public class SMain {
 	}
 	private static void StartClient(){
 		while (!Display.isCloseRequested()) {
+			gameInstance.CheckEntityMessages();
 			gameInstance.UpdateEntities();
 			renderGL();
 			Display.update();
@@ -181,7 +161,6 @@ public class SMain {
 		}
 		Display.destroy();
 	}
-	
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;

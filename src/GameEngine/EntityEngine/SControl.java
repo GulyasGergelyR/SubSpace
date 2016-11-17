@@ -8,7 +8,7 @@ public class SControl {
 	public SControl(SMobile mobile){
 		Owner = mobile;
 	}
-	public  boolean setKeyTo(String key, boolean state){return false;}
+	public  boolean setKeyTo(int key, boolean state){return false;}
 	protected void Think(){}
 	protected void Act(){
 		Owner.Move();
@@ -17,8 +17,6 @@ public class SControl {
 	
 	public void ThinkAndAct(){
 		Think();
-		if(!Owner.IsPosUpdated()){
-			Act();
-		}
+		Act();
 	}
 }

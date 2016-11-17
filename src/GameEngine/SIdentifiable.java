@@ -29,15 +29,15 @@ public class SIdentifiable {
 		if (obj instanceof SIdentifiable){
 			return equals((SIdentifiable)obj);
 		}
-		if (obj instanceof SId){
+		else if (obj instanceof SId){
 			return equals((SId)obj);
 		}
-		if (obj instanceof Integer){
+		else if (obj instanceof Integer){
 			return equals((Integer)obj);
 		}
 		return false;
 	}
-	public void inheriteIdFrom(SIdentifiable identifiable){
+	public void inheritIdFrom(SIdentifiable identifiable){
 		this.Id = identifiable.Id;
 	}
 	

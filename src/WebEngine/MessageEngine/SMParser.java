@@ -1,54 +1,75 @@
 package WebEngine.MessageEngine;
 
-import java.util.LinkedList;
-import java.util.UUID;
+import java.nio.ByteBuffer;
 
+import GameEngine.SPlayer;
+import GameEngine.SPlayer.PlayerState;
 import GameEngine.EntityEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
-import WebEngine.ComEngine.SMessage;
-import WebEngine.ComEngine.SMessagePatterns;
+import WebEngine.ComEngine.SNode;
 
 public class SMParser {
-	public static boolean ParseEntityUpdateMessage(SMessage message, SEntity entity){
-		entity.setPos(SMessagePatterns.getPos(message));
-		entity.setLookDir(SMessagePatterns.getLookDir(message));
-		entity.setMoveDir(SMessagePatterns.getMoveDir(message));
-		entity.setAcclDir(SMessagePatterns.getAcclDir(message));
-		entity.setPosUpdated();
-		
-		return true;
+	public static int parseId(ByteBuffer buffer){ // 2 byte long
+		return buffer.getShort();
 	}
-	public static boolean ParseEntityCreateMessage(SMessage message){
-		SEntity entity = new SEntity();
-		entity.setController(new SHumanControl(entity));
-		//entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
-		entity.setPos(SMessagePatterns.getPos(message));
-		entity.setLookDir(SMessagePatterns.getLookDir(message));
-		entity.setMoveDir(SMessagePatterns.getMoveDir(message));
-		entity.setAcclDir(SMessagePatterns.getAcclDir(message));
-		entity.setPosUpdated();
-		
-		SMain.getGameInstance().addEntity(entity);
-		return true;
+	public static SVector parseBigVector(ByteBuffer buffer){ //[+-32768],[9999] - 4 byte long
+		float x =  buffer.getShort()+ buffer.getShort()/10000f;
+		float y =  buffer.getShort()+ buffer.getShort()/10000f;
+		return new SVector(x,y);
 	}
-	public static boolean ParseClientInputMessage(SMessage message, SEntity entity){
+	public static SVector parseSmallVector(ByteBuffer buffer){ //[+-127],[9999] - 3 byte long
+		float x =  buffer.get()+ buffer.getShort()/10000f;
+		float y =  buffer.get()+ buffer.getShort()/10000f;
+		return new SVector(x,y);
+	}
+	
+	
+	public static void parseEntityUpdateMessage(SM message, SEntity entity){
+		ByteBuffer buffer = message.getBuffer();
+		entity.setPos(parseBigVector(buffer));
+		entity.setLookDir(parseBigVector(buffer));
+		entity.setMoveDir(parseBigVector(buffer));
+		entity.setAcclDir(parseBigVector(buffer));
+		//TODO check if this is needed - posUpdated
+		entity.setPosUpdated();
+	}
+	public static void parseEntityCreateMessage(SM message){
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMParser.parseId(message.getBuffer());
+		byte nameLength = buffer.get();
+		byte[] nameBytes = new byte[nameLength];
+		for (int i=0; i<nameLength;i++){
+			nameBytes[i] = buffer.get();
+		}
+		String name = new String(nameBytes);
+		SNode localNode = SMain.getCommunicationHandler().getLocalNode();
+		
+		if (message.getAddress().equals(localNode.getIPAddress())){
+			SEntity entity = new SEntity(localNode.getPlayer());
+			SMain.getGameInstance().addEntity(entity);
+		}
+		else{
+			 SPlayer player = new SPlayer(id, name, PlayerState.lan);
+			 SEntity entity = new SEntity(player);
+			 SMain.getGameInstance().addPlayer(player);
+			 SMain.getGameInstance().addEntity(entity);
+		}
+	}
+	public static void parseClientInputMessage(SM message, SEntity entity){
 		SControl control = entity.getController();
-		LinkedList<String> wasd = SMessagePatterns.getEntityCommandWASD(message);
-		SVector aimLookDir = SMessagePatterns.getMousePos(message);
-		if (aimLookDir!= null){
-			entity.setAimLookDir(aimLookDir);
-		}
-		while(wasd.size()>0){
-			String command = wasd.pop();
+		ByteBuffer buffer = message.getBuffer();
+		byte command = buffer.get();
+		SVector aimLookDir = parseBigVector(buffer);
+		entity.setAimLookDir(aimLookDir);
+		for (byte key=0;key<4;key++){
 			boolean pressed = false;
-			if(command.substring(0, 1).equals("P")){
+			int state = (byte)(command >> key) & 1;
+			if (state == 1){
 				pressed = true;
-			} //"R" - Released is default false
-			control.setKeyTo(command.substring(1, 2), pressed);
+			}
+			control.setKeyTo(key, pressed);
 		}
-		return true;
 	}
 }

@@ -41,7 +41,6 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		}else{
 			this.setController(new SHumanControl(this));
 		}
-			
 	}
 		
 	@Override

@@ -7,19 +7,19 @@ import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
-import WebEngine.ComEngine.SMessage;
-import WebEngine.ComEngine.SCommunicationHandler.UDPNodeRole;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SHumanControlLocal extends SHumanControl{
+	
+	private int keys[] = {Keyboard.KEY_W, Keyboard.KEY_A, Keyboard.KEY_S, Keyboard.KEY_D};
 	
 	public SHumanControlLocal(SMobile mobile) {
 		super(mobile);
 	}
-	
-	public void stuff(){}
-	
-	@Override
-	protected void Think() {
+	/*
+	protected void ThinkOld() {
+		
 		String command = new String();
 		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
 			if (setKeyTo("A", true)) command  = command+"PA;";
@@ -45,7 +45,38 @@ public class SHumanControlLocal extends SHumanControl{
 		//	super.Think();
 		
 		if (command.length()>0){
-			SMessage message = new SMessage(Owner.getId(), "CLIIN", command);
+			SM message = new SM();
+			SMain.getCommunicationHandler().SendMessage(message);
+		}
+	}
+	*/
+	
+	@Override
+	protected void Think() {
+		byte command = 0;  //WASD - MPL - MPR
+		boolean change = false;
+		// W:0 A:1 S:2 D:3
+		for (int key=0;key<4;key++){
+			if (Keyboard.isKeyDown(keys[key])) {
+				if (setKeyTo(key, true)) {
+					command += 1<<key;
+					change=true;
+				}
+			}
+			else if (setKeyTo(key, false)) {
+					change=true;
+			}
+		}
+		int M_x = Mouse.getX();
+		int M_y = Mouse.getY();
+		
+		Owner.setAimLookDir(new SVector(M_x-Specifications.WindowWidth/2,
+				M_y-Specifications.WindowHeight/2));
+		
+		System.out.println("Command: "+command);
+		
+		if (change){
+			SM message = SMPatterns.getClientUpdateMessage(Owner, command);
 			SMain.getCommunicationHandler().SendMessage(message);
 		}
 	}

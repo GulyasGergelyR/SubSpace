@@ -2,8 +2,9 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
+import GameEngine.SPlayer;
+import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.GeomEngine.SVector;
 import WebEngine.ComEngine.SNode;
 
 public class SMPatterns {
@@ -41,24 +42,11 @@ public class SMPatterns {
 	public static byte CObjectUpdate = 0x12;
 	public static byte CObjectDelete = 0x1F;
 	
-	public static int parseId(ByteBuffer buffer){ // 2 byte long
-		return buffer.getShort();
-	}
-	public static SVector parseBigVector(ByteBuffer buffer){ //[+-32768],[9999] - 4 byte long
-		float x =  buffer.getShort()+ buffer.getShort()/10000f;
-		float y =  buffer.getShort()+ buffer.getShort()/10000f;
-		return new SVector(x,y);
-	}
-	public static SVector parseSmallVector(ByteBuffer buffer){ //[+-127],[9999] - 3 byte long
-		float x =  buffer.get()+ buffer.getShort()/10000f;
-		float y =  buffer.get()+ buffer.getShort()/10000f;
-		return new SVector(x,y);
-	}
 	public static SM getConnectToServerMessage(String nameString){
-		byte[] name = nameString.getBytes();
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CConnect);
+		byte[] name = nameString.getBytes();
 		buffer.put((byte)nameString.length());
 		buffer.put(name);
 		return message;
@@ -101,11 +89,31 @@ public class SMPatterns {
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CEntityUpdate);
 		buffer.putShort((short)entity.getId().get());
-		// Add position
+		// Add vectors
 		entity.getPos().addToBufferAsBigVector(buffer);
 		entity.getMoveDir().addToBufferAsBigVector(buffer);
 		entity.getLookDir().addToBufferAsBigVector(buffer);
 		entity.getAcclDir().addToBufferAsBigVector(buffer);
 		return message;
 	}
+	public static SM getEntityCreateMessage(SPlayer player){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CEntityCreate);
+		buffer.putShort((short)player.getId().get());
+		byte[] name = player.getName().getBytes();
+		buffer.put((byte)player.getName().length());
+		buffer.put(name);
+		return message;
+	}
+	public static SM getClientUpdateMessage(SMobile mobile, byte command){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CClientInput);
+		buffer.putShort((short)mobile.getId().get());
+		buffer.put(command);
+		mobile.getAimLookDir().addToBufferAsBigVector(buffer);
+		return message;
+	}
+	
 }

@@ -5,10 +5,10 @@ import WebEngine.ComEngine.SNode;
 
 public class SId {
 	static int currentMaxDefaultObjectId = 1;
-	static int currentMaxEntityId = 1;
-	static int currentMaxNodeId = 1;
+	static int currentMaxEntityId = 2;
+	static int currentMaxNodeId = 2;
 	public static SId getNewId(Object o){
-		if (o instanceof SEntity){
+		if (o instanceof SEntity || o instanceof SNode){
 			return new SId(currentMaxEntityId++);
 		}
 		else if (o instanceof SNode){

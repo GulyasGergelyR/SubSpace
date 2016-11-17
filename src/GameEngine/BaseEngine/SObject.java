@@ -20,7 +20,6 @@ public abstract class SObject extends SIdentifiable {
 	//Initialize
 	public SObject()
 	{
-		super();
 		this.pos = new SVector();
 		this.lookDir = new SVector(1,0);
 		this.texture = "res/entity/spaceshipv1.png";

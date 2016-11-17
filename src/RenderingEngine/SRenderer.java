@@ -22,7 +22,6 @@ import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.EntityState;
-import WebEngine.ComEngine.SMessagePatterns;
 
 //TODO create SDrawObject and replace texture
 
@@ -54,15 +53,15 @@ public class SRenderer {
 		}
 	}
 	
-	
-	
-	private void setFollowLocalPlayer(boolean follow){
+	public void setFollowLocalPlayer(boolean follow){
 		this.followLocalPlayer = follow;
 	}
 	
 	private void FollowLocalPlayer(){
 		SPlayer localPlayer = gameInstance.getLocalPlayer();
 		SEntity entity = localPlayer.getEntity();
+		if (entity == null)
+			return;
 		if(entity.getState().equals(EntityState.Active) 
 				|| entity.getState().equals(EntityState.Ghost)){
 			float x = entity.getPos().getX();

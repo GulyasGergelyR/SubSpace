@@ -45,9 +45,9 @@ public class SUDPNode {
 		}
 	    
 	    if(communicationHandler.getUDPRole().equals(UDPRole.Server))
-	    	System.out.println("Data Sent from Server "+message.getData());
+	    	System.out.println("Data Sent from Server "+String.format("%02x", message.getData()[0] & 0xff));
 	    if(communicationHandler.getUDPRole().equals(UDPRole.Client))
-	    	System.out.println("Data Sent from Client "+message.getData());
+	    	System.out.println("Data Sent from Client "+String.format("%02x", message.getData()[0] & 0xff));
 	    	
 	}
 	
@@ -73,9 +73,9 @@ public class SUDPNode {
 				}
                 communicationHandler.ParseMessageFromDatagramPacket(receivePacket);
                 // TODO Remove junk below
-               String sentence = new String(receivePacket.getData());
-                if(sentence.length()>0)
-                	System.out.println("RECEIVED: " + sentence);
+                //String sentence = new String(receivePacket.getData());
+                //if(sentence.length()>0)
+                	//System.out.println("RECEIVED: " + sentence);
             }
 		}
 	}

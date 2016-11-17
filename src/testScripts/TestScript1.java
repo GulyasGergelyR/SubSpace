@@ -29,6 +29,7 @@ public class TestScript1 {
 			System.out.println(b);
 	
 		System.out.println((125.52432f-((byte)125.52432f))*10000);
+		System.out.println(1<<3);
 
 	}
 	private static void test1(){
