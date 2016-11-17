@@ -46,7 +46,7 @@ public class SMParser {
 		String name = new String(nameBytes);
 		SNode localNode = SMain.getCommunicationHandler().getLocalNode();
 		
-		if (message.getAddress().equals(localNode.getIPAddress())){
+		if (localNode.equals(id)){
 			SEntity entity = new SEntity(localNode.getPlayer());
 			SMain.getGameInstance().addEntity(entity);
 		}
