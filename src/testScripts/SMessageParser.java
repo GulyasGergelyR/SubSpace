@@ -1,7 +1,6 @@
 package testScripts;
 
 import java.util.LinkedList;
-import java.util.UUID;
 
 import GameEngine.ControlEngine.SControl;
 import GameEngine.ControlEngine.SHumanControlServer;

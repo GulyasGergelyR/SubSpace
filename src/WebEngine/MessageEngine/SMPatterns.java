@@ -11,6 +11,8 @@ import GameEngine.WeaponEngine.SBullet;
 import WebEngine.ComEngine.SNode;
 
 public class SMPatterns {
+	//TODO create ID adder function instead of adding simple short, for future changes
+	
 	//Message Patterns
 	//M is mask, C is command
 	

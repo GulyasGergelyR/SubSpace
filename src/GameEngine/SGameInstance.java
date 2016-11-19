@@ -26,8 +26,6 @@ public class SGameInstance {
 	private List<SPlayer> players;
 	private List<SEntity> entities;
 	private LinkedList<SObject> objects;
-	//private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
-	//private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
 	private SBackGround backGround = new SBackGround();
 	
 	private SFPS FPS;
@@ -88,16 +86,40 @@ public class SGameInstance {
 	}
 	public void removeEntity(int Id){
 		synchronized (entities) {
-			SEntity entity = getEntityById(Id);
-			if (entity != null){
-				entities.remove(entity);
+			synchronized (players) {
+				removeEntityFromList(Id);
+				removePlayerFromList(Id);
 			}
 		}
-		synchronized (players) {
-			SPlayer player = getPlayerById(Id);
-			if (player != null){
-				players.remove(player);
-			}
+	}
+	private void removePlayerFromList(int Id){
+		ListIterator<SPlayer> iter = players.listIterator();
+		while(iter.hasNext()){
+			SPlayer player = iter.next();
+		    if(player.equals(Id)){
+		        iter.remove();
+		        break;
+		    }
+		}
+	}
+	private void removeEntityFromList(int Id){
+		ListIterator<SEntity> iter = entities.listIterator();
+		while(iter.hasNext()){
+			SEntity entity = iter.next();
+		    if(entity.equals(Id)){
+		        iter.remove();
+		        break;
+		    }
+		}
+	}
+	private void removeObjectFromList(int Id){
+		ListIterator<SObject> iter = objects.listIterator();
+		while(iter.hasNext()){
+			SObject object = iter.next();
+		    if(object.equals(Id)){
+		        iter.remove();
+		        break;
+		    }
 		}
 	}
 	
@@ -220,9 +242,7 @@ public class SGameInstance {
 				}
 				else if (command == SMPatterns.CEntityDelete){ 	//Server deletes an Entity
 					int id = SMParser.parseId(message.getBuffer());
-					SEntity entity = getEntityById(id);
-					if (entity != null)
-						entities.remove(entity);
+					removeEntity(id);
 				}
 			}
 			i++;
@@ -251,9 +271,7 @@ public class SGameInstance {
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
 					int id = SMParser.parseId(message.getBuffer());
-					SObject object = getObjectById(id);
-					if (object != null)
-						objects.remove(object);
+					removeObjectFromList(id);
 				}
 			}
 			i++;

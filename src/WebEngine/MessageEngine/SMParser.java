@@ -7,7 +7,6 @@ import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
-import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.WeaponEngine.SBullet;
