@@ -1,12 +1,14 @@
 package GameEngine.EntityEngine;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
-import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.ControlEngine.SHumanControlClient;
+import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.WeaponEngine.SWeapon;
 import Main.SMain;
 import RenderingEngine.SRenderObject;
 import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
@@ -14,7 +16,7 @@ import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public enum EntityState{
 		//TODO add this to SObject
-		Active, Ghost, Invisible, OnDeathRaw
+		Active, Ghost, Invisible, WaitingDelete
 	}
 	protected EntityState entityState = EntityState.Active;
 	protected SPlayer player;
@@ -22,7 +24,9 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	
 	protected float life;
 	// TODO Create SWeapon
-	// protected List<SWeapon> weapons;
+	protected List<SWeapon> weapons;
+	protected SWeapon activeWeapon;
+	
 	@Deprecated
 	public SEntity(){
 		super();
@@ -39,6 +43,10 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.scale = 0.05f;
 		this.player = player;
 		player.setEntity(this);
+		// Add weapons
+		weapons = new ArrayList<SWeapon>();
+		SWeapon weapon = new SWeapon(this);
+		activeWeapon = weapon;
 		if (player.getPlayerState().equals(PlayerState.local)){
 			System.out.println("Created local player at: "+SMain.getCommunicationHandler().getUDPRole());
 			this.setController(new SHumanControlClient(this));
@@ -60,5 +68,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public EntityState getState(){
 		return entityState;
 	}
-	
+	public void tryToFire(){
+		if (!activeWeapon.tryIt())
+			activeWeapon.coolIt();
+	}
 }

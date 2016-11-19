@@ -20,6 +20,7 @@ import org.newdawn.slick.opengl.Texture;
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
 import GameEngine.Specifications;
+import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.EntityState;
 
@@ -34,16 +35,21 @@ public class SRenderer {
 		this.gameInstance = GameInstance;
 	}
 	
-	public void DrawObjects(){
+	public void DrawGame(){
 		if(followLocalPlayer) FollowLocalPlayer();
 		DrawBackGround();
+		DrawObjects();
 		DrawEntities();
 	}
 	
 	private void DrawBackGround(){
 		Draw(gameInstance.getBackGround().getDrawables());
 	}
-	
+	private void DrawObjects(){
+		for (SObject object : gameInstance.getObjects()){
+			Draw(object.getDrawables());
+		}
+	}
 	private void DrawEntities(){
 		List<SEntity> Entities = gameInstance.getEntities();
 		for (SEntity entity : Entities){

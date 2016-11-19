@@ -24,16 +24,16 @@ public class SHumanControlClient extends SControlClient{
 		for (int key=0;key<4;key++){
 			if (Keyboard.isKeyDown(keys[key])) {
 				command += 1<<key;
-				//if (setKeyTo(key, true)) {
-					
-				//}
 			}
-			//else if (setKeyTo(key, false)) {
-			//}
 		}
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
-		
+		if(Mouse.isButtonDown(0)){
+			command += 1<<4;
+		}
+		if(Mouse.isButtonDown(1)){
+			command += 1<<5;
+		}
 		SVector aimLookDir = new SVector(M_x-Specifications.WindowWidth/2, M_y-Specifications.WindowHeight/2);
 		SM message = SMPatterns.getClientUpdateMessage(Owner, command, aimLookDir);
 		SMain.getCommunicationHandler().SendMessage(message);

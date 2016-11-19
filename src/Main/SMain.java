@@ -142,8 +142,8 @@ public class SMain {
 		while(true){
 			timer.StartTimer();
 			communicationHandler.RequestPingDataFromClients();
-			gameInstance.CheckEntityMessages();
-			gameInstance.UpdateEntities();
+			gameInstance.CheckMessages();
+			gameInstance.UpdateGame();
 			gameInstance.SendGameDataToClients();
 			timer.SleepIfRequired();
 			updateDelta();
@@ -151,8 +151,8 @@ public class SMain {
 	}
 	public static void StartClient(){
 		while (!Display.isCloseRequested()) {
-			gameInstance.CheckEntityMessages();
-			gameInstance.UpdateEntities();
+			gameInstance.CheckMessages();
+			gameInstance.UpdateGame();
 			renderGL();
 			Display.update();
             Display.sync(Specifications.FPS_M); // cap fps to 60fps
@@ -198,6 +198,6 @@ public class SMain {
 	public static void renderGL() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		renderer.DrawObjects();
+		renderer.DrawGame();
 	}
 }

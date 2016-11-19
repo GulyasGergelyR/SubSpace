@@ -1,6 +1,7 @@
 package GameEngine;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.BaseEngine.SObject;
@@ -22,7 +23,7 @@ public class SGameInstance {
 	
 	private List<SPlayer> players;
 	private List<SEntity> entities;
-	private List<SObject> objects;
+	private LinkedList<SObject> objects;
 	//private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	//private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
 	private SBackGround backGround = new SBackGround();
@@ -35,10 +36,14 @@ public class SGameInstance {
 		backGround.setTexture("res/object/background/bg1.png");
 		players = new ArrayList<SPlayer>();
 		entities = new ArrayList<SEntity>();
+		objects = new LinkedList<SObject>();
 	}
 	
 	public List<SEntity> getEntities(){
 		return entities;
+	}
+	public LinkedList<SObject> getObjects(){
+		return objects;
 	}
 	
 	public SFPS getFPS(){
@@ -94,7 +99,7 @@ public class SGameInstance {
 		}
 	}
 	
-	protected SEntity getEntityById(int Id){
+	public SEntity getEntityById(int Id){
 		for(SEntity entity : entities){
 			if (entity.equals(Id))
 				return entity;
@@ -103,7 +108,7 @@ public class SGameInstance {
 		return null;
 	}
 	
-	protected SPlayer getPlayerById(int Id){
+	public SPlayer getPlayerById(int Id){
 		for(SPlayer player : players){
 			if (player.equals(Id))
 				return player;
@@ -112,7 +117,7 @@ public class SGameInstance {
 		return null;
 	}
 	
-	protected SObject getObjectById(int Id){
+	public SObject getObjectById(int Id){
 		for(SObject object : objects){
 			if (object.equals(Id))
 				return object;
@@ -121,16 +126,29 @@ public class SGameInstance {
 		return null;
 	}
 	
-	public void UpdateEntities(){
+	public void UpdateGame(){
+		UpdateEntities();
+		UpdateObjects();
+	}
+	
+	protected void UpdateEntities(){
 		if(!entities.isEmpty()){
 			for(SEntity entity : entities){
 				entity.update();
 			}
 		}
 	}
+	protected void UpdateObjects(){
+		if(!objects.isEmpty()){
+			for(SObject object : objects){
+				object.update();
+			}
+		}
+	}
 	
 	public void SendGameDataToClients(){
 		SendEntityData();
+		SendObjectData();
 	}
 	private void SendEntityData(){
 		synchronized (entities) {
@@ -140,8 +158,21 @@ public class SGameInstance {
 			}
 		}
 	}
+	private void SendObjectData(){
+		synchronized (objects) {
+			for(SObject object: objects){
+				SM message = SMPatterns.getObjectUpdateMessage(object);
+				SMain.getCommunicationHandler().SendMessage(message);
+			}
+		}
+	}
+	public void CheckMessages(){
+		CheckEntityMessages();
+		CheckObjectMessages();
+	}
 	
-	public void CheckEntityMessages(){
+	
+	protected void CheckEntityMessages(){
 		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
 		// Check Entity messages
 		int current_length = communicationHandler.getEntityMessageLength();
@@ -178,7 +209,7 @@ public class SGameInstance {
 		}
 	}
 	
-	public void CheckObjectMessages(){
+	protected void CheckObjectMessages(){
 		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
 		// Check Object messages
 		int current_length = communicationHandler.getObjectMessageLength();
@@ -193,10 +224,16 @@ public class SGameInstance {
 					SMParser.parseObjectCreateMessage(message);
 				}
 				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
-					SMParser.parseObjectUpdateMessage(message);
+					int id = SMParser.parseId(message.getBuffer());
+					SObject object = getObjectById(id);
+					if (object != null)
+						SMParser.parseObjectUpdateMessage(message, object);
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
-					
+					int id = SMParser.parseId(message.getBuffer());
+					SEntity object = getEntityById(id);
+					if (object != null)
+						objects.remove(object);
 				}
 			}
 			i++;

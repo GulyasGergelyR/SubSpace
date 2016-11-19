@@ -94,14 +94,21 @@ public class SCommunicationHandler {
 	}
 	public int getObjectMessageLength(){
 		synchronized (objectlock) {
+			for(SM message: ObjectMessages)
+				System.out.print(message);
+			System.out.println("");
 			return ObjectMessages.size();
 		}
 	}
 	public SM popEntityMessage(){
-		return EntityMessages.pop();
+		synchronized (entitylock) {
+			return EntityMessages.pop();
+		}
 	}
 	public SM popObjectMessage(){
-		return ObjectMessages.pop();
+		synchronized (objectlock) {
+			return ObjectMessages.pop();
+		}
 	}
 	
 	@Deprecated
@@ -269,13 +276,13 @@ public class SCommunicationHandler {
 					addEntityMessage(message);
 				}
 				else if (command == SMPatterns.CObjectCreate){ 	//Server created Object
-					ObjectMessages.add(message);
+					addObjectMessage(message);
 				}
 				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
-					ObjectMessages.add(message);
+					addObjectMessage(message);
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
-					ObjectMessages.add(message);
+					addObjectMessage(message);
 				}
 				else{
 					System.out.println("Received unknown message: "+String.format("%02x", command & 0xff));
@@ -339,13 +346,9 @@ public class SCommunicationHandler {
 						nodes.remove(client);
 						System.out.println("Client removed: "+client.getName());
 					}
-					//TODO look here if there is an entity nullpointer error - might have been fixed already
+					SM message = SMPatterns.getEntityDeleteMessage(client.getPlayer().getEntity());
+					SendMessage(message);
 					SMain.getGameInstance().removeEntity(client.getId().get());
-					//TODO add entity delete message:
-					/*
-					SM deleteentity = new SM(client.getId(),"DELEN","");
-					SendMessage(deleteentity);
-					*/
 				}
 			};
 			deleteNodeThread.start();

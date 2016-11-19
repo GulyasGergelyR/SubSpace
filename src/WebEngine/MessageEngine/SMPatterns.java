@@ -4,8 +4,10 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
+import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.WeaponEngine.SBullet;
 import WebEngine.ComEngine.SNode;
 
 public class SMPatterns {
@@ -107,6 +109,14 @@ public class SMPatterns {
 		buffer.put(name);
 		return message;
 	}
+	public static SM getEntityDeleteMessage(SEntity entity){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CEntityDelete);
+		buffer.putShort((short)entity.getId().get());
+		return message;
+	}
+	
 	public static SM getClientUpdateMessage(SMobile mobile, byte command, SVector aim){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
@@ -114,6 +124,35 @@ public class SMPatterns {
 		buffer.putShort((short)mobile.getId().get());
 		buffer.put(command);
 		aim.addToBufferAsBigVector(buffer);
+		return message;
+	}
+	
+	public static SM getObjectUpdateMessage(SObject object){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CObjectUpdate);
+		buffer.putShort((short)object.getId().get());
+		// Add vectors
+		object.getPos().addToBufferAsBigVector(buffer);
+		object.getLookDir().addToBufferAsBigVector(buffer);
+		return message;
+	}
+	public static SM getObjectCreateMessage(SObject object){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CObjectCreate);
+		buffer.putShort((short)object.getId().get());
+		if (object instanceof SBullet){
+			buffer.put((byte)20); //TODO remove hard coded bullet type id
+			buffer.putShort((short)(((SBullet)object).getOwner().getId().get()));
+		}
+		return message;
+	}
+	public static SM getObjectDeleteMessage(SObject object){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CObjectDelete);
+		buffer.putShort((short)object.getId().get());
 		return message;
 	}
 	

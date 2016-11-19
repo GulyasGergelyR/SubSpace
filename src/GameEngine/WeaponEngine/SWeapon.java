@@ -2,33 +2,42 @@ package GameEngine.WeaponEngine;
 
 import GameEngine.EntityEngine.SEntity;
 import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SWeapon{
 	protected SEntity owner;
-	protected int coolTime = 25;
-	protected int lastTime = 0;
+	protected int coolTime = 10;
+	protected int lastTime = 10;
 	protected int clipSize = 0; // zero means it does not have to be reloaded
 	protected int maxAmmo = 0; // zero means there is infinite number of bullets
 	protected int ammoInClip = 0; 
 	protected int ammo = 0;  
 	
-	protected SBullet baseBullet = new SBullet(owner);
+	protected SBullet baseBullet;
 	
 	public SWeapon(SEntity owner){
 		this.owner = owner;
+		baseBullet = new SBullet(owner);
 	}
 	
-	public SBullet getBaseBullet() {
+	protected SBullet getBaseBullet() {
 		return baseBullet;
 	}
 	
-	public void tryIt(){
+	public boolean tryIt(){
 		if (cooled()){
 			fireIt();
+			return true;
+		}else{
+			return false;
 		}
 	}
+	public void coolIt(){
+		lastTime++;
+	}
 	
-	public void fireIt(){
+	protected void fireIt(){
 		if (maxAmmo > 0){
 			if (ammoInClip > 0){
 				createBullet();
@@ -46,5 +55,8 @@ public class SWeapon{
 	private void createBullet(){
 		SBullet bullet = baseBullet.createBullet();
 		SMain.getGameInstance().addObject(bullet);
+		SM message = SMPatterns.getObjectCreateMessage(bullet);
+		SMain.getCommunicationHandler().SendMessage(message);
+		lastTime = 0;
 	}
 }

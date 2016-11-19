@@ -154,7 +154,7 @@ public abstract class SMobile extends SObject{
 			lookDir = new SVector(aimLookDir);
 		else lookDir = lookDir.rotate(rotSpeed*SMain.getDeltaRatio());
 	}
-	
+	@Override
 	public void update(){
 		controller.ThinkAndAct();
 		posUpdated = false;

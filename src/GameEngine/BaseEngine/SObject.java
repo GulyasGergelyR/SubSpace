@@ -79,5 +79,5 @@ public abstract class SObject extends SIdentifiable {
 		list.add(new SRenderObject(texture, pos, lookDir.getAngle(), scale, 1.0f));
 		return list;
 	}	
-	
+	public void update(){}
 }

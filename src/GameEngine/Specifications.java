@@ -27,11 +27,12 @@ public final class Specifications {
 		
 		
 		//TODO create automatic import
-		resourcePathStrings = new String[5];
+		resourcePathStrings = new String[6];
 		resourcePathStrings[0] = "res/entity/spaceshipv1.png";
 		resourcePathStrings[1] = "res/entity/prob.png";
 		resourcePathStrings[2] = "res/dot.png";
 		resourcePathStrings[3] = "res/entity/spaceshipv2.png";
 		resourcePathStrings[4] = "res/object/background/bg1.png";
+		resourcePathStrings[5] = "res/object/bullet/bullet.png";
 	}
 }

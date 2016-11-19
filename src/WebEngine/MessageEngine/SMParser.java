@@ -2,11 +2,15 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
+import GameEngine.SId;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
+import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
+import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
 import WebEngine.ComEngine.SNode;
 
@@ -37,7 +41,7 @@ public class SMParser {
 	}
 	public static void parseEntityCreateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
-		int id = SMParser.parseId(message.getBuffer());
+		int id = SMParser.parseId(buffer);
 		
 		SNode localNode = SMain.getCommunicationHandler().getLocalNode();
 		
@@ -76,11 +80,32 @@ public class SMParser {
 			}
 			control.setKeyTo(key, pressed);
 		}
+		for (byte key=0;key<2;key++){
+			boolean pressed = false;
+			int state = (byte)(command >> (key+4)) & 1;
+			if (state == 1){
+				pressed = true;
+			}
+			control.setMouseTo(key, pressed);
+		}
 	}
 	public static void parseObjectCreateMessage(SM message){
-		//TODO implement ObjectCreateMessage
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMParser.parseId(buffer);
+		SObject object = null;
+		int objectTypeId = buffer.get();
+		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
+			int ownerId = buffer.getShort();
+			object = new SBullet(ownerId);
+			object.setId(new SId(id));
+		}
+		if (object != null){
+			SMain.getGameInstance().addObject(object);
+		}
 	}
-	public static void parseObjectUpdateMessage(SM message){
-		//TODO implement ObjectUpdateMessage
+	public static void parseObjectUpdateMessage(SM message, SObject object){
+		ByteBuffer buffer = message.getBuffer();
+		object.setPos(parseBigVector(buffer));
+		object.setLookDir(parseBigVector(buffer));
 	}
 }
