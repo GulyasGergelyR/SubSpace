@@ -3,19 +3,29 @@ package GameEngine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
-import GameEngine.EntityEngine.SDistantHumanControl;
+import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SHumanControl;
+import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
-import WebEngine.SMessage;
+import Main.SMain;
+import WebEngine.ComEngine.SCommunicationHandler;
+import WebEngine.ComEngine.SMessage;
+import WebEngine.ComEngine.SMessageParser;
 
 public class SGameInstance {
 	private List<SEntity> Entities = new ArrayList<SEntity>();
 	private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
-	private SFPS FPS;
+	private SBackGround backGround = new SBackGround();
 	
+	private SFPS FPS;
+	private static int delta;
+	
+	private SPlayer localPlayer;
 	
 	public SGameInstance(){
 		FPS = new SFPS();
@@ -27,6 +37,28 @@ public class SGameInstance {
 	
 	public SFPS getFPS(){
 		return FPS;
+	}
+	public void updateDelta(){
+		delta = FPS.getDelta();
+	}
+	public int getDelta(){
+		return delta;
+	}
+	public float getDeltaRatio(){
+		return ((float)delta)/FPS.getFPS_M();
+	}
+	
+	public SPlayer getLocalPlayer() {
+		return localPlayer;
+	}
+
+	public void setLocalPlayer(SPlayer localPlayer) {
+		this.localPlayer = localPlayer;
+		addEntity(localPlayer.getEntity());
+	}
+
+	public SBackGround getBackGround(){
+		return backGround;
 	}
 	
 	public void addEntity(SEntity entity){
@@ -51,11 +83,49 @@ public class SGameInstance {
 	}
 	
 	public void UpdateEntities(){
-		if(Entities.size()>0)
+		if(Entities.size()>0){
+			int maxLength = SMain.getCommunicationHandler().getEntityMessageLength();
+			
 			for(SEntity entity : Entities){
+				for(SMessage message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
+					if(message.getCommandName().equals("ENTUP"))
+						SMessageParser.ParseEntityUpdateMessage(message, entity);
+					else if(message.getCommandName().equals("CLIIN"))
+						SMessageParser.ParseClientInputMessage(message, entity);
+				}
 				entity.update();
 			}
+		}
 	}
+	
+	public void SendGameDataToClients(){
+		SendEntityData();
+	}
+	private void SendEntityData(){
+		for(SEntity entity: Entities){
+			SMessage message = new SMessage(entity.getId(), "ENTUP", "");
+			message.addContent("p;"+entity.getPos().getString());
+			message.addContent("md;"+entity.getMoveDir().getString());
+			message.addContent("ld;"+entity.getLookDir().getString());
+			message.addContent("ad;"+entity.getAcclDir().getString());
+			SMain.getCommunicationHandler().SendMessage(message);
+		}
+	}
+	
+	public void CheckEntityMessages(){
+		SCommunicationHandler communicationHandler = SMain.getCommunicationHandler();
+		// Check Entity messages (server do not receive Obj message, yet)
+		int current_length = communicationHandler.getEntityMessageLength();
+		int i = 0;
+		while(i<current_length){
+			SMessage message = communicationHandler.popEntityMessage();
+			if(message.getCommandName().equals("CLIIN")){  // Client input
+				
+			}
+			i++;
+		}
+	}
+	
 	
 	public void CheckServerMessages(){
 		int current_length = ServerMessages.size();
@@ -73,7 +143,6 @@ public class SGameInstance {
 		while(i<current_length){
 			i += 1;
 			SMessage message = ClientMessages.poll();
-			//TODO add command check as not only entity can get a refresh!
 			
 			SEntity entity = getEntityById(message.getId());
 			
@@ -90,7 +159,7 @@ public class SGameInstance {
 					// P-Pressed or R-Released
 					
 					boolean state;
-					SDistantHumanControl control = (SDistantHumanControl)entity.getController();
+					SHumanControl control = (SHumanControl)entity.getController();
 					if(sub.substring(0, 1) == "P"){
 						state = true;
 					}else{

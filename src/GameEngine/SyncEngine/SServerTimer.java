@@ -11,6 +11,10 @@ public class SServerTimer {
     	TS=System.nanoTime();
     }
     
+    public static long GetNanoTime(){
+    	return System.nanoTime();
+    }
+    
     public void SleepIfRequired(){
     	//Calculate how long did the cycle take
     	long l = 15*1000*1000; //60 fps

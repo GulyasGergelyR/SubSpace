@@ -1,85 +1,53 @@
 package GameEngine.EntityEngine;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
+import java.util.HashMap;
+import java.util.Map;
 
-import WebEngine.SMessage;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
-import Main.SMain;
+
 
 public class SHumanControl extends SControl{
+	private static final String[] keyChars = {"W","A","S","D","1","2","3","4","5"};
+	private static final int numberofkeys = keyChars.length;
 	
-private static final int numberofkeys = 4;
-	
-	private final String[] keyChars = {"W","A","S","D"};
-	private boolean[] keyStates = new boolean[numberofkeys];
-	private boolean[] prevKeyStates = new boolean[numberofkeys];
+	private Map<String, Boolean> keyStates = new HashMap<String, Boolean>();
+	private Map<String, Boolean> prevKeyStates = new HashMap<String, Boolean>();
 	
 	public SHumanControl(SMobile mobile){
 		super(mobile);
-		for(int i=0;i<numberofkeys;i++)
-		{
-			keyStates[i] = false;
-			prevKeyStates[i] = false;
-		}
-	}
-	
-	public boolean setKeyTo(String keyChar, boolean state)
-	{
-		int key = -1;
-		for(int i=0;i<numberofkeys; i++){
-			if(keyChars[i]==keyChar){
-				key = i;
-				break;
+		for(int i=0;i<numberofkeys;i++){
+				keyStates.put(keyChars[i], false);
+				prevKeyStates.put(keyChars[i], false);
 			}
-		}
-		prevKeyStates[key] = keyStates[key];
-		keyStates[key] = state;
-		if (prevKeyStates[key] != state) return true; else return false;
+	}
+	public boolean setKeyTo(String key, boolean state)
+	{
+		prevKeyStates.replace(key, keyStates.get(key));
+		keyStates.replace(key, state);
+		if (prevKeyStates.get(key) != state) return true; else return false;
 	}
 	
 	@Override
-	public void Think() {
+	protected void Think(){
 		SVector acclDir = new SVector();
-		String command = new String();
-		if (Keyboard.isKeyDown(Keyboard.KEY_A)) {
-			acclDir = acclDir.add(-1.0f, 0.0f);
-			if (setKeyTo("A", true)) command  = command+"PA;";
-		}else 
-			if (setKeyTo("A", false)) command  = command+"RA;";
-		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
-			acclDir = acclDir.add(1.0f, 0.0f);
-			if (setKeyTo("D", true)) command  = command+"PD;";
-		}else 
-			if (setKeyTo("D", false)) command  = command+"RD;";
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			acclDir = acclDir.add(0.0f, 1.0f);
-			if (setKeyTo("W", true)) command  = command+"PD;";
-		}else 
-			if (setKeyTo("W", false)) command  = command+"RD;";
-		if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			acclDir = acclDir.add(0.0f, -1.0f);
-			if (setKeyTo("S", true)) command  = command+"PS;";
-		}else 
-			if (setKeyTo("S", false)) command  = command+"RS;";
-		
-		if (command.length()>0){
-			System.out.println(command);
-			SMessage message = new SMessage(Owner.getId(), "CCCCC", command);
-			SMain.SendClientMessage(message);
-		}
+		if(keyStates.get("W")) acclDir = acclDir.add(0,1);
+		if(keyStates.get("A")) acclDir = acclDir.add(-1,0);
+		if(keyStates.get("S")) acclDir = acclDir.add(0,-1);
+		if(keyStates.get("D")) acclDir = acclDir.add(1,0);
 		
 		if(acclDir.l()==0){
-			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/2.0f));
+			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/10.0f));
+		}else{
+			float accl = Owner.getMaxAcceleration();
+			float factor = 1/(1+Owner.getLookDir().getAbsAngleBetween(acclDir)/4.0f);
+			Owner.setAcclDir(acclDir.setLength(accl*factor));
 		}
-		else{
-			Owner.setAcclDir(acclDir.setLength(Owner.getMaxAcceleration()));
-		}
-		Owner.Move();
-		
-		int M_x = Mouse.getX();
-		int M_y = Mouse.getY();
-		Owner.setLookDir(new SVector(M_x,M_y).sub(Owner.getPos()));
+		float angle = Owner.getAimLookDir().getAngle() - Owner.getLookDir().getAngle();
+		float rotdir = 0;
+		if (angle<0.0f)	{if (Math.abs(angle)<180.0f) rotdir = 1; else rotdir = -1;}
+		else			{if (Math.abs(angle)<180.0f) rotdir = -1; else rotdir = 1;}
+		Owner.setRotAcceleration(Owner.getMaxRotAcceleration()*rotdir);
 	}
+	
 }

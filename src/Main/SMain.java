@@ -16,29 +16,34 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.UUID;
+
 import javax.swing.JOptionPane;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.util.glu.GLU;
 
 import GameEngine.SGameInstance;
+import GameEngine.SPlayer;
 import GameEngine.SResLoader;
+import GameEngine.Specifications;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
-import WebEngine.SMessage;
-import WebEngine.SUDPClient;
-import WebEngine.SUDPServer;
+import WebEngine.ComEngine.SCommunicationHandler;
+import WebEngine.ComEngine.SNode;
 
 public class SMain {
 	
 	private static SGameInstance gameInstance;
+	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
-	private static int delta;
 	
-	private static SUDPServer server;
-	private static SUDPClient client;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -55,46 +60,87 @@ public class SMain {
 		
 		if (n == 0){
 			// Start server
-			
 			try {
 				InitServer();
-				server = new SUDPServer(9090);
-				StartServer(server);
+				StartServer();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				if (server != null)
-					server.Close();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
-				if (server != null)
-					server.Close();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 			}
 		}
 		else{
 			try {
 				InitClient();
-				client = new SUDPClient(9090);
+				
 				StartClient();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				if(client!=null)
-					client.Close();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 				e.printStackTrace();
 			} finally {
-				if(client!=null)
-					client.Close();
+				if (communicationHandler != null)
+					communicationHandler.CloseUDPNode();
 			}
 		}
 	}
-
-	private static void InitServer(){
+	
+	private static void Init(){
+		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
+		communicationHandler = new SCommunicationHandler();
+	}
+	
+	private static void InitGhost(){
+		SEntity Ghost = new SEntity();
+		Ghost.setId(UUID.fromString("06732ac0-51c6-4ba1-a45e-41e82d107847"));
+		Ghost.setController(new SHumanControl(Ghost));
+		gameInstance.addEntity(Ghost);
+	}
+	
+	private static void InitServer(){
+		Init();
+		System.out.println("Starting server...");
+		SNode node;
+		try {
+			node = new SNode(InetAddress.getLocalHost(), 0);
+			communicationHandler.setLocalNode(node);
+			communicationHandler.createUDPNodeAsServer(9090, 9089);
+			System.out.println("Server is running...");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	private static void InitClient(){
-		gameInstance = new SGameInstance();
-		renderer = new SRenderer(gameInstance);
+		Init();
+		SNode node;
+		SPlayer player;
+		SEntity entity;
 		try {
-            Display.setDisplayMode(new DisplayMode(1024, 768));
+			node = new SNode(InetAddress.getLocalHost(), 0);
+			player = new SPlayer(node, "Gergo");
+			entity = new SEntity();
+			player.setEntity(entity);
+			
+			entity.setId(node.getId());
+			gameInstance.setLocalPlayer(player);
+			communicationHandler.setLocalNode(node);
+			communicationHandler.createUDPNodeAsClient(9089, 9090);
+			communicationHandler.ConnectToServer(node);
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		renderer = new SRenderer(gameInstance);
+		
+		try {
+            Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
             Display.create();
         } catch (LWJGLException e) {
             e.printStackTrace();
@@ -103,31 +149,22 @@ public class SMain {
  
         initGL(); // init OpenGL
         initResources();
-        
-        gameInstance.addEntity(new SEntity());
 	}
 	
 	private static void initResources() {
-		// TODO Auto-generated method stub
-		String[] res = new String[4];
-		res[0] = "res/entity/spaceshipv1.png";
-		res[1] = "res/entity/prob.png";
-		res[2] = "res/dot.png";
-		res[3] = "res/entity/spaceshipv2.png";
-		SResLoader.addSpriteArray(res);
+		SResLoader.addSpriteArray(Specifications.resourcePathStrings);
 	}
 
-	private static void StartServer(SUDPServer server){
+	private static void StartServer(){
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
-			gameInstance.CheckClientMessages();
+			communicationHandler.RequestPingDataFromClients();
 			gameInstance.UpdateEntities();
-			//write outputs
+			gameInstance.SendGameDataToClients();
 			timer.SleepIfRequired();
+			updateDelta();
 		}
-		
-		
 	}
 	private static void StartClient(){
 		while (!Display.isCloseRequested()) {
@@ -140,36 +177,31 @@ public class SMain {
 		Display.destroy();
 	}
 	
-	public static void SendClientMessage(SMessage message){
-		try {
-			client.SendMessage(message);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;
 	}
 	
+	public static SCommunicationHandler getCommunicationHandler(){
+		return communicationHandler;
+	}
+	
 	private static void updateDelta(){
-		delta = gameInstance.getFPS().getDelta();
+		gameInstance.updateDelta();
 	}
 	
 	public static int getDelta(){
-		return delta;
+		return gameInstance.getDelta();
 	}
 	
 	public static float getDeltaRatio(){
-		return ((float)delta)/gameInstance.getFPS().getFPS_M();
+		return gameInstance.getDeltaRatio();
 	}
 	
 	public static void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, 1024, 0, 768, -1, 1);
+		glOrtho(0, Specifications.WindowWidth, 0, Specifications.WindowHeight, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND); 

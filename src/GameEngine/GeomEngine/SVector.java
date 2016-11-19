@@ -1,5 +1,9 @@
 package GameEngine.GeomEngine;
 
+import java.util.Locale;
+
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 
 public class SVector {
 	private float x;
@@ -50,6 +54,9 @@ public class SVector {
 	public float l(){
 		return (float) Math.sqrt(this.x*this.x+this.y*this.y);
 	}
+	public float d(SVector v){
+		return this.sub(v).l();
+	}
 	public SVector setLength(float length){
 		if(this.l()>0.0f){
 			return this.m(length/this.l());
@@ -61,9 +68,19 @@ public class SVector {
 	{
 		return (float) (Math.atan2(y,x)*180/Math.PI);
 	}
+	public float getAbsAngleBetween(SVector v)
+	{
+		float alpha = Math.abs(v.getAngle()-this.getAngle());
+		if(alpha>180) alpha = 360-alpha;
+		return alpha;
+	}
 	public SVector rotate(float f)	//rotating by 
 	{
 		float alpha = f*(float)Math.PI/180;
 		return(new SVector((float)(Math.cos(alpha)*x+Math.sin(alpha)*y),(float)(Math.sin(alpha)*(-x)+Math.cos(alpha)*y)));
+	}
+	
+	public String getString(){
+		return String.format(Locale.ROOT,"%.2f;%.2f", x,y);
 	}
 }

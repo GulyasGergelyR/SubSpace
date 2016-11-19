@@ -4,29 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import org.newdawn.slick.opengl.Texture;
-
-import GameEngine.SResLoader;
+import GameEngine.GeomEngine.SBody;
+import GameEngine.GeomEngine.SHitbox;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 
 public abstract class SObject {
 	protected SVector pos;
 	protected SVector lookDir;
-	protected String texture;
-	protected float scale;
-	private UUID Id = UUID.randomUUID();
-	// TODO add hitbox
-
+	protected SBody body;
+	protected UUID Id = UUID.randomUUID();
+	protected boolean posUpdated;
 	
+	public enum OjectState{
+		Active, Ghost, Invisible, OnDeathRaw
+	}
+	protected OjectState objectState = OjectState.Active;
 	
 	//Initialize
 	public SObject()
 	{
 		this.pos = new SVector();
-		this.lookDir = new SVector();
-		this.texture = "res/entity/spaceshipv1.png";
-		this.scale = 1.0f;
+		this.lookDir = new SVector(1,0);
+		this.body = new SBody(this, new SHitbox(this), "res/entity/spaceshipv1.png", 1.0f);
 		this.Id = UUID.randomUUID();
 	}
 	public SObject(SVector pos, SVector lookDir, String texture)
@@ -34,14 +34,13 @@ public abstract class SObject {
 		this.pos = pos;
 		this.lookDir = lookDir;
 		this.Id = UUID.randomUUID();
-		this.scale = 1.0f;
-		this.texture = texture;
+		this.body = new SBody(this, new SHitbox(this), texture, 1.0f);
 	}
 	public SObject(SObject o)
 	{
 		this.pos = o.pos;
 		this.lookDir = o.lookDir;
-		this.texture = o.texture;
+		this.body = new SBody(this, o.getBody().getHitbox().SHCopy(this), o.getBody().getTexture(), o.getBody().getScale());
 		this.Id = o.Id;
 	}
 	// Properties
@@ -49,7 +48,8 @@ public abstract class SObject {
 		return pos;
 	}
 	public void setPos(SVector pos) {
-		this.pos = pos;
+		if(pos!=null)
+			this.pos = pos;
 	}
 	public UUID getId() {
 		return Id;
@@ -57,30 +57,36 @@ public abstract class SObject {
 	public void setId(UUID id) {
 		Id = id;
 	}
-	public void setTexture(String s){
-		this.texture = s;
-	}
-	public String getTexture(){
-		return texture;
-	}
 	public SVector getLookDir() {
 		return lookDir;
 	}
 	public void setLookDir(SVector lookDir) {
-		this.lookDir = lookDir;
+		if(lookDir!=null)
+			this.lookDir = lookDir;
 	}
-	public float getScale() {
-		return scale;
+	public boolean IsPosUpdated(){
+		return posUpdated;
 	}
-	public void setScale(float scale) {
-		this.scale = scale;
+	public void setPosUpdated(){
+		posUpdated = true;
+	}
+	public SBody getBody() {
+		return body;
+	}
+	public void setBody(SBody body) {
+		this.body = body;
+	}
+	public OjectState getObjectState() {
+		return objectState;
+	}
+	public void setObjectState(OjectState objectState) {
+		this.objectState = objectState;
 	}
 	// functions
-	public List<SRenderObject> Draw(){
+	public List<SRenderObject> getDrawables(){
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
-		list.add(new SRenderObject(texture, pos, lookDir.getAngle(), scale, 1.0f));
+		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getScale(), 1.0f));
 		return list;
-	}
-	
+	}	
 	
 }

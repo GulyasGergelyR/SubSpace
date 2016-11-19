@@ -8,9 +8,17 @@ public class SControl {
 	public SControl(SMobile mobile){
 		Owner = mobile;
 	}
-	
-	public void Think(){
+	public  boolean setKeyTo(String key, boolean state){return false;}
+	protected void Think(){}
+	protected void Act(){
 		Owner.Move();
 		Owner.Rotate();
+	}
+	
+	public void ThinkAndAct(){
+		Think();
+		if(!Owner.IsPosUpdated()){
+			Act();
+		}
 	}
 }

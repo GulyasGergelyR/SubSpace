@@ -1,5 +1,10 @@
 package RenderingEngine;
 
+import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
+import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.glLoadIdentity;
+import static org.lwjgl.opengl.GL11.glMatrixMode;
+import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
@@ -13,29 +18,71 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 
 import GameEngine.SGameInstance;
+import GameEngine.SPlayer;
+import GameEngine.Specifications;
+import GameEngine.BaseEngine.SObject.OjectState;
 import GameEngine.EntityEngine.SEntity;
 
+//TODO create SDrawObject and replace texture
+
 public class SRenderer {
-	SGameInstance GameInstance;
+	private SGameInstance gameInstance;
+	// TODO recalculate Mouse positions based on viewport
+	private boolean followLocalPlayer = true;
+	
 	public SRenderer(SGameInstance GameInstance){
-		this.GameInstance = GameInstance;
+		this.gameInstance = GameInstance;
 	}
 	
 	public void DrawObjects(){
+		if(followLocalPlayer) FollowLocalPlayer();
+		DrawBackGround();
 		DrawEntities();
 	}
 	
+	private void DrawBackGround(){
+		Draw(gameInstance.getBackGround().getDrawables());
+	}
+	
 	private void DrawEntities(){
-		List<SEntity> Entities = GameInstance.getEntities();
+		List<SEntity> Entities = gameInstance.getEntities();
 		for (SEntity entity : Entities){
-			for(SRenderObject draw : entity.Draw()){
-				Draw(draw);
+			if (entity.getObjectState() == OjectState.Active){
+				Draw(entity.getDrawables());
 			}
+		}
+	}
+	
+	private void setFollowLocalPlayer(boolean follow){
+		this.followLocalPlayer = follow;
+	}
+	
+	private void FollowLocalPlayer(){
+		SPlayer localPlayer = gameInstance.getLocalPlayer();
+		SEntity entity = localPlayer.getEntity();
+		if(entity.getObjectState().equals(OjectState.Active) 
+				|| entity.getObjectState().equals(OjectState.Ghost)){
+			float x = entity.getPos().getX();
+			float y = entity.getPos().getY();
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(x-Specifications.WindowWidth/2,
+					x+Specifications.WindowWidth/2,
+					y-Specifications.WindowHeight/2,
+					y+Specifications.WindowHeight/2, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
+		}
+	}
+	
+	private static void Draw(List<SRenderObject> drawables){
+		for(SRenderObject draw : drawables){
+			Draw(draw);
 		}
 	}
 	
 	private static void Draw(SRenderObject SRO)
 	{
+		
 		float x = SRO.v.getX();
 		float y = SRO.v.getY();
 		float scale = SRO.scale;
