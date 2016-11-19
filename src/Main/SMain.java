@@ -32,6 +32,7 @@ import GameEngine.Specifications;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.ComEngine.SCommunicationHandler;
+import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.ComEngine.SNode;
 
 public class SMain {
@@ -162,6 +163,10 @@ public class SMain {
 	
 	public static SGameInstance getGameInstance(){
 		return gameInstance;
+	}
+	
+	public static boolean IsServer(){
+		return communicationHandler.getUDPRole().equals(UDPRole.Server);
 	}
 	
 	public static SCommunicationHandler getCommunicationHandler(){

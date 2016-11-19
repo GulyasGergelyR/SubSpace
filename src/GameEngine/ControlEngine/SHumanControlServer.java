@@ -1,17 +1,17 @@
-package GameEngine.EntityEngine;
+package GameEngine.ControlEngine;
 
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 
 
-public class SHumanControl extends SControl{
-	private static final String[] keyChars = {"W","A","S","D","1","2","3","4","5"};
+public class SHumanControlServer extends SControlServer{
+	//keyChars = {"W","A","S","D","1","2","3","4","5"};
 	private static final int numberofkeys = 9;
 
 	private boolean[] keyStates = new boolean[9];
 	private boolean[] prevKeyStates = new boolean[9];
 
-	public SHumanControl(SMobile mobile){
+	public SHumanControlServer(SMobile mobile){
 		super(mobile);
 		for(int i=0;i<numberofkeys;i++){
 				keyStates[i] = false;

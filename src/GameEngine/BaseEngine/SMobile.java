@@ -1,6 +1,8 @@
 package GameEngine.BaseEngine;
 
-import GameEngine.EntityEngine.SControl;
+import GameEngine.ControlEngine.SControl;
+import GameEngine.ControlEngine.SControlClient;
+import GameEngine.ControlEngine.SControlServer;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 
@@ -23,12 +25,18 @@ public abstract class SMobile extends SObject{
 		moveDir = new SVector();
 		acclDir = new SVector();
 		aimLookDir = new SVector(lookDir);
-		controller = new SControl(this);
+		if (SMain.IsServer()){
+			controller = new SControlServer(this);
+		}else{
+			controller = new SControlClient(this);
+		}
 	}
+	@Deprecated
 	public SMobile(SVector pos, SVector look_dir, String texture)
 	{
 		super(pos, look_dir, texture);
 	}
+	@Deprecated
 	public SMobile(SMobile m)
 	{
 		super(m);

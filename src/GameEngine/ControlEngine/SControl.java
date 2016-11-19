@@ -1,4 +1,4 @@
-package GameEngine.EntityEngine;
+package GameEngine.ControlEngine;
 
 import GameEngine.BaseEngine.SMobile;
 
@@ -10,13 +10,6 @@ public class SControl {
 	}
 	public  boolean setKeyTo(int key, boolean state){return false;}
 	protected void Think(){}
-	protected void Act(){
-		Owner.Move();
-		Owner.Rotate();
-	}
-	
-	public void ThinkAndAct(){
-		Think();
-		Act();
-	}
+	protected void Act(){}
+	public void ThinkAndAct(){}
 }

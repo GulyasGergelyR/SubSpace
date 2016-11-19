@@ -1,12 +1,8 @@
 package GameEngine;
 
-import java.io.IOError;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import testScripts.SMessage;
-import testScripts.SMessageParser;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SBackGround;

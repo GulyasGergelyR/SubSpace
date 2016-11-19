@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
-import GameEngine.EntityEngine.SControl;
+import GameEngine.ControlEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;

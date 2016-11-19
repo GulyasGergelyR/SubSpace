@@ -1,4 +1,4 @@
-package GameEngine.EntityEngine;
+package GameEngine.ControlEngine;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -10,11 +10,11 @@ import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SHumanControlLocal extends SHumanControl{
+public class SHumanControlClient extends SControlClient{
 	
 	private int keys[] = {Keyboard.KEY_W, Keyboard.KEY_A, Keyboard.KEY_S, Keyboard.KEY_D};
 	
-	public SHumanControlLocal(SMobile mobile) {
+	public SHumanControlClient(SMobile mobile) {
 		super(mobile);
 	}
 	@Override
@@ -24,12 +24,12 @@ public class SHumanControlLocal extends SHumanControl{
 		for (int key=0;key<4;key++){
 			if (Keyboard.isKeyDown(keys[key])) {
 				command += 1<<key;
-				if (setKeyTo(key, true)) {
+				//if (setKeyTo(key, true)) {
 					
-				}
+				//}
 			}
-			else if (setKeyTo(key, false)) {
-			}
+			//else if (setKeyTo(key, false)) {
+			//}
 		}
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
@@ -37,11 +37,5 @@ public class SHumanControlLocal extends SHumanControl{
 		SVector aimLookDir = new SVector(M_x-Specifications.WindowWidth/2, M_y-Specifications.WindowHeight/2);
 		SM message = SMPatterns.getClientUpdateMessage(Owner, command, aimLookDir);
 		SMain.getCommunicationHandler().SendMessage(message);
-	}
-
-	@Override
-	public void ThinkAndAct() {
-		// TODO Auto-generated method stub
-		Think();
 	}
 }

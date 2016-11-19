@@ -3,7 +3,6 @@ package GameEngine.BaseEngine;
 import java.util.ArrayList;
 import java.util.List;
 
-import GameEngine.SId;
 import GameEngine.SIdentifiable;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;

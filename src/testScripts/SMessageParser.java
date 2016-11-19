@@ -3,9 +3,9 @@ package testScripts;
 import java.util.LinkedList;
 import java.util.UUID;
 
-import GameEngine.EntityEngine.SControl;
+import GameEngine.ControlEngine.SControl;
+import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -29,7 +29,7 @@ public class SMessageParser {
 	}
 	public static boolean ParseEntityCreateMessage(SMessage message){
 		SEntity entity = new SEntity();
-		entity.setController(new SHumanControl(entity));
+		entity.setController(new SHumanControlServer(entity));
 		//entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
 		entity.setPos(SMessagePatterns.getPos(message));
 		entity.setLookDir(SMessagePatterns.getLookDir(message));
