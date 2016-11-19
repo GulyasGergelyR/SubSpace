@@ -18,7 +18,7 @@ public class SBullet extends SMobile{
 		super();
 		//TODO add SSimpleBulletControl here
 		this.owner = SMain.getGameInstance().getEntityById(ownerId);
-		this.texture = "res/object/bullet/bullet.png";
+		this.getBody().setTexture("res/object/bullet/bullet.png");
 		this.pos = new SVector(owner.getPos());
 		this.lookDir = new SVector(owner.getLookDir());
 		this.maxSpeed = 200;
@@ -29,7 +29,7 @@ public class SBullet extends SMobile{
 		super();
 		//TODO add SSimpleBulletControl here
 		this.owner = owner;
-		this.texture = "res/object/bullet/bullet.png";
+		this.getBody().setTexture("res/object/bullet/bullet.png");
 		this.pos = new SVector(owner.getPos());
 		this.lookDir = new SVector(owner.getLookDir());
 		this.maxSpeed = 200;

@@ -33,7 +33,7 @@ public class SGameInstance {
 	
 	public SGameInstance(){
 		FPS = new SFPS();
-		backGround.setTexture("res/object/background/bg1.png");
+		backGround.getBody().setTexture("res/object/background/bg1.png");
 		players = new ArrayList<SPlayer>();
 		entities = new ArrayList<SEntity>();
 		objects = new LinkedList<SObject>();

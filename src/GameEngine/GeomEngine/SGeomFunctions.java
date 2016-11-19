@@ -10,7 +10,7 @@ public class SGeomFunctions {
 		SHitbox hitbox2 = object2.getBody().getHitbox();
 		if (hitbox1 instanceof SHitboxSpherical || hitbox2 instanceof SHitboxSpherical){
 			if (hitbox1 instanceof SHitboxSpherical && hitbox2 instanceof SHitboxSpherical){
-				if (object1.getPos().d(object2.getPos()) <=
+				if (object1.getPos().d(new SVector()) <=
 					((SHitboxSpherical)hitbox1).getRadius()+((SHitboxSpherical)hitbox2).getRadius()){
 					return true;
 				}

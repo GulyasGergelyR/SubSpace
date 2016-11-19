@@ -113,6 +113,7 @@ public class SMain {
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
 			byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 104};
+			//byte[] ipAddr = new byte[]{(byte)134, (byte)255, (byte)89, (byte)249};
 			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server hets special id 1
 			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {

@@ -19,11 +19,6 @@ public abstract class SObject extends SIdentifiable {
 	}
 	protected ObjectState objectState = ObjectState.Active;
 	
-	public enum OjectState{
-		Active, Ghost, Invisible, OnDeathRaw
-	}
-	protected OjectState objectState = OjectState.Active;
-	
 	//Initialize
 	public SObject()
 	{
@@ -53,9 +48,6 @@ public abstract class SObject extends SIdentifiable {
 	}
 	public boolean equals(SObject o){
 		return this.Id.equals(o.Id);
-	}
-	public void setId(UUID id) {
-		Id = id;
 	}
 	public SVector getLookDir() {
 		return lookDir;

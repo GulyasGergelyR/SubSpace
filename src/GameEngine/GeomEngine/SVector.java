@@ -53,9 +53,7 @@ public class SVector {
 	public float l(){
 		return (float) Math.sqrt(this.x*this.x+this.y*this.y);
 	}
-	public float d(SVector v){
-		return this.sub(v).l();
-	}
+	
 	public SVector setLength(float length){
 		if(this.l()>0.0f){
 			return this.m(length/this.l());
@@ -99,9 +97,11 @@ public class SVector {
 		buffer.putShort(f_y);
 		buffer.putShort((short)((y-f_y)*10000));
 	}
-	
 	@Deprecated
 	public String getString(){
 		return String.format(Locale.ROOT,"%.2f;%.2f", x,y);
+	}
+	public float d(SVector v){
+		return this.sub(v).l();
 	}
 }
