@@ -136,11 +136,13 @@ public abstract class SMobile extends SObject{
 	}
 	// functions
 	public void Move(){
-		moveDir = moveDir.add(acclDir.m(SMain.getDeltaRatio()));
-		if (moveDir.l()>maxSpeed){
-			moveDir = moveDir.setLength(maxSpeed);
-		}
-		pos = pos.add(moveDir.m(SMain.getDeltaRatio()));
+		
+			moveDir = moveDir.add(acclDir.m(SMain.getDeltaRatio()));
+			if (moveDir.l()>maxSpeed){
+				moveDir = moveDir.setLength(maxSpeed);
+			}
+		
+			pos = pos.add(moveDir.m(SMain.getDeltaRatio()));
 	}
 	public void Rotate(){
 		//TODO correct rotation

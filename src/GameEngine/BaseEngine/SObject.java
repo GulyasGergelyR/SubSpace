@@ -14,7 +14,7 @@ public abstract class SObject extends SIdentifiable {
 	protected float scale;
 	protected boolean posUpdated;
 	public enum ObjectState{
-		Active, Ghost, Invisible, WaitingDelete
+		Active, Ghost, Invisible, WaitingDelete, Initialization
 	}
 	protected ObjectState objectState = ObjectState.Active;
 	

@@ -47,7 +47,12 @@ public class SHumanControlServer extends SControlServer{
 		if(keyStates[3]) acclDir = acclDir.add(1,0);
 		
 		if(acclDir.l()==0){
-			Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/10.0f));
+			if (Owner.getMoveDir().l() > 1)
+				Owner.setAcclDir(Owner.getMoveDir().setLength(-Owner.getMaxAcceleration()/10.0f));
+			else{
+				Owner.setMoveDir(new SVector());
+				Owner.setAcclDir(new SVector());
+			}
 		}else{
 			float accl = Owner.getMaxAcceleration();
 			float factor = 1/(1+Owner.getLookDir().getAbsAngleBetween(acclDir)/4.0f);

@@ -212,11 +212,23 @@ public class SCommunicationHandler {
 			}
 		}
 	}
+	public void SendMessageToNode(SM message, int id){
+		synchronized (nodes){
+			SNode node = getNodeById(id);
+			if(!node.equals(localNode))
+				udpNode.SendMessage(message, node);
+			else{
+				System.out.println("Trying to send to itself");
+			}
+		}
+	}
 	public void SendMessageToNode(SM message, SNode node){
-		if(!node.equals(localNode))
-			udpNode.SendMessage(message, node);
-		else{
-			System.out.println("Trying to send to itself");
+		synchronized (nodes) {
+			if(!node.equals(localNode))
+				udpNode.SendMessage(message, node);
+			else{
+				System.out.println("Trying to send to itself");
+			}
 		}
 	}
 	public void SendMessageExceptToNode(SM message, SNode notNode){
@@ -315,6 +327,7 @@ public class SCommunicationHandler {
 				}
 				//TODO add normal entity creation
 				SEntity entity = new SEntity(client.getPlayer());
+				entity.setObjectState(ObjectState.Initialization);
 				SMain.getGameInstance().addEntity(entity);
 				SMain.getGameInstance().addPlayer(client.getPlayer());
 				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);
@@ -325,7 +338,6 @@ public class SCommunicationHandler {
 				//Send to other clients
 				SM createEntity = SMPatterns.getEntityCreateMessage(client.getPlayer());
 				SendMessage(createEntity);
-				
 			}
 		}else{
 			System.out.println("Client already joined: "+client.getName());

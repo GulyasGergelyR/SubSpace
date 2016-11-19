@@ -160,12 +160,23 @@ public class SGameInstance {
 			ListIterator<SEntity> iter = entities.listIterator();
 			while(iter.hasNext()){
 				SEntity entity = iter.next();
-			    if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
+				if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
 			        iter.remove();
+			        removePlayerFromList(entity.getId().get());
+				}else if(entity.getObjectState().equals(ObjectState.Initialization)){
+						System.out.println(SMain.IsServer());
+				        for(SPlayer player : players){
+				        	if (!player.equals(entity)){
+				        		SM message = SMPatterns.getEntityCreateMessage(player);
+				        		SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	}
+				        }
+				        entity.setObjectState(ObjectState.Active);
 			    }else {
 			    	entity.update();
 			    	if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
 				        iter.remove();
+				        removePlayerFromList(entity.getId().get());
 				    }
 			    }
 			}
@@ -234,8 +245,9 @@ public class SGameInstance {
 				if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
 					int id = SMParser.parseId(message.getBuffer());
 					SEntity entity = getEntityById(id);
-					if (entity != null)
+					if (entity != null){
 						SMParser.parseEntityUpdateMessage(message, entity);
+					}
 				}
 				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity
 					SMParser.parseEntityCreateMessage(message);
