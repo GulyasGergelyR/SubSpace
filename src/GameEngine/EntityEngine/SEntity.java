@@ -14,16 +14,8 @@ import RenderingEngine.SRenderObject;
 import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 
 public class SEntity extends GameEngine.BaseEngine.SMobile{
-	public enum EntityState{
-		//TODO add this to SObject
-		Active, Ghost, Invisible, WaitingDelete
-	}
-	protected EntityState entityState = EntityState.Active;
 	protected SPlayer player;
-	
-	
 	protected float life;
-	// TODO Create SWeapon
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
@@ -63,10 +55,6 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		//TODO Add movement and life specific drawings
 		List<SRenderObject> list = super.getDrawables();
 		return list;
-	}
-
-	public EntityState getState(){
-		return entityState;
 	}
 	public void tryToFire(){
 		if (!activeWeapon.tryIt())

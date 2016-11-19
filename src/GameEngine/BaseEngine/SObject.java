@@ -13,6 +13,10 @@ public abstract class SObject extends SIdentifiable {
 	protected String texture;
 	protected float scale;
 	protected boolean posUpdated;
+	public enum ObjectState{
+		Active, Ghost, Invisible, WaitingDelete
+	}
+	protected ObjectState objectState = ObjectState.Active;
 	
 	// TODO add hitbox
 
@@ -72,6 +76,12 @@ public abstract class SObject extends SIdentifiable {
 	}
 	public void setPosUpdated(){
 		posUpdated = true;
+	}
+	public ObjectState getObjectState() {
+		return objectState;
+	}
+	public void setObjectState(ObjectState objectState) {
+		this.objectState = objectState;
 	}
 	// functions
 	public List<SRenderObject> getDrawables(){

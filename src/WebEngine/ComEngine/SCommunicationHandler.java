@@ -10,6 +10,7 @@ import java.util.List;
 
 import GameEngine.SId;
 import GameEngine.SPlayer.PlayerState;
+import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
@@ -94,9 +95,6 @@ public class SCommunicationHandler {
 	}
 	public int getObjectMessageLength(){
 		synchronized (objectlock) {
-			for(SM message: ObjectMessages)
-				System.out.print(message);
-			System.out.println("");
 			return ObjectMessages.size();
 		}
 	}
@@ -236,7 +234,7 @@ public class SCommunicationHandler {
 		//System.out.println("parsing message...");
 		if(message.isValid()){
 			byte command = message.getCommandId();
-			System.out.println("Received command: "+String.format("%02x", command & 0xff));
+			//System.out.println("Received command: "+String.format("%02x", command & 0xff));
 			////////////////////////SERVER\\\\\\\\\\\\\\\\\\\\\\
 			if(udpRole.equals(UDPRole.Server)){
 				if (command == SMPatterns.CConnect){ 		//connect client
@@ -342,13 +340,13 @@ public class SCommunicationHandler {
 			Thread deleteNodeThread = new Thread(){
 				@Override
 				public void run() {
+					client.getPlayer().getEntity().setObjectState(ObjectState.WaitingDelete);
+					SM message = SMPatterns.getEntityDeleteMessage(client.getPlayer().getEntity());
+					SendMessage(message);
 					synchronized (nodes) {
 						nodes.remove(client);
 						System.out.println("Client removed: "+client.getName());
 					}
-					SM message = SMPatterns.getEntityDeleteMessage(client.getPlayer().getEntity());
-					SendMessage(message);
-					SMain.getGameInstance().removeEntity(client.getId().get());
 				}
 			};
 			deleteNodeThread.start();

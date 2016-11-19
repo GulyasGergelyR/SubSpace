@@ -43,12 +43,12 @@ public class SUDPNode {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    
+	    /*
 	    if(communicationHandler.getUDPRole().equals(UDPRole.Server))
 	    	System.out.println("Data Sent from Server "+String.format("%02x", message.getData()[0] & 0xff));
 	    if(communicationHandler.getUDPRole().equals(UDPRole.Client))
 	    	System.out.println("Data Sent from Client "+String.format("%02x", message.getData()[0] & 0xff));
-	    	
+	    	*/
 	}
 	
 	private class Listener extends SCommunicationThread{

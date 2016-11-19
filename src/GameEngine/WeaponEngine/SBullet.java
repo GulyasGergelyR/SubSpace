@@ -1,6 +1,7 @@
 package GameEngine.WeaponEngine;
 
 import GameEngine.BaseEngine.SMobile;
+import GameEngine.ControlEngine.SSimpleBulletControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
@@ -12,7 +13,7 @@ public class SBullet extends SMobile{
 	protected int numberOfBulletsAtOnce = 1;
 	
 	protected SVector origin;
-	protected int maxLifeTime = 1000;
+	protected int maxLifeTime = 100;
 	protected int currentLifeTime = 0;
 	protected int maxLifeDistance = 100;
 	
@@ -28,8 +29,8 @@ public class SBullet extends SMobile{
 		this.pos = new SVector(owner.getPos());
 		origin = new SVector(pos);
 		this.lookDir = new SVector(owner.getLookDir());
-		this.maxSpeed = 60;
-		this.moveDir = this.lookDir.setLength(this.maxSpeed).add(owner.getMoveDir());
+		this.maxSpeed = 200;
+		this.moveDir = this.lookDir.setLength(70).add(owner.getMoveDir());
 	}
 	public SBullet(SEntity owner){
 		//used at server side
@@ -40,8 +41,9 @@ public class SBullet extends SMobile{
 		this.pos = new SVector(owner.getPos());
 		origin = new SVector(pos);
 		this.lookDir = new SVector(owner.getLookDir());
-		this.maxSpeed = 60;
-		this.moveDir = this.lookDir.setLength(this.maxSpeed).add(owner.getMoveDir());
+		this.maxSpeed = 200;
+		this.moveDir = this.lookDir.setLength(70).add(owner.getMoveDir());
+		this.setController(new SSimpleBulletControlServer(this));
 	}
 	public int getNumberOfBulletsAtOnce() {
 		return numberOfBulletsAtOnce;
@@ -49,18 +51,4 @@ public class SBullet extends SMobile{
 	public SEntity getOwner() {
 		return owner;
 	}
-	@Override
-	public void update() {
-		currentLifeTime++;
-		if (currentLifeTime < maxLifeTime){
-			super.update();
-		}
-		else{
-			// Delete this
-			SM message = SMPatterns.getObjectDeleteMessage(this);
-			SMain.getCommunicationHandler().SendMessage(message);
-		}
-	}
-	
-	
 }

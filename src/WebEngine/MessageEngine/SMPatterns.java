@@ -43,7 +43,7 @@ public class SMPatterns {
 	public static byte MObject = 0x10;
 	public static byte CObjectCreate = 0x11;
 	public static byte CObjectUpdate = 0x12;
-	public static byte CObjectDelete = 0x1F;
+	public static byte CObjectDelete = 0x17;
 	
 	public static SM getConnectToServerMessage(String nameString){
 		SM message = new SM();

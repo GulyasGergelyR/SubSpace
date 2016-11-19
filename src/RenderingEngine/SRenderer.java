@@ -21,8 +21,8 @@ import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.EntityEngine.SEntity.EntityState;
 
 //TODO create SDrawObject and replace texture
 
@@ -47,13 +47,15 @@ public class SRenderer {
 	}
 	private void DrawObjects(){
 		for (SObject object : gameInstance.getObjects()){
-			Draw(object.getDrawables());
+			if (object.getObjectState() == ObjectState.Active){
+				Draw(object.getDrawables());
+			}
 		}
 	}
 	private void DrawEntities(){
 		List<SEntity> Entities = gameInstance.getEntities();
 		for (SEntity entity : Entities){
-			if (entity.getState() == EntityState.Active){
+			if (entity.getObjectState() == ObjectState.Active){
 				Draw(entity.getDrawables());
 			}
 		}
@@ -68,8 +70,8 @@ public class SRenderer {
 		SEntity entity = localPlayer.getEntity();
 		if (entity == null)
 			return;
-		if(entity.getState().equals(EntityState.Active) 
-				|| entity.getState().equals(EntityState.Ghost)){
+		if(entity.getObjectState().equals(ObjectState.Active) 
+				|| entity.getObjectState().equals(ObjectState.Ghost)){
 			float x = entity.getPos().getX();
 			float y = entity.getPos().getY();
 			glMatrixMode(GL_PROJECTION);

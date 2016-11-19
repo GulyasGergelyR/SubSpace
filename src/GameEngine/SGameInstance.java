@@ -3,8 +3,10 @@ package GameEngine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
@@ -133,15 +135,33 @@ public class SGameInstance {
 	
 	protected void UpdateEntities(){
 		if(!entities.isEmpty()){
-			for(SEntity entity : entities){
-				entity.update();
+			ListIterator<SEntity> iter = entities.listIterator();
+			while(iter.hasNext()){
+				SEntity entity = iter.next();
+			    if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
+			        iter.remove();
+			    }else {
+			    	entity.update();
+			    	if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
+				        iter.remove();
+				    }
+			    }
 			}
 		}
 	}
 	protected void UpdateObjects(){
 		if(!objects.isEmpty()){
-			for(SObject object : objects){
-				object.update();
+			ListIterator<SObject> iter = objects.listIterator();
+			while(iter.hasNext()){
+				SObject object = iter.next();
+			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+			        iter.remove();
+			    }else {
+			    	object.update();
+			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+				        iter.remove();
+				    }
+			    }
 			}
 		}
 	}
@@ -231,7 +251,7 @@ public class SGameInstance {
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
 					int id = SMParser.parseId(message.getBuffer());
-					SEntity object = getEntityById(id);
+					SObject object = getObjectById(id);
 					if (object != null)
 						objects.remove(object);
 				}
