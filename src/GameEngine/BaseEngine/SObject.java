@@ -1,11 +1,10 @@
 package GameEngine.BaseEngine;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
-
 import org.newdawn.slick.opengl.Texture;
-import org.omg.CosNaming.IstringHelper;
 
 import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
@@ -14,7 +13,8 @@ import RenderingEngine.SRenderObject;
 public abstract class SObject {
 	protected SVector pos;
 	protected SVector lookDir;
-	protected Texture texture;
+	protected String texture;
+	protected float scale;
 	private UUID Id = UUID.randomUUID();
 	// TODO add hitbox
 
@@ -25,20 +25,17 @@ public abstract class SObject {
 	{
 		this.pos = new SVector();
 		this.lookDir = new SVector();
-		this.texture = SResLoader.getTexture("res/default.png");
+		this.texture = "res/entity/spaceshipv1.png";
+		this.scale = 1.0f;
 		this.Id = UUID.randomUUID();
 	}
-	public SObject(SVector pos, SVector lookDir, Object texture)
+	public SObject(SVector pos, SVector lookDir, String texture)
 	{
 		this.pos = pos;
 		this.lookDir = lookDir;
 		this.Id = UUID.randomUUID();
-		if (texture instanceof String){
-			this.texture = SResLoader.getTexture((String)texture);
-		}
-		else{
-			this.texture = (Texture)texture;
-		}
+		this.scale = 1.0f;
+		this.texture = texture;
 	}
 	public SObject(SObject o)
 	{
@@ -54,13 +51,6 @@ public abstract class SObject {
 	public void setPos(SVector pos) {
 		this.pos = pos;
 	}
-	
-	public SVector getLook_dir() {
-		return lookDir;
-	}
-	public void setLook_dir(SVector lookDir) {
-		this.lookDir = lookDir;
-	}
 	public UUID getId() {
 		return Id;
 	}
@@ -68,18 +58,28 @@ public abstract class SObject {
 		Id = id;
 	}
 	public void setTexture(String s){
-		this.texture = SResLoader.getTexture(s);
+		this.texture = s;
 	}
-	public void setTexture(Texture t){
-		this.texture = t;
-	}
-	public Texture getTexture(){
+	public String getTexture(){
 		return texture;
 	}
-	
+	public SVector getLookDir() {
+		return lookDir;
+	}
+	public void setLookDir(SVector lookDir) {
+		this.lookDir = lookDir;
+	}
+	public float getScale() {
+		return scale;
+	}
+	public void setScale(float scale) {
+		this.scale = scale;
+	}
 	// functions
-	public SRenderObject Draw(){
-		return new SRenderObject(texture, pos, lookDir.getAngle());
+	public List<SRenderObject> Draw(){
+		List<SRenderObject> list = new ArrayList<SRenderObject>();
+		list.add(new SRenderObject(texture, pos, lookDir.getAngle(), scale, 1.0f));
+		return list;
 	}
 	
 	

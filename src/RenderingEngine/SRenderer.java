@@ -28,7 +28,9 @@ public class SRenderer {
 	private void DrawEntities(){
 		List<SEntity> Entities = GameInstance.getEntities();
 		for (SEntity entity : Entities){
-			Draw(entity.Draw());
+			for(SRenderObject draw : entity.Draw()){
+				Draw(draw);
+			}
 		}
 	}
 	
@@ -40,7 +42,7 @@ public class SRenderer {
 		float rotateBy = SRO.rotateBy;
 		float transparency = SRO.transparency;
 		Texture texture = SRO.texture;
-		
+
 		int alpha = (int)(transparency*255);
 		Color c = new Color(255,255,255,alpha);
 		c.bind();
