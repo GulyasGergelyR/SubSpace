@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
+import GameEngine.Specifications;
 import GameEngine.EntityEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
@@ -38,12 +39,7 @@ public class SMParser {
 	public static void parseEntityCreateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(message.getBuffer());
-		byte nameLength = buffer.get();
-		byte[] nameBytes = new byte[nameLength];
-		for (int i=0; i<nameLength;i++){
-			nameBytes[i] = buffer.get();
-		}
-		String name = new String(nameBytes);
+		
 		SNode localNode = SMain.getCommunicationHandler().getLocalNode();
 		
 		if (localNode.equals(id)){
@@ -51,6 +47,16 @@ public class SMParser {
 			SMain.getGameInstance().addEntity(entity);
 		}
 		else{
+			 byte nameLength = buffer.get();
+			 if (nameLength<0){
+			 	System.out.println("CLIENT NAME ERROR");
+				return;
+			 }
+			 byte[] nameBytes = new byte[nameLength];
+			 for (int i=0; i<nameLength;i++){
+				nameBytes[i] = buffer.get();
+			 }
+			 String name = new String(nameBytes);
 			 SPlayer player = new SPlayer(id, name, PlayerState.lan);
 			 SEntity entity = new SEntity(player);
 			 SMain.getGameInstance().addPlayer(player);
@@ -62,6 +68,7 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		byte command = buffer.get();
 		SVector aimLookDir = parseBigVector(buffer);
+		System.out.print("Received AimLookDir: "+aimLookDir.getString());
 		entity.setAimLookDir(aimLookDir);
 		for (byte key=0;key<4;key++){
 			boolean pressed = false;

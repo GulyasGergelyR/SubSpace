@@ -1,8 +1,5 @@
 package GameEngine.EntityEngine;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.GeomEngine.SVector;
 

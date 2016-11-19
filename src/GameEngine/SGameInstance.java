@@ -1,5 +1,6 @@
 package GameEngine;
 
+import java.io.IOError;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -116,27 +117,6 @@ public class SGameInstance {
 			for(SEntity entity : entities){
 				entity.update();
 			}
-				/*
-
-			}
-			int maxLength = SMain.getCommunicationHandler().getEntityMessageLength();
-			
-			for(SEntity entity : entities){
-				for(SM message : SMain.getCommunicationHandler().getEntityMessagesForEntity(entity, maxLength)){
-					if(message.getCommandName().equals("ENTUP"))
-						SMessageParser.ParseEntityUpdateMessage(message, entity);
-					else if(message.getCommandName().equals("CLIIN"))
-						SMessageParser.ParseClientInputMessage(message, entity);
-				}
-				
-				entity.update();
-			}
-			//get rest of the messages
-			for(SM message : SMain.getCommunicationHandler().getEntityMessages()){
-				if(message.getCommandName().equals("ENTCR"))
-					SMessageParser.ParseEntityCreateMessage(message);
-			}
-			*/
 		}
 	}
 	
@@ -164,8 +144,13 @@ public class SGameInstance {
 				if (command == SMPatterns.CClientInput){ 	//Client input (pressed key, mouse moved, mouse click)
 					int id = SMParser.parseId(message.getBuffer());
 					SEntity entity = getEntityById(id);
-					if (entity != null)
+					if (entity != null){
 						SMParser.parseClientInputMessage(message, entity);
+					}
+					else {
+						System.out.println("ENTITY CANNOZ BE FOUND ERROR");
+					}
+						
 				}
 			}else{
 				if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information

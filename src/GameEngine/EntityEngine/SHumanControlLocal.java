@@ -51,33 +51,43 @@ public class SHumanControlLocal extends SHumanControl{
 	}
 	*/
 	
+	
+	
 	@Override
 	protected void Think() {
 		byte command = 0;  //WASD - MPL - MPR
-		boolean change = false;
 		// W:0 A:1 S:2 D:3
 		for (int key=0;key<4;key++){
 			if (Keyboard.isKeyDown(keys[key])) {
+				command += 1<<key;
 				if (setKeyTo(key, true)) {
-					command += 1<<key;
-					change=true;
+					
 				}
 			}
 			else if (setKeyTo(key, false)) {
-					change=true;
 			}
 		}
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
 		
-		Owner.setAimLookDir(new SVector(M_x-Specifications.WindowWidth/2,
-				M_y-Specifications.WindowHeight/2));
+		SVector aimLookDir = new SVector(M_x-Specifications.WindowWidth/2, M_y-Specifications.WindowHeight/2);
 		
-		System.out.println("Command: "+command);
 		
-		if (change){
-			SM message = SMPatterns.getClientUpdateMessage(Owner, command);
+		System.out.print("Sent AimLookDir: "+aimLookDir.getString());
+		//if (change){
+			SM message = SMPatterns.getClientUpdateMessage(Owner, command, aimLookDir);
+			for (int i=0;i<Specifications.DataLength;i++){
+				System.out.print(message.getData()[i]+" ");
+			}
 			SMain.getCommunicationHandler().SendMessage(message);
-		}
+		//}
+	}
+
+
+
+	@Override
+	public void ThinkAndAct() {
+		// TODO Auto-generated method stub
+		Think();
 	}
 }

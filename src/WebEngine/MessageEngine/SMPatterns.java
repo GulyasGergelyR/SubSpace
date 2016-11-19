@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.GeomEngine.SVector;
 import WebEngine.ComEngine.SNode;
 
 public class SMPatterns {
@@ -91,8 +92,8 @@ public class SMPatterns {
 		buffer.putShort((short)entity.getId().get());
 		// Add vectors
 		entity.getPos().addToBufferAsBigVector(buffer);
-		entity.getMoveDir().addToBufferAsBigVector(buffer);
 		entity.getLookDir().addToBufferAsBigVector(buffer);
+		entity.getMoveDir().addToBufferAsBigVector(buffer);
 		entity.getAcclDir().addToBufferAsBigVector(buffer);
 		return message;
 	}
@@ -106,13 +107,13 @@ public class SMPatterns {
 		buffer.put(name);
 		return message;
 	}
-	public static SM getClientUpdateMessage(SMobile mobile, byte command){
+	public static SM getClientUpdateMessage(SMobile mobile, byte command, SVector aim){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CClientInput);
 		buffer.putShort((short)mobile.getId().get());
 		buffer.put(command);
-		mobile.getAimLookDir().addToBufferAsBigVector(buffer);
+		aim.addToBufferAsBigVector(buffer);
 		return message;
 	}
 	

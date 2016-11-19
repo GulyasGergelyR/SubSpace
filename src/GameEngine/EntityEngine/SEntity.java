@@ -6,6 +6,7 @@ import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
 import GameEngine.SResLoader;
 import GameEngine.GeomEngine.SVector;
+import Main.SMain;
 import RenderingEngine.SRenderObject;
 
 public class SEntity extends GameEngine.BaseEngine.SMobile{
@@ -37,8 +38,10 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.player = player;
 		player.setEntity(this);
 		if (player.getPlayerState().equals(PlayerState.local)){
+			System.out.println("Created local player at: "+SMain.getCommunicationHandler().getUDPRole());
 			this.setController(new SHumanControlLocal(this));
 		}else{
+			System.out.println("Created lan player at: "+SMain.getCommunicationHandler().getUDPRole());
 			this.setController(new SHumanControl(this));
 		}
 	}
