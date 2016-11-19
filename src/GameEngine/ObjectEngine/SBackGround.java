@@ -6,7 +6,6 @@ public class SBackGround extends SObject{
 	
 	public SBackGround(){
 		super();
-		this.texture = "res/object/background/bg1.png";
+		this.getBody().setTexture("res/object/background/bg1.png");
 	}
-
 }

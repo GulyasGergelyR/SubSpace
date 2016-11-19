@@ -3,6 +3,7 @@ package GameEngine.EntityEngine;
 import java.util.ArrayList;
 import java.util.List;
 
+import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
 import GameEngine.ControlEngine.SHumanControlClient;
@@ -23,8 +24,9 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public SEntity(){
 		super();
 		this.pos = new SVector(250.0f,250.0f);
-		this.texture = "res/entity/spaceshipv1.png";
-		this.scale = 0.05f;
+		this.getBody().setTexture("res/entity/spaceshipv1.png");
+		this.getBody().setScale(0.05f);
+		this.getBody().setHitbox(new SHitboxSpherical(this, 10f));
 		this.setController(new SHumanControlClient(this));
 	}
 	
