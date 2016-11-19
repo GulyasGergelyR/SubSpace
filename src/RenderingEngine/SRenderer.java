@@ -23,6 +23,7 @@ import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import Main.SMain;
 
 //TODO create SDrawObject and replace texture
 
@@ -36,7 +37,9 @@ public class SRenderer {
 	}
 	
 	public void DrawGame(){
-		if(followLocalPlayer) FollowLocalPlayer();
+		if (!SMain.IsServer()){
+			if(followLocalPlayer) FollowLocalPlayer();
+		}
 		DrawBackGround();
 		DrawObjects();
 		DrawEntities();

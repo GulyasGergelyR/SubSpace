@@ -70,7 +70,7 @@ public class SMain {
 		}
 		else{
 			try {
-				InitClient();
+				InitClient(new byte[]{(byte)192, (byte)168, 1, 104});
 				StartClient();
 			} catch (Exception e) {
 				if (communicationHandler != null)
@@ -102,8 +102,21 @@ public class SMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		renderer = new SRenderer(gameInstance);
+		
+		try {
+            Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
+            Display.create();
+        } catch (LWJGLException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
+ 
+        initGL(); // init OpenGL
+        initResources();
 	}
-	public static void InitClient(){
+	public static void InitClient(byte[] ipAddr){
 		Init();
 		SNode node;
 		SNode server;
@@ -112,7 +125,7 @@ public class SMain {
 			gameInstance.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
-			byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 104};
+			//byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 104};
 			//byte[] ipAddr = new byte[]{(byte)134, (byte)255, (byte)89, (byte)249};
 			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server hets special id 1
 			communicationHandler.ConnectToServer(server);
@@ -146,7 +159,10 @@ public class SMain {
 			gameInstance.CheckMessages();
 			gameInstance.UpdateGame();
 			gameInstance.SendGameDataToClients();
-			timer.SleepIfRequired();
+			renderGL();
+			Display.update();
+			Display.sync(Specifications.FPS_M);
+			//timer.SleepIfRequired();
 			updateDelta();
 		}
 	}

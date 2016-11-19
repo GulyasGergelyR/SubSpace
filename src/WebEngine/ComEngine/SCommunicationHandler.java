@@ -351,14 +351,14 @@ public class SCommunicationHandler {
 		}else{
 			Thread deleteNodeThread = new Thread(){
 				@Override
-				public void run() {
+				public void run(){
 					client.getPlayer().getEntity().setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getEntityDeleteMessage(client.getPlayer().getEntity());
 					SendMessage(message);
 					synchronized (nodes) {
 						nodes.remove(client);
-						System.out.println("Client removed: "+client.getName());
 					}
+					System.out.println("Client removed: "+client.getName());
 				}
 			};
 			deleteNodeThread.start();

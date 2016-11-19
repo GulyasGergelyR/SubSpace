@@ -14,8 +14,8 @@ public class SPlayer extends SIdentifiable{
 	}
 	
 	//TODO implement scores
-	//private int kills;
-	//private int deaths;
+	private int kills;
+	private int deaths;
 	
 	// clientNode is just for the local for everybody at server side
 	public SPlayer(SNode clientNode, String name, PlayerState playerState){

@@ -1,7 +1,12 @@
 package GameEngine.ControlEngine;
 
+import java.util.List;
+
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.EntityEngine.SEntity;
+import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
@@ -16,14 +21,37 @@ public class SSimpleBulletControlServer extends SControlServer {
 	}
 	@Override
 	protected void Think() {
-		if (currentLifeTime < maxLifeTime){
-			currentLifeTime++;
+		for(SEntity entity : SMain.getGameInstance().getEntities()){
+			SEntity bulletOwner = ((SBullet)Owner).getOwner();
+			if (!entity.equals(bulletOwner)){
+				if (SGeomFunctions.intersects(entity, Owner)){
+					entity.gotHit(((SBullet)Owner).getDamage());
+					Owner.setObjectState(ObjectState.WaitingDelete);
+					SM message = SMPatterns.getObjectDeleteMessage(Owner);
+					SMain.getCommunicationHandler().SendMessage(message);
+					break;
+				}
+			}
 		}
-		else{
-			// Delete this
-			Owner.setObjectState(ObjectState.WaitingDelete);
-			SM message = SMPatterns.getObjectDeleteMessage(Owner);
-			SMain.getCommunicationHandler().SendMessage(message);
+		if (Owner.getObjectState().equals(ObjectState.Active)){
+			if (currentLifeTime < maxLifeTime){
+				currentLifeTime++;
+			}
+			else{
+				// Delete this
+				Owner.setObjectState(ObjectState.WaitingDelete);
+				SM message = SMPatterns.getObjectDeleteMessage(Owner);
+				SMain.getCommunicationHandler().SendMessage(message);
+			}
 		}
 	}
+	@Override
+	public void ThinkAndAct() {
+		Think();
+		if (Owner.getObjectState().equals(ObjectState.Active)){
+			Act();
+		}
+	}
+	
+	
 }

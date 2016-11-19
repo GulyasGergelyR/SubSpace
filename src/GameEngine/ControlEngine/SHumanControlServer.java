@@ -63,10 +63,14 @@ public class SHumanControlServer extends SControlServer{
 		if (angle<0.0f)	{if (Math.abs(angle)<180.0f) rotdir = 1; else rotdir = -1;}
 		else			{if (Math.abs(angle)<180.0f) rotdir = -1; else rotdir = 1;}
 		Owner.setRotAcceleration(Owner.getMaxRotAcceleration()*rotdir);
-		
+	}
+	@Override
+	protected void Act() {
+		super.Act();
 		// Firing weapon
 		if (mouseStates[0]){
 			((SEntity)Owner).tryToFire();
 		}
 	}
+	
 }

@@ -164,7 +164,6 @@ public class SGameInstance {
 			        iter.remove();
 			        removePlayerFromList(entity.getId().get());
 				}else if(entity.getObjectState().equals(ObjectState.Initialization)){
-						System.out.println(SMain.IsServer());
 				        for(SPlayer player : players){
 				        	if (!player.equals(entity)){
 				        		SM message = SMPatterns.getEntityCreateMessage(player);
@@ -201,7 +200,7 @@ public class SGameInstance {
 	
 	public void SendGameDataToClients(){
 		SendEntityData();
-		SendObjectData();
+		//SendObjectData();
 	}
 	private void SendEntityData(){
 		synchronized (entities) {

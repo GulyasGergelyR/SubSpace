@@ -21,6 +21,9 @@ import javax.swing.SpinnerNumberModel;
  */
 public class MainWindow extends JFrame {
     
+	JFormattedTextField ipAddress;
+	JSpinner portNumber;
+	
     public static void main(String[] args) {
         new MainWindow();
     }
@@ -53,9 +56,9 @@ public class MainWindow extends JFrame {
         
         JButton startClientButton = new JButton();
         JLabel ipLabel = new JLabel();
-        JFormattedTextField ipAddress = new JFormattedTextField(new IPAddressFormatter());
+        ipAddress = new JFormattedTextField(new IPAddressFormatter());
         JLabel portLabel = new JLabel();
-        JSpinner portNumber = new JSpinner();
+        portNumber = new JSpinner();
         
         startClientButton.setText("Start");
         startClientButton.addActionListener((ActionEvent evt) -> {
@@ -65,7 +68,7 @@ public class MainWindow extends JFrame {
         ipLabel.setForeground(new java.awt.Color(255, 255, 255));
         ipLabel.setText("Server IP address:");
 
-        ipAddress.setText("127.0.0.1");
+        ipAddress.setText("134.255.89.249");
 
         portLabel.setForeground(new java.awt.Color(255, 255, 255));
         portLabel.setText("Server port:");
@@ -108,7 +111,8 @@ public class MainWindow extends JFrame {
     
     private void StartClientButtonPressed(java.awt.event.ActionEvent evt) {                                         
     	try {
-			SMain.InitClient();
+    		IPAddressFormatter ipAddressFormatter = new IPAddressFormatter();
+			SMain.InitClient((byte[])ipAddressFormatter.stringToValue(ipAddress.getText()));
 			SMain.StartClient();
 		} catch (Exception e) {
 			if (SMain.getCommunicationHandler() != null)

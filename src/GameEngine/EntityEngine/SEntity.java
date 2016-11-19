@@ -20,6 +20,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
+	
 	@Deprecated
 	public SEntity(){
 		super();
@@ -35,8 +36,9 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.pos = new SVector(250.0f,250.0f);
 		this.getBody().setTexture("res/entity/spaceshipv1.png");
 		this.getBody().setScale(0.05f);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 10f));
+		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
 		this.player = player;
+		this.life = 100;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
@@ -62,5 +64,16 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public void tryToFire(){
 		if (!activeWeapon.tryIt())
 			activeWeapon.coolIt();
+	}
+	
+	public void gotHit(float damage){
+		this.life -= damage;
+		if (this.life < 0){
+			this.life = 100;
+			this.pos = new SVector(250.0f,250.0f);
+			this.moveDir = new SVector();
+			this.acclDir = new SVector();
+			this.lookDir = new SVector();
+		}
 	}
 }
