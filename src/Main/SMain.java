@@ -29,7 +29,6 @@ import GameEngine.SGameInstance;
 import GameEngine.SPlayer.PlayerState;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
-import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -89,7 +88,7 @@ public class SMain {
 		communicationHandler = new SCommunicationHandler();
 	}
 	
-	private static void InitServer(){
+	public static void InitServer(){
 		Init();
 		System.out.println("Starting server...");
 		SNode node;
@@ -103,7 +102,7 @@ public class SMain {
 			e.printStackTrace();
 		}
 	}
-	private static void InitClient(){
+	public static void InitClient(){
 		Init();
 		SNode node;
 		SNode server;
@@ -116,7 +115,6 @@ public class SMain {
 			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server hets special id 1
 			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -138,7 +136,7 @@ public class SMain {
 		SResLoader.addSpriteArray(Specifications.resourcePathStrings);
 	}
 
-	private static void StartServer(){
+	public static void StartServer(){
 		SServerTimer timer = new SServerTimer();
 		while(true){
 			timer.StartTimer();
@@ -150,7 +148,7 @@ public class SMain {
 			updateDelta();
 		}
 	}
-	private static void StartClient(){
+	public static void StartClient(){
 		while (!Display.isCloseRequested()) {
 			gameInstance.CheckEntityMessages();
 			gameInstance.UpdateEntities();

@@ -32,7 +32,11 @@ public class SId {
 		Id = id.Id;
 	}
 	public boolean equals(SId id){
-		return (this.Id == id.Id);
+		if (this.Id == 0 || id.Id == 0){
+			System.out.println("Checking not initialized id");
+			return false;
+		}
+		else return (this.Id == id.Id);
 	}
 	@Override
 	public String toString() {

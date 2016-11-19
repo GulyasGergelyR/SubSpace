@@ -46,9 +46,9 @@ public class MainWindow extends JFrame {
             protected void paintComponent(Graphics g) {
 
                   super.paintComponent(g);
-                  //ImageIcon temp = new ImageIcon("c:\\Users\\Botond\\Documents\\NetBeansProjects\\GUI\\src\\res\\bg1.png");
+                  ImageIcon temp = new ImageIcon("res\\object\\background\\bg1.png");
 
-                  //g.drawImage(temp.getImage(), 0, 0, null);
+                  g.drawImage(temp.getImage(), 0, 0, null);
         }};
         
         JButton startClientButton = new JButton();
@@ -107,7 +107,18 @@ public class MainWindow extends JFrame {
     }
     
     private void StartClientButtonPressed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
+    	try {
+			SMain.InitClient();
+			SMain.StartClient();
+		} catch (Exception e) {
+			if (SMain.getCommunicationHandler() != null)
+				SMain.getCommunicationHandler().CloseUDPNode();
+			e.printStackTrace();
+		} finally {
+			if (SMain.getCommunicationHandler() != null)
+				SMain.getCommunicationHandler().CloseUDPNode();
+			this.dispose();
+		}
     } 
     
     private JPanel CreateServer()
@@ -117,9 +128,9 @@ public class MainWindow extends JFrame {
             protected void paintComponent(Graphics g) {
 
                   super.paintComponent(g);
-                  //ImageIcon temp = new ImageIcon("c:\\Users\\Botond\\Documents\\NetBeansProjects\\GUI\\src\\res\\bg1.png");
+                  ImageIcon temp = new ImageIcon("res\\object\\background\\bg1.png");
 
-                  //g.drawImage(temp.getImage(), 0, 0, null);
+                  g.drawImage(temp.getImage(), 0, 0, null);
         }};
         
         JLabel portLabel = new JLabel();
@@ -159,11 +170,21 @@ public class MainWindow extends JFrame {
                     .addComponent(startServerButton))
                 .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        
         return p;
     }
     
     private void StartServerButtonPressed(java.awt.event.ActionEvent evt) {                                         
-        // TODO add your handling code here:
+    	try {
+			SMain.InitServer();
+			SMain.StartServer();
+		} catch (Exception e) {
+			if (SMain.getCommunicationHandler() != null)
+				SMain.getCommunicationHandler().CloseUDPNode();
+			e.printStackTrace();
+		} finally {
+			if (SMain.getCommunicationHandler() != null)
+				SMain.getCommunicationHandler().CloseUDPNode();
+			this.dispose();
+		}
     } 
 }

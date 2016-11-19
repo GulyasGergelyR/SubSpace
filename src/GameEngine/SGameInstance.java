@@ -7,6 +7,7 @@ import java.util.List;
 
 import testScripts.SMessage;
 import testScripts.SMessageParser;
+import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
@@ -25,6 +26,7 @@ public class SGameInstance {
 	
 	private List<SPlayer> players;
 	private List<SEntity> entities;
+	private List<SObject> objects;
 	//private LinkedList<SMessage> ServerMessages = new LinkedList<SMessage>();
 	//private LinkedList<SMessage> ClientMessages = new LinkedList<SMessage>();
 	private SBackGround backGround = new SBackGround();
@@ -78,6 +80,9 @@ public class SGameInstance {
 			entities.add(entity);
 		}
 	}
+	public void addObject(SObject object){
+		objects.add(object);
+	}
 	public void removeEntity(int Id){
 		synchronized (entities) {
 			SEntity entity = getEntityById(Id);
@@ -111,6 +116,14 @@ public class SGameInstance {
 		return null;
 	}
 	
+	protected SObject getObjectById(int Id){
+		for(SObject object : objects){
+			if (object.equals(Id))
+				return object;
+		}
+		System.out.println("Object was not found, with Id: "+Id);
+		return null;
+	}
 	
 	public void UpdateEntities(){
 		if(!entities.isEmpty()){

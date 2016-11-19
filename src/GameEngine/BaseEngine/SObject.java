@@ -27,7 +27,6 @@ public abstract class SObject extends SIdentifiable {
 	}
 	public SObject(SVector pos, SVector lookDir, String texture)
 	{
-		super();
 		this.pos = pos;
 		this.lookDir = lookDir;
 		this.scale = 1.0f;
@@ -35,7 +34,6 @@ public abstract class SObject extends SIdentifiable {
 	}
 	public SObject(SObject o)
 	{
-		super(o);
 		this.pos = o.pos;
 		this.lookDir = o.lookDir;
 		this.texture = o.texture;
