@@ -65,7 +65,7 @@ public class SCommunicationHandler {
 	public SNode getNodeByAddress(InetAddress address){
 		synchronized (nodes) {
 			for(SNode node : nodes){
-				if(node.getIPAddress().equals(address)){
+				if(node.getAddress().equals(address)){
 					return node;
 				}
 			}

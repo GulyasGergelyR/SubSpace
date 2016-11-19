@@ -1,4 +1,4 @@
-package WebEngine.ComEngine;
+package testScripts;
 
 import GameEngine.SId;
 import GameEngine.Specifications;

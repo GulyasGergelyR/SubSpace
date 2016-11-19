@@ -156,7 +156,7 @@ public class SMain {
 			gameInstance.UpdateEntities();
 			renderGL();
 			Display.update();
-            Display.sync(60); // cap fps to 60fps
+            Display.sync(Specifications.FPS_M); // cap fps to 60fps
 			updateDelta();
 		}
 		Display.destroy();

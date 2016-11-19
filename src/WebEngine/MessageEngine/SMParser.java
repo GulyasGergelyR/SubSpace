@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
-import GameEngine.Specifications;
 import GameEngine.EntityEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
@@ -68,7 +67,6 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		byte command = buffer.get();
 		SVector aimLookDir = parseBigVector(buffer);
-		System.out.print("Received AimLookDir: "+aimLookDir.getString());
 		entity.setAimLookDir(aimLookDir);
 		for (byte key=0;key<4;key++){
 			boolean pressed = false;
@@ -78,5 +76,11 @@ public class SMParser {
 			}
 			control.setKeyTo(key, pressed);
 		}
+	}
+	public static void parseObjectCreateMessage(SM message){
+		//TODO implement ObjectCreateMessage
+	}
+	public static void parseObjectUpdateMessage(SM message){
+		//TODO implement ObjectUpdateMessage
 	}
 }

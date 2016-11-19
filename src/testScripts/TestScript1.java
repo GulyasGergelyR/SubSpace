@@ -3,9 +3,6 @@ package testScripts;
 import java.nio.ByteBuffer;
 import java.util.Locale;
 
-import WebEngine.ComEngine.SMessage;
-import WebEngine.ComEngine.SMessagePatterns;
-
 public class TestScript1 {
 	public static void main(String[] args) {
 		test1();

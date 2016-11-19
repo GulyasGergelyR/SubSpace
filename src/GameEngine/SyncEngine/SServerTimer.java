@@ -17,7 +17,7 @@ public class SServerTimer {
     
     public void SleepIfRequired(){
     	//Calculate how long did the cycle take
-    	long l = 15*1000*1000; //60 fps
+    	long l = 20*1000*1000; 
     	long TC=System.nanoTime();
 		long time=l-(TC-TS);
 		if(time>0)

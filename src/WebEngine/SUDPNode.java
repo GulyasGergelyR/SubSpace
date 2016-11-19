@@ -37,7 +37,7 @@ public class SUDPNode {
 	
 	public void SendMessage(SM message, SNode node){
 		byte[] sendData = message.getData();
-		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, node.getIPAddress(), transmitPort);
+		DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, node.getAddress(), transmitPort);
 	    try {
 			transmitSocket.send(sendPacket);
 		} catch (IOException e) {

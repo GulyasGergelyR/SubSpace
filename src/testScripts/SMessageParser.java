@@ -1,4 +1,4 @@
-package WebEngine.ComEngine;
+package testScripts;
 
 import java.util.LinkedList;
 import java.util.UUID;
@@ -8,6 +8,7 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SHumanControl;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
+import WebEngine.ComEngine.SCommunicationHandler;
 
 @Deprecated
 public class SMessageParser {

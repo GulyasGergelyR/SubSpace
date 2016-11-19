@@ -7,31 +7,27 @@ import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
 
 public class SNode extends SIdentifiable{
-	//////////Communication
-	private InetAddress IPAddress;
-	//////////Interface
-
+	private InetAddress address;
 	public enum ConnectionState{
 		Connected, NotConnected
 	}
 	private ConnectionState state = ConnectionState.NotConnected;
 	private float ping = 1.0f;
-	//////////Game - Client
 	private SPlayer player;
 	
-	public SNode(InetAddress IPAddress, int port, String name, PlayerState playerState){
+	public SNode(InetAddress address, int port, String name, PlayerState playerState){
 		super();
-		this.IPAddress = IPAddress;
+		this.address = address;
 		this.player = new SPlayer(this, name, playerState);
 	}
 	
-	public SNode(InetAddress IPAddress, int port, int id){
+	public SNode(InetAddress address, int port, int id){
 		this.Id = new SId(id);
-		this.IPAddress = IPAddress;
+		this.address = address;
 	}
 
-	public InetAddress getIPAddress() {
-		return IPAddress;
+	public InetAddress getAddress() {
+		return address;
 	}
 	
 	public float getPing() {

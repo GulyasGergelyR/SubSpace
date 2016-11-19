@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import testScripts.SMessage;
+import testScripts.SMessageParser;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
-import WebEngine.ComEngine.SMessage;
-import WebEngine.ComEngine.SMessageParser;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;
@@ -147,10 +147,6 @@ public class SGameInstance {
 					if (entity != null){
 						SMParser.parseClientInputMessage(message, entity);
 					}
-					else {
-						System.out.println("ENTITY CANNOZ BE FOUND ERROR");
-					}
-						
 				}
 			}else{
 				if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
@@ -163,16 +159,10 @@ public class SGameInstance {
 					SMParser.parseEntityCreateMessage(message);
 				}
 				else if (command == SMPatterns.CEntityDelete){ 	//Server deletes an Entity
-					
-				}
-				else if (command == SMPatterns.CObjectCreate){ 	//Server created Object
-					
-				}
-				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
-					
-				}
-				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
-					
+					int id = SMParser.parseId(message.getBuffer());
+					SEntity entity = getEntityById(id);
+					if (entity != null)
+						entities.remove(entity);
 				}
 			}
 			i++;
@@ -191,10 +181,10 @@ public class SGameInstance {
 				
 			}else{
 				if (command == SMPatterns.CObjectCreate){ 	//Server created Object
-					
+					SMParser.parseObjectCreateMessage(message);
 				}
 				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
-					
+					SMParser.parseObjectUpdateMessage(message);
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
 					

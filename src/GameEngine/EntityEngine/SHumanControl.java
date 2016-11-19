@@ -7,9 +7,7 @@ import GameEngine.GeomEngine.SVector;
 public class SHumanControl extends SControl{
 	private static final String[] keyChars = {"W","A","S","D","1","2","3","4","5"};
 	private static final int numberofkeys = 9;
-	
-	//private Map<String, Boolean> keyStates = new HashMap<String, Boolean>();
-	//private Map<String, Boolean> prevKeyStates = new HashMap<String, Boolean>();
+
 	private boolean[] keyStates = new boolean[9];
 	private boolean[] prevKeyStates = new boolean[9];
 
