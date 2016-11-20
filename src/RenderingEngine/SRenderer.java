@@ -11,10 +11,12 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
+import java.awt.Font;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 
 import GameEngine.SGameInstance;
@@ -31,10 +33,14 @@ public class SRenderer {
 	private SGameInstance gameInstance;
 	// TODO recalculate Mouse positions based on viewport
 	private boolean followLocalPlayer = true;
+	TrueTypeFont font;
 	
 	public SRenderer(SGameInstance GameInstance){
 		this.gameInstance = GameInstance;
-	}
+		
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 24); //name, style (PLAIN, BOLD, or ITALIC), size
+		font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
+	} 
 	
 	public void DrawGame(){
 		if (!SMain.IsServer()){
@@ -43,6 +49,7 @@ public class SRenderer {
 		DrawBackGround();
 		DrawObjects();
 		DrawEntities();
+		DrawText();
 	}
 	
 	private void DrawBackGround(){
@@ -66,6 +73,30 @@ public class SRenderer {
 	
 	public void setFollowLocalPlayer(boolean follow){
 		this.followLocalPlayer = follow;
+	}
+	
+	private void DrawText(){
+		if(!SMain.IsServer()){
+			SPlayer localPlayer = gameInstance.getLocalPlayer();
+			SEntity entity = localPlayer.getEntity();
+			if (entity == null)
+				return;
+			if(entity.getObjectState().equals(ObjectState.Active) 
+					|| entity.getObjectState().equals(ObjectState.Ghost)){
+				float x = entity.getPos().getX();
+				float y = entity.getPos().getY();
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glOrtho(x-Specifications.WindowWidth/2,
+						x+Specifications.WindowWidth/2,
+						y+Specifications.WindowHeight/2,
+						y-Specifications.WindowHeight/2, -1, 1);
+				glMatrixMode(GL_MODELVIEW);
+				font.drawString(x-Specifications.WindowWidth/2+30, y+Specifications.WindowHeight/2-90, "Life: "+entity.getLife(), Color.yellow); //x, y, string to draw, color
+				font.drawString(x-Specifications.WindowWidth/2+30, y+Specifications.WindowHeight/2-70, "kills: "+localPlayer.getKills(), Color.yellow); //x, y, string to draw, color
+				font.drawString(x-Specifications.WindowWidth/2+30, y+Specifications.WindowHeight/2-50, "death: "+localPlayer.getDeaths(), Color.yellow); //x, y, string to draw, color
+			}
+		}
 	}
 	
 	private void FollowLocalPlayer(){

@@ -53,10 +53,13 @@ public class SWeapon{
 	}
 	
 	private void createBullet(){
-		SBullet bullet = baseBullet.createBullet();
-		SMain.getGameInstance().addObject(bullet);
-		SM message = SMPatterns.getObjectCreateMessage(bullet);
-		SMain.getCommunicationHandler().SendMessage(message);
+		for(int i=0;i<5;i++){
+			SBullet bullet = baseBullet.createBullet();
+			SMain.getGameInstance().addObject(bullet);
+			SM message = SMPatterns.getObjectCreateMessage(bullet);
+			SMain.getCommunicationHandler().SendMessage(message);
+			
+		}
 		lastTime = 0;
 	}
 }

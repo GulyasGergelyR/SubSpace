@@ -99,6 +99,9 @@ public class SMPatterns {
 		entity.getLookDir().addToBufferAsBigVector(buffer);
 		entity.getMoveDir().addToBufferAsBigVector(buffer);
 		entity.getAcclDir().addToBufferAsBigVector(buffer);
+		buffer.put((byte)entity.getLife());
+		buffer.put((byte)entity.getPlayer().getKills());
+		buffer.put((byte)entity.getPlayer().getDeaths());
 		return message;
 	}
 	public static SM getEntityCreateMessage(SPlayer player){
@@ -147,6 +150,7 @@ public class SMPatterns {
 		if (object instanceof SBullet){
 			buffer.put((byte)20); //TODO remove hard coded bullet type id
 			buffer.putShort((short)(((SBullet)object).getOwner().getId().get()));
+			object.getLookDir().addToBufferAsBigVector(buffer);
 		}
 		return message;
 	}

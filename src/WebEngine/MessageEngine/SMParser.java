@@ -35,6 +35,9 @@ public class SMParser {
 		entity.setLookDir(parseBigVector(buffer));
 		entity.setMoveDir(parseBigVector(buffer));
 		entity.setAcclDir(parseBigVector(buffer));
+		entity.setLife(buffer.get());
+		entity.getPlayer().setKills(buffer.get());
+		entity.getPlayer().setDeaths(buffer.get());
 		//TODO check if this is needed - posUpdated
 		entity.setPosUpdated();
 	}
@@ -95,7 +98,8 @@ public class SMParser {
 		int objectTypeId = buffer.get();
 		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
 			int ownerId = buffer.getShort();
-			object = new SBullet(ownerId);
+			SVector lookdir = parseBigVector(buffer);
+			object = new SBullet(ownerId, lookdir);
 			object.setId(new SId(id));
 		}
 		if (object != null){

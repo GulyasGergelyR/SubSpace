@@ -1,5 +1,7 @@
 package GameEngine.WeaponEngine;
 
+import java.util.Random;
+
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.ControlEngine.SSimpleBulletControlClient;
 import GameEngine.ControlEngine.SSimpleBulletControlServer;
@@ -16,7 +18,7 @@ public class SBullet extends SMobile{
 	public SBullet createBullet(){
 		return new SBullet(owner);
 	}
-	public SBullet(int ownerId){
+	public SBullet(int ownerId, SVector lookdir){
 		//used at client side
 		super();
 		//TODO add SSimpleBulletControl here
@@ -25,7 +27,7 @@ public class SBullet extends SMobile{
 		this.getBody().setScale(2.0f);
 		
 		this.pos = new SVector(owner.getPos());
-		this.lookDir = new SVector(owner.getLookDir());
+		this.lookDir = lookdir;
 		this.maxSpeed = 200;
 		this.moveDir = this.lookDir.setLength(70).add(owner.getMoveDir());
 		this.setController(new SSimpleBulletControlClient(this));
@@ -38,7 +40,8 @@ public class SBullet extends SMobile{
 		this.getBody().setHitbox(new SHitboxSpherical(this, 5));
 		this.getBody().setScale(2.0f);
 		this.pos = new SVector(owner.getPos());
-		this.lookDir = new SVector(owner.getLookDir());
+		Random random = new Random();
+		this.lookDir = new SVector(owner.getLookDir().rotate(random.nextFloat()*60-30));
 		this.maxSpeed = 200;
 		this.damage = 10;
 		this.moveDir = this.lookDir.setLength(70).add(owner.getMoveDir());

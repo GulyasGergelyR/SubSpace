@@ -55,5 +55,23 @@ public class SPlayer extends SIdentifiable{
 	public void setPlayerState(PlayerState playerState) {
 		this.playerState = playerState;
 	}
+	public int getKills() {
+		return kills;
+	}
+	public void addKill(int kills) {
+		this.kills += kills;
+	}
+	public int getDeaths() {
+		return deaths;
+	}
+	public void addDeath(int deaths) {
+		this.deaths += deaths;
+	}
+	public void setKills(int kills) {
+		this.kills = kills;
+	}
+	public void setDeaths(int deaths) {
+		this.deaths = deaths;
+	}
 	
 }

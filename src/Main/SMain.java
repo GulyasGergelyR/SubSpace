@@ -103,7 +103,6 @@ public class SMain {
 			e.printStackTrace();
 		}
 		
-		renderer = new SRenderer(gameInstance);
 		
 		try {
             Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
@@ -112,9 +111,10 @@ public class SMain {
             e.printStackTrace();
             System.exit(0);
         }
- 
-        initGL(); // init OpenGL
-        initResources();
+		initGL(); // init OpenGL
+	    initResources();
+		renderer = new SRenderer(gameInstance);
+       
 	}
 	public static void InitClient(byte[] ipAddr){
 		Init();
@@ -133,7 +133,7 @@ public class SMain {
 			e.printStackTrace();
 		}
 		
-		renderer = new SRenderer(gameInstance);
+		
 		
 		try {
             Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
@@ -145,6 +145,7 @@ public class SMain {
  
         initGL(); // init OpenGL
         initResources();
+        renderer = new SRenderer(gameInstance);
 	}
 	
 	private static void initResources() {
@@ -205,7 +206,7 @@ public class SMain {
 	public static void initGL() {
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, Specifications.WindowWidth, 0, Specifications.WindowHeight, -1, 1);
+		glOrtho(0, Specifications.WindowWidth, Specifications.WindowHeight, 0, -1, 1);
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_BLEND); 

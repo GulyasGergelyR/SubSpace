@@ -29,6 +29,7 @@ public class SSimpleBulletControlServer extends SControlServer {
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
+					bulletOwner.getPlayer().addKill(1);
 					break;
 				}
 			}

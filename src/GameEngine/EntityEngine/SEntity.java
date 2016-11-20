@@ -2,6 +2,7 @@ package GameEngine.EntityEngine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.SPlayer;
@@ -70,10 +71,22 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.life -= damage;
 		if (this.life < 0){
 			this.life = 100;
-			this.pos = new SVector(250.0f,250.0f);
+			Random random = new Random();
+			this.pos = new SVector(random.nextFloat()*1000-500,random.nextFloat()*1000-500);
 			this.moveDir = new SVector();
 			this.acclDir = new SVector();
-			this.lookDir = new SVector();
+			this.lookDir = new SVector(1,0);
+			this.player.addDeath(1);
 		}
 	}
+	public float getLife(){
+		return life;
+	}
+	public void setLife(float life){
+		this.life = life;
+	}
+	public SPlayer getPlayer() {
+		return player;
+	}
+	
 }
