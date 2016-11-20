@@ -53,7 +53,7 @@ public class SWeapon{
 	}
 	
 	private void createBullet(){
-		for(int i=0;i<5;i++){
+		for(int i=0;i<1;i++){
 			SBullet bullet = baseBullet.createBullet();
 			SMain.getGameInstance().addObject(bullet);
 			SM message = SMPatterns.getObjectCreateMessage(bullet);

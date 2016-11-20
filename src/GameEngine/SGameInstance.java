@@ -38,7 +38,9 @@ public class SGameInstance {
 		entities = new ArrayList<SEntity>();
 		objects = new LinkedList<SObject>();
 	}
-	
+	public List<SPlayer> getPlayers(){
+		return players;
+	}
 	public List<SEntity> getEntities(){
 		return entities;
 	}

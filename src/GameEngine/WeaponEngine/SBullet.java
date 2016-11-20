@@ -26,7 +26,7 @@ public class SBullet extends SMobile{
 		this.getBody().setTexture("res/object/bullet/bullet.png");
 		this.getBody().setScale(2.0f);
 		
-		this.pos = new SVector(owner.getPos());
+		this.pos = new SVector(owner.getPos().add(lookdir.setLength(5)));
 		this.lookDir = lookdir;
 		this.maxSpeed = 200;
 		this.moveDir = this.lookDir.setLength(70).add(owner.getMoveDir());
@@ -39,9 +39,10 @@ public class SBullet extends SMobile{
 		this.getBody().setTexture("res/object/bullet/bullet.png");
 		this.getBody().setHitbox(new SHitboxSpherical(this, 5));
 		this.getBody().setScale(2.0f);
-		this.pos = new SVector(owner.getPos());
-		Random random = new Random();
-		this.lookDir = new SVector(owner.getLookDir().rotate(random.nextFloat()*60-30));
+		this.lookDir = new SVector(owner.getLookDir());
+		this.pos = new SVector(owner.getPos().add(lookDir.setLength(5)));
+		//Random random = new Random();
+		//this.lookDir = new SVector(owner.getLookDir().rotate(random.nextFloat()*60-30));
 		this.maxSpeed = 200;
 		this.damage = 10;
 		this.moveDir = this.lookDir.setLength(70).add(owner.getMoveDir());

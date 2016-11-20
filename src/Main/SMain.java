@@ -121,7 +121,8 @@ public class SMain {
 		SNode node;
 		SNode server;
 		try {
-			node = new SNode(InetAddress.getLocalHost(), 0, "Gergo", PlayerState.local);
+			InetAddress address = InetAddress.getLocalHost();
+			node = new SNode(address, 0, address.getHostName(), PlayerState.local);
 			gameInstance.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
@@ -132,9 +133,6 @@ public class SMain {
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
 		try {
             Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
             Display.create();
@@ -154,7 +152,7 @@ public class SMain {
 
 	public static void StartServer(){
 		SServerTimer timer = new SServerTimer();
-		while(true){
+		while(!Display.isCloseRequested()){
 			timer.StartTimer();
 			communicationHandler.RequestPingDataFromClients();
 			gameInstance.CheckMessages();

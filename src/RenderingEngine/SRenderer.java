@@ -13,7 +13,9 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import java.awt.Font;
 import java.util.List;
+import java.util.ListIterator;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
@@ -26,6 +28,7 @@ import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import Main.SMain;
+import WebEngine.ComEngine.SNode;
 
 //TODO create SDrawObject and replace texture
 
@@ -33,22 +36,23 @@ public class SRenderer {
 	private SGameInstance gameInstance;
 	// TODO recalculate Mouse positions based on viewport
 	private boolean followLocalPlayer = true;
+	private SPlayer playerToFollow;
 	TrueTypeFont font;
 	
 	public SRenderer(SGameInstance GameInstance){
 		this.gameInstance = GameInstance;
-		
-		Font awtFont = new Font("Times New Roman", Font.BOLD, 24); //name, style (PLAIN, BOLD, or ITALIC), size
+		Font awtFont = new Font("Times New Roman", Font.BOLD, 15); //name, style (PLAIN, BOLD, or ITALIC), size
 		font = new TrueTypeFont(awtFont, false); //base Font, anti-aliasing true/false
 	} 
 	
 	public void DrawGame(){
-		if (!SMain.IsServer()){
-			if(followLocalPlayer) FollowLocalPlayer();
-		}
+		deceideWhichPlayerToFollow();
+		FollowPlayer();
 		DrawBackGround();
 		DrawObjects();
 		DrawEntities();
+		
+		SetTextViewPort();
 		DrawText();
 	}
 	
@@ -75,33 +79,11 @@ public class SRenderer {
 		this.followLocalPlayer = follow;
 	}
 	
-	private void DrawText(){
-		if(!SMain.IsServer()){
-			SPlayer localPlayer = gameInstance.getLocalPlayer();
-			SEntity entity = localPlayer.getEntity();
-			if (entity == null)
-				return;
-			if(entity.getObjectState().equals(ObjectState.Active) 
-					|| entity.getObjectState().equals(ObjectState.Ghost)){
-				float x = entity.getPos().getX();
-				float y = entity.getPos().getY();
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-				glOrtho(x-Specifications.WindowWidth/2,
-						x+Specifications.WindowWidth/2,
-						y+Specifications.WindowHeight/2,
-						y-Specifications.WindowHeight/2, -1, 1);
-				glMatrixMode(GL_MODELVIEW);
-				font.drawString(x-Specifications.WindowWidth/2+30, y+Specifications.WindowHeight/2-90, "Life: "+entity.getLife(), Color.yellow); //x, y, string to draw, color
-				font.drawString(x-Specifications.WindowWidth/2+30, y+Specifications.WindowHeight/2-70, "kills: "+localPlayer.getKills(), Color.yellow); //x, y, string to draw, color
-				font.drawString(x-Specifications.WindowWidth/2+30, y+Specifications.WindowHeight/2-50, "death: "+localPlayer.getDeaths(), Color.yellow); //x, y, string to draw, color
-			}
+	private void SetTextViewPort(){
+		if (playerToFollow == null){
+			return;
 		}
-	}
-	
-	private void FollowLocalPlayer(){
-		SPlayer localPlayer = gameInstance.getLocalPlayer();
-		SEntity entity = localPlayer.getEntity();
+		SEntity entity = playerToFollow.getEntity();
 		if (entity == null)
 			return;
 		if(entity.getObjectState().equals(ObjectState.Active) 
@@ -112,8 +94,120 @@ public class SRenderer {
 			glLoadIdentity();
 			glOrtho(x-Specifications.WindowWidth/2,
 					x+Specifications.WindowWidth/2,
-					y-Specifications.WindowHeight/2,
-					y+Specifications.WindowHeight/2, -1, 1);
+					y+Specifications.WindowHeight/2,
+					y-Specifications.WindowHeight/2, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
+		}
+	}
+	
+	private void DrawText(){
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0,
+				Specifications.WindowWidth,
+				Specifications.WindowHeight,
+				0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
+		if (!SMain.IsServer()){
+			DrawTextOfPlayer(playerToFollow, 0);
+		}else{
+			if (playerToFollow == null){
+				ListIterator<SPlayer> iter = gameInstance.getPlayers().listIterator();
+				int i=0;
+				while(iter.hasNext()){
+					SPlayer player = iter.next();
+					DrawTextOfPlayer(player, i);
+					i++;
+				}
+			}else{
+				DrawTextOfPlayer(playerToFollow, 0);
+			}
+		}
+	}
+	
+	private void DrawTextOfPlayer(SPlayer player, int i){
+		if (player == null)
+			return;
+		SEntity entity = player.getEntity();
+		if (entity == null)
+			return;
+		int textSize = 200;
+		if(entity.getObjectState().equals(ObjectState.Active) 
+				|| entity.getObjectState().equals(ObjectState.Ghost)){
+			if (SMain.IsServer()){
+				font.drawString(30+i*textSize, Specifications.WindowHeight-1790, "Name: "+player.getName(), Color.yellow); //x, y, string to draw, color
+				font.drawString(30+i*textSize, Specifications.WindowHeight-170, "Address: "+player.getClientNode().getAddress().toString(), Color.yellow); //x, y, string to draw, color
+				font.drawString(30+i*textSize, Specifications.WindowHeight-150, "Pos: "+entity.getPos().getString(), Color.yellow); //x, y, string to draw, color
+			} 
+			float delta = gameInstance.getDelta();
+			if (delta > 0){
+				font.drawString(30+i*textSize, Specifications.WindowHeight-130, "fps: "+(int)(1000/delta), Color.yellow); //x, y, string to draw, color
+			}
+			font.drawString(30+i*textSize, Specifications.WindowHeight-110, "Life: "+entity.getLife(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, Specifications.WindowHeight-90, "kills: "+player.getKills(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, Specifications.WindowHeight-70, "death: "+player.getDeaths(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, Specifications.WindowHeight-50, "ping: "+player.getClientNode().getPing(), Color.yellow); //x, y, string to draw, color
+		}
+	}
+	
+	private void deceideWhichPlayerToFollow(){
+		if(!SMain.IsServer()){
+			playerToFollow = gameInstance.getLocalPlayer();
+		}
+		else {
+			while(Keyboard.next()){
+				if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
+				    if (Keyboard.getEventKeyState()) {
+				    	ListIterator<SPlayer> iter = gameInstance.getPlayers().listIterator();
+						while(iter.hasNext()){
+							SPlayer player = iter.next();
+							if(playerToFollow == null){
+								playerToFollow = player;
+								break;
+							}
+						    if(player.equals(playerToFollow)){
+						        if(iter.hasNext()){
+						        	playerToFollow = iter.next();
+						        }
+						        else{
+						        	playerToFollow = null;
+						        }
+						    }
+						}
+					break;
+				    }
+				}
+
+			}
+		}
+	}
+	
+	private void FollowPlayer(){
+		if (playerToFollow == null){
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			int size = 10;
+			glOrtho(-size*Specifications.WindowWidth/2,
+					size*Specifications.WindowWidth/2,
+					-size*Specifications.WindowHeight/2,
+					size*Specifications.WindowHeight/2, -1, 1);
+			glMatrixMode(GL_MODELVIEW);
+			return;
+		}
+		SEntity entity = playerToFollow.getEntity();
+		if (entity == null)
+			return;
+		if(entity.getObjectState().equals(ObjectState.Active) 
+				|| entity.getObjectState().equals(ObjectState.Ghost)){
+			float x = entity.getPos().getX();
+			float y = entity.getPos().getY();
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			int size = 2;
+			glOrtho(x-(Specifications.WindowWidth/2)*size,
+					x+(Specifications.WindowWidth/2)*size,
+					y-(Specifications.WindowHeight/2)*size,
+					y+(Specifications.WindowHeight/2)*size, -1, 1);
 			glMatrixMode(GL_MODELVIEW);
 		}
 	}

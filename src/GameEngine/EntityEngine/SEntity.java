@@ -36,7 +36,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		super();
 		this.pos = new SVector(250.0f,250.0f);
 		this.getBody().setTexture("res/entity/spaceshipv1.png");
-		this.getBody().setScale(0.05f);
+		this.getBody().setScale(0.1f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
 		this.player = player;
 		this.life = 100;
@@ -67,7 +67,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			activeWeapon.coolIt();
 	}
 	
-	public void gotHit(float damage){
+	public boolean gotHit(float damage){
 		this.life -= damage;
 		if (this.life < 0){
 			this.life = 100;
@@ -77,6 +77,10 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			this.acclDir = new SVector();
 			this.lookDir = new SVector(1,0);
 			this.player.addDeath(1);
+			return true;
+		}
+		else {
+			return false;
 		}
 	}
 	public float getLife(){

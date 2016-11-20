@@ -5,7 +5,7 @@ import WebEngine.ComEngine.SNode;
 
 public class SPlayer extends SIdentifiable{
 	private SNode clientNode;
-	private SEntity entity;
+	private SEntity entity = null;
 	private String name;
 	private PlayerState playerState;
 	
