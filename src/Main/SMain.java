@@ -57,8 +57,8 @@ public class SMain {
 		if (n == 0){
 			// Start server
 			try {
-				InitServer();
-				StartServer();
+				InitServer(true);
+				StartServer(true);
 			} catch (Exception e) {
 				if (communicationHandler != null)
 					communicationHandler.CloseUDPNode();
@@ -89,7 +89,7 @@ public class SMain {
 		communicationHandler = new SCommunicationHandler();
 	}
 	
-	public static void InitServer(){
+	public static void InitServer(boolean serverWindow){
 		Init();
 		System.out.println("Starting server...");
 		SNode node;
@@ -102,19 +102,19 @@ public class SMain {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		try {
-            Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
-            Display.create();
-        } catch (LWJGLException e) {
-            e.printStackTrace();
-            System.exit(0);
-        }
-		initGL(); // init OpenGL
-	    initResources();
-		renderer = new SRenderer(gameInstance);
-       
+		if (serverWindow){
+
+			try {
+	            Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
+	            Display.create();
+	        } catch (LWJGLException e) {
+	            e.printStackTrace();
+	            System.exit(0);
+	        }
+			initGL(); // init OpenGL
+		    initResources();
+			renderer = new SRenderer(gameInstance);
+		}
 	}
 	public static void InitClient(byte[] ipAddr){
 		Init();
@@ -150,25 +150,30 @@ public class SMain {
 		SResLoader.addSpriteArray(Specifications.resourcePathStrings);
 	}
 
-	public static void StartServer(){
+	public static void StartServer(boolean serverWindow){
 		SServerTimer timer = new SServerTimer();
-		while(!Display.isCloseRequested()){
+		boolean run = true;
+		while(run){
 			timer.StartTimer();
 			communicationHandler.RequestPingDataFromClients();
-			gameInstance.CheckMessages();
 			gameInstance.UpdateGame();
+			gameInstance.CheckMessages();
 			gameInstance.SendGameDataToClients();
-			renderGL();
-			Display.update();
-			Display.sync(Specifications.FPS_M);
-			//timer.SleepIfRequired();
+			if (serverWindow){
+				renderGL();
+				Display.update();
+				Display.sync(Specifications.FPS_M);
+				run = !Display.isCloseRequested();
+			}else{
+				timer.SleepIfRequired();
+			}
 			updateDelta();
 		}
 	}
 	public static void StartClient(){
 		while (!Display.isCloseRequested()) {
-			gameInstance.CheckMessages();
 			gameInstance.UpdateGame();
+			gameInstance.CheckMessages();
 			renderGL();
 			Display.update();
             Display.sync(Specifications.FPS_M); // cap fps to 60fps

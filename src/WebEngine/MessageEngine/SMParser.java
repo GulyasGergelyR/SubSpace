@@ -98,8 +98,10 @@ public class SMParser {
 		int objectTypeId = buffer.get();
 		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
 			int ownerId = buffer.getShort();
+			SVector pos = parseBigVector(buffer);
 			SVector lookdir = parseBigVector(buffer);
-			object = new SBullet(ownerId, lookdir);
+			SVector movedir = parseBigVector(buffer);
+			object = new SBullet(ownerId, pos, lookdir, movedir);
 			object.setId(new SId(id));
 		}
 		if (object != null){

@@ -1,5 +1,7 @@
 package GameEngine.SyncEngine;
 
+import GameEngine.Specifications;
+
 public class SServerTimer {
 	private long TS; //The time when the cycle begun
     
@@ -17,7 +19,7 @@ public class SServerTimer {
     
     public void SleepIfRequired(){
     	//Calculate how long did the cycle take
-    	long l = 20*1000*1000; 
+    	long l = 1000/Specifications.FPS_M*1000*1000; 
     	long TC=System.nanoTime();
 		long time=l-(TC-TS);
 		if(time>0)

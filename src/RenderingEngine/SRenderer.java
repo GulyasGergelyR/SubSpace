@@ -135,7 +135,7 @@ public class SRenderer {
 		if(entity.getObjectState().equals(ObjectState.Active) 
 				|| entity.getObjectState().equals(ObjectState.Ghost)){
 			if (SMain.IsServer()){
-				font.drawString(30+i*textSize, Specifications.WindowHeight-1790, "Name: "+player.getName(), Color.yellow); //x, y, string to draw, color
+				font.drawString(30+i*textSize, Specifications.WindowHeight-190, "Name: "+player.getName(), Color.yellow); //x, y, string to draw, color
 				font.drawString(30+i*textSize, Specifications.WindowHeight-170, "Address: "+player.getClientNode().getAddress().toString(), Color.yellow); //x, y, string to draw, color
 				font.drawString(30+i*textSize, Specifications.WindowHeight-150, "Pos: "+entity.getPos().getString(), Color.yellow); //x, y, string to draw, color
 			} 

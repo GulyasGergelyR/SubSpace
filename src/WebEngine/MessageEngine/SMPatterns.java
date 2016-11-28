@@ -150,7 +150,9 @@ public class SMPatterns {
 		if (object instanceof SBullet){
 			buffer.put((byte)20); //TODO remove hard coded bullet type id
 			buffer.putShort((short)(((SBullet)object).getOwner().getId().get()));
+			object.getPos().addToBufferAsBigVector(buffer);
 			object.getLookDir().addToBufferAsBigVector(buffer);
+			((SBullet) object).getMoveDir().addToBufferAsBigVector(buffer);
 		}
 		return message;
 	}

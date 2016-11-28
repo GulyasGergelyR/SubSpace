@@ -28,7 +28,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.pos = new SVector(250.0f,250.0f);
 		this.getBody().setTexture("res/entity/spaceshipv1.png");
 		this.getBody().setScale(0.05f);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 10f));
+		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
 		this.setController(new SHumanControlClient(this));
 	}
 	

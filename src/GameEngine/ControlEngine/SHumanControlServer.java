@@ -56,7 +56,7 @@ public class SHumanControlServer extends SControlServer{
 		}else{
 			float accl = Owner.getMaxAcceleration();
 			float factor = 1/(1+Owner.getLookDir().getAbsAngleBetween(acclDir)/4.0f);
-			Owner.setAcclDir(acclDir.setLength(accl*factor));
+			Owner.setAcclDir(acclDir);//.setLength(accl*factor));
 		}
 		float angle = Owner.getAimLookDir().getAngle() - Owner.getLookDir().getAngle();
 		float rotdir = 0;

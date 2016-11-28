@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class Specifications {
-	public static final int FPS_M = 40;
+	public static final int FPS_M = 60;
 	public static final int DataLength = 38;
 	public static final int WindowWidth = 1280;
 	public static final int WindowHeight = 768;

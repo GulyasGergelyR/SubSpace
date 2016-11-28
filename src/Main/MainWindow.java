@@ -1,5 +1,6 @@
 package Main;
 
+import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -25,7 +26,36 @@ public class MainWindow extends JFrame {
 	JSpinner portNumber;
 	
     public static void main(String[] args) {
-        new MainWindow();
+    	if (args.length>0){
+    		boolean server = false;
+    		boolean serverWindow = false;
+    		for(String s: args){
+    			if (s.equals("-server")){
+    				server = true;
+    			}
+    			if (s.equals("-serverWindow")){
+    				serverWindow = true;
+    			}
+    		}
+    		if (server){
+    			try {
+    				SMain.InitServer(serverWindow);
+    				SMain.StartServer(serverWindow);
+    			} catch (Exception e) {
+    				if (SMain.getCommunicationHandler() != null)
+    					SMain.getCommunicationHandler().CloseUDPNode();
+    				e.printStackTrace();
+    			} finally {
+    				if (SMain.getCommunicationHandler() != null)
+    					SMain.getCommunicationHandler().CloseUDPNode();
+    			}
+    		}else{
+        		new MainWindow();
+    		}
+    	}else{
+    		new MainWindow();
+    	}
+        
     }
     
     public MainWindow()
@@ -109,7 +139,8 @@ public class MainWindow extends JFrame {
         return p;
     }
     
-    private void StartClientButtonPressed(java.awt.event.ActionEvent evt) {                                         
+    private void StartClientButtonPressed(java.awt.event.ActionEvent evt) {  
+    	this.setState(Frame.ICONIFIED);
     	try {
     		IPAddressFormatter ipAddressFormatter = new IPAddressFormatter();
 			SMain.InitClient((byte[])ipAddressFormatter.stringToValue(ipAddress.getText()));
@@ -177,10 +208,11 @@ public class MainWindow extends JFrame {
         return p;
     }
     
-    private void StartServerButtonPressed(java.awt.event.ActionEvent evt) {                                         
+    private void StartServerButtonPressed(java.awt.event.ActionEvent evt) {
+    	this.setState(Frame.ICONIFIED);
     	try {
-			SMain.InitServer();
-			SMain.StartServer();
+			SMain.InitServer(false);
+			SMain.StartServer(false);
 		} catch (Exception e) {
 			if (SMain.getCommunicationHandler() != null)
 				SMain.getCommunicationHandler().CloseUDPNode();

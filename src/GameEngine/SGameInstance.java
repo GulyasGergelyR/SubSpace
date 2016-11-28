@@ -58,6 +58,7 @@ public class SGameInstance {
 		return delta;
 	}
 	public float getDeltaRatio(){
+		//TODO check this fps
 		return ((float)delta)/FPS.getFPS_M();
 	}
 	public void addPlayer(SPlayer player){

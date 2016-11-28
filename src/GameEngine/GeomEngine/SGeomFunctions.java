@@ -4,12 +4,14 @@ import GameEngine.BaseEngine.SObject;
 
 public class SGeomFunctions {
 
-	
 	public static boolean intersects(SObject object1, SObject object2){
 		SHitbox hitbox1 = object1.getBody().getHitbox();
 		SHitbox hitbox2 = object2.getBody().getHitbox();
 		if (hitbox1 instanceof SHitboxSpherical || hitbox2 instanceof SHitboxSpherical){
 			if (hitbox1 instanceof SHitboxSpherical && hitbox2 instanceof SHitboxSpherical){
+				float d = object1.getPos().d(object2.getPos());
+				if (d<60)
+					System.out.println(object2.getId()+" "+d+" "+((SHitboxSpherical)hitbox1).getRadius()+" "+((SHitboxSpherical)hitbox2).getRadius() );
 				if (object1.getPos().d(object2.getPos()) <=
 					((SHitboxSpherical)hitbox1).getRadius()+((SHitboxSpherical)hitbox2).getRadius()){
 					return true;

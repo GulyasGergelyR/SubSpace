@@ -28,10 +28,27 @@ public class SHumanControlClient extends SControlClient{
 		}
 		int M_x = Mouse.getX();
 		int M_y = Mouse.getY();
+		boolean leftPressed = false;
+		boolean rightPressed = false;
+		while(Mouse.next()){
+			if(Mouse.getEventButton() == 0){
+				leftPressed = true;
+			}
+			if(Mouse.getEventButton() == 1){
+				rightPressed = true;
+			}
+		}
+		
 		if(Mouse.isButtonDown(0)){
-			command += 1<<4;
+			leftPressed = true;
 		}
 		if(Mouse.isButtonDown(1)){
+			rightPressed = true;
+		}
+		if(leftPressed){
+			command += 1<<4;
+		}
+		if(rightPressed){
 			command += 1<<5;
 		}
 		SVector aimLookDir = new SVector(M_x-Specifications.WindowWidth/2, M_y-Specifications.WindowHeight/2);

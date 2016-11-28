@@ -3,6 +3,8 @@ package testScripts;
 import java.nio.ByteBuffer;
 import java.util.Locale;
 
+import GameEngine.Specifications;
+
 public class TestScript1 {
 	public static void main(String[] args) {
 		test1();
@@ -24,9 +26,9 @@ public class TestScript1 {
 		System.out.println(buffer.getShort(0));
 		for (byte b: data)
 			System.out.println(b);
-	
+		
 		System.out.println((125.52432f-((byte)125.52432f))*10000);
-		System.out.println(1<<3);
+		System.out.println(1000/Specifications.FPS_M*1000*1000);
 
 	}
 	private static void test1(){
