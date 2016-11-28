@@ -77,7 +77,7 @@ public abstract class SObject extends SIdentifiable {
 	// functions
 	public List<SRenderObject> getDrawables(){
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
-		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getScale(), 1.0f));
+		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getScale(), 1.0f, body.getColor()));
 		return list;
 	}	
 	public void update(){}

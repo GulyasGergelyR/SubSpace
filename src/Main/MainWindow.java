@@ -98,7 +98,7 @@ public class MainWindow extends JFrame {
         ipLabel.setForeground(new java.awt.Color(255, 255, 255));
         ipLabel.setText("Server IP address:");
 
-        ipAddress.setText("134.255.89.249");
+        ipAddress.setText("127.0.0.1");
 
         portLabel.setForeground(new java.awt.Color(255, 255, 255));
         portLabel.setText("Server port:");

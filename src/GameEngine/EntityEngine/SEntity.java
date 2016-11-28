@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.newdawn.slick.Color;
+
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
@@ -38,6 +40,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.getBody().setTexture("res/entity/spaceshipv1.png");
 		this.getBody().setScale(0.1f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
+		Random random = new Random();
+		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
 		this.life = 100;
 		player.setEntity(this);

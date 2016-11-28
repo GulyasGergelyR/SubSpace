@@ -47,6 +47,8 @@ public class SMPatterns {
 	public static byte CObjectUpdate = 0x12;
 	public static byte CObjectDelete = 0x17;
 	
+	public static byte CAnimationObjectCreate = 0x13;
+	
 	public static SM getConnectToServerMessage(String nameString){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
@@ -154,6 +156,13 @@ public class SMPatterns {
 			object.getLookDir().addToBufferAsBigVector(buffer);
 			((SBullet) object).getMoveDir().addToBufferAsBigVector(buffer);
 		}
+		return message;
+	}
+	public static SM getAnimationObjectCreateMessage(SVector pos){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CAnimationObjectCreate);
+		pos.addToBufferAsBigVector(buffer);
 		return message;
 	}
 	public static SM getObjectDeleteMessage(SObject object){

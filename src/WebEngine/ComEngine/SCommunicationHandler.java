@@ -246,7 +246,7 @@ public class SCommunicationHandler {
 		//System.out.println("parsing message...");
 		if(message.isValid()){
 			byte command = message.getCommandId();
-			System.out.println("Received command: "+String.format("%02x", command & 0xff));
+			//System.out.println("Received command: "+String.format("%02x", command & 0xff));
 			////////////////////////SERVER\\\\\\\\\\\\\\\\\\\\\\
 			if(udpRole.equals(UDPRole.Server)){
 				if (command == SMPatterns.CConnect){ 		//connect client
@@ -292,6 +292,9 @@ public class SCommunicationHandler {
 					addObjectMessage(message);
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
+					addObjectMessage(message);
+				}
+				else if (command == SMPatterns.CAnimationObjectCreate){ 	//Server created explosion
 					addObjectMessage(message);
 				}
 				else{

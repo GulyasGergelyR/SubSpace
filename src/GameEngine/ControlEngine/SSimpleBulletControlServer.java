@@ -1,7 +1,5 @@
 package GameEngine.ControlEngine;
 
-import java.util.List;
-
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
@@ -30,6 +28,9 @@ public class SSimpleBulletControlServer extends SControlServer {
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
+					// add explosion to client
+					SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(Owner.getPos());
+					SMain.getCommunicationHandler().SendMessage(explosionMessage);
 					break;
 				}
 			}

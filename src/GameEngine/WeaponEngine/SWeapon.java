@@ -58,7 +58,6 @@ public class SWeapon{
 			SMain.getGameInstance().addObject(bullet);
 			SM message = SMPatterns.getObjectCreateMessage(bullet);
 			SMain.getCommunicationHandler().SendMessage(message);
-			
 		}
 		lastTime = 0;
 	}

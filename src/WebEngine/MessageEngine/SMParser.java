@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SId;
 import GameEngine.SPlayer;
+import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.SPlayer.PlayerState;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
@@ -103,10 +104,15 @@ public class SMParser {
 			SVector movedir = parseBigVector(buffer);
 			object = new SBullet(ownerId, pos, lookdir, movedir);
 			object.setId(new SId(id));
-		}
-		if (object != null){
 			SMain.getGameInstance().addObject(object);
 		}
+	}
+	public static void parseAnimationObjectCreateMessage(SM message){
+		ByteBuffer buffer = message.getBuffer();
+		SObject object = null;
+		SVector pos = parseBigVector(buffer);
+		object = new SExplosion(pos);
+		SMain.getGameInstance().addAnimationObject(object);
 	}
 	public static void parseObjectUpdateMessage(SM message, SObject object){
 		ByteBuffer buffer = message.getBuffer();

@@ -26,6 +26,7 @@ public class SGameInstance {
 	private List<SPlayer> players;
 	private List<SEntity> entities;
 	private LinkedList<SObject> objects;
+	private LinkedList<SObject> animationObjects;
 	private SBackGround backGround = new SBackGround();
 	
 	private SFPS FPS;
@@ -37,6 +38,7 @@ public class SGameInstance {
 		players = new ArrayList<SPlayer>();
 		entities = new ArrayList<SEntity>();
 		objects = new LinkedList<SObject>();
+		animationObjects = new LinkedList<SObject>();
 	}
 	public List<SPlayer> getPlayers(){
 		return players;
@@ -46,6 +48,9 @@ public class SGameInstance {
 	}
 	public LinkedList<SObject> getObjects(){
 		return objects;
+	}
+	public LinkedList<SObject> getAnimationObjects(){
+		return animationObjects;
 	}
 	
 	public SFPS getFPS(){
@@ -86,6 +91,9 @@ public class SGameInstance {
 	}
 	public void addObject(SObject object){
 		objects.add(object);
+	}
+	public void addAnimationObject(SObject object){
+		animationObjects.add(object);
 	}
 	public void removeEntity(int Id){
 		synchronized (entities) {
@@ -156,6 +164,7 @@ public class SGameInstance {
 	public void UpdateGame(){
 		UpdateEntities();
 		UpdateObjects();
+		UpdateAnimationObjects();
 	}
 	
 	protected void UpdateEntities(){
@@ -187,6 +196,22 @@ public class SGameInstance {
 	protected void UpdateObjects(){
 		if(!objects.isEmpty()){
 			ListIterator<SObject> iter = objects.listIterator();
+			while(iter.hasNext()){
+				SObject object = iter.next();
+			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+			        iter.remove();
+			    }else {
+			    	object.update();
+			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+				        iter.remove();
+				    }
+			    }
+			}
+		}
+	}
+	protected void UpdateAnimationObjects(){
+		if(!animationObjects.isEmpty()){
+			ListIterator<SObject> iter = animationObjects.listIterator();
 			while(iter.hasNext()){
 				SObject object = iter.next();
 			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
@@ -286,6 +311,9 @@ public class SGameInstance {
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
 					int id = SMParser.parseId(message.getBuffer());
 					removeObjectFromList(id);
+				}
+				else if (command == SMPatterns.CAnimationObjectCreate){ 	//Server deleted Object
+					SMParser.parseAnimationObjectCreateMessage(message);
 				}
 			}
 			i++;

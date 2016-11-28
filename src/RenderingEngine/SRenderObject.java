@@ -1,6 +1,6 @@
 package RenderingEngine;
 
-import java.awt.Color;
+import org.newdawn.slick.Color;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -35,12 +35,14 @@ public class SRenderObject {
 		this.color = new Color(255,255,255,alpha);
 	}
 	
-	public SRenderObject(String texture,SVector v,float rotateBy,float scale,float transparency){
+	public SRenderObject(String texture,SVector v,float rotateBy,float scale,float transparency, Color color){
 		this.texture = SResLoader.getTexture(texture);
 		this.v = v;
 		this.rotateBy = rotateBy;
 		this.scale = scale;
 		this.transparency = transparency;
+		int alpha = (int)(transparency*255);
+		this.color = new Color(color.getRed(),color.getGreen(),color.getBlue(),alpha);;
 	}
 	
 }

@@ -94,7 +94,7 @@ public class SMain {
 		System.out.println("Starting server...");
 		SNode node;
 		try {
-			node = new SNode(InetAddress.getLocalHost(), 0, 1); // server hets special id 1
+			node = new SNode(InetAddress.getLocalHost(), 0, 1); // server gets special id 1
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsServer(9090, 9089);
 			System.out.println("Server is running...");
@@ -128,7 +128,7 @@ public class SMain {
 			communicationHandler.createUDPNodeAsClient(9089, 9090);
 			//byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 104};
 			//byte[] ipAddr = new byte[]{(byte)134, (byte)255, (byte)89, (byte)249};
-			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server hets special id 1
+			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server gets special id 1
 			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();

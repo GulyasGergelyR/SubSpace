@@ -25,6 +25,7 @@ public class SBullet extends SMobile{
 		this.owner = SMain.getGameInstance().getEntityById(ownerId);
 		this.getBody().setTexture("res/object/bullet/bullet.png");
 		this.getBody().setScale(2.0f);
+		this.getBody().setColor(this.owner.getBody().getColor());
 		this.pos = pos;
 		this.lookDir = lookdir;
 		this.moveDir = movedir;
@@ -43,7 +44,7 @@ public class SBullet extends SMobile{
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
 		this.maxSpeed = 100;
 		this.damage = 10;
-		this.moveDir = this.lookDir.setLength(this.maxSpeed).add(owner.getMoveDir());
+		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
 		this.setController(new SSimpleBulletControlServer(this));
 	}
 	public int getNumberOfBulletsAtOnce() {

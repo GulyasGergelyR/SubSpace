@@ -17,10 +17,9 @@ import java.util.ListIterator;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
-
+import org.newdawn.slick.Color;
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
 import GameEngine.Specifications;
@@ -51,6 +50,7 @@ public class SRenderer {
 		DrawBackGround();
 		DrawObjects();
 		DrawEntities();
+		DrawExplosions();
 		
 		SetTextViewPort();
 		DrawText();
@@ -71,6 +71,13 @@ public class SRenderer {
 		for (SEntity entity : Entities){
 			if (entity.getObjectState() == ObjectState.Active){
 				Draw(entity.getDrawables());
+			}
+		}
+	}
+	private void DrawExplosions(){
+		for (SObject object : gameInstance.getAnimationObjects()){
+			if (object.getObjectState() == ObjectState.Active){
+				Draw(object.getDrawables());
 			}
 		}
 	}
@@ -227,11 +234,13 @@ public class SRenderer {
 		float rotateBy = SRO.rotateBy;
 		float transparency = SRO.transparency;
 		Texture texture = SRO.texture;
-
+		/*
 		int alpha = (int)(transparency*255);
 		Color c = new Color(255,255,255,alpha);
 		c.bind();
-
+		 */
+		SRO.color.bind();
+		
 		texture.bind(); // or GL11.glBind(texture.getTextureID());
 		
 		glPushMatrix();
