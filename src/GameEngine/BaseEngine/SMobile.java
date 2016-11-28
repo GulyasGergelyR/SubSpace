@@ -10,7 +10,7 @@ public abstract class SMobile extends SObject{
 	protected SVector moveDir; // movement direction, length is speed
 	protected SVector acclDir; 
 	protected SVector aimLookDir;
-	protected float maxSpeed = 35.0f;
+	protected float maxSpeed = 40.0f;
 	protected float maxAcceleration = 10.0f;     
 	protected float rotSpeed = 0.0f;         
 	protected float maxRotSpeed = 40.0f;

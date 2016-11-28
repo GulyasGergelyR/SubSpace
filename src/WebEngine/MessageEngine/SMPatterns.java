@@ -7,6 +7,7 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.WeaponEngine.SBullet;
 import WebEngine.ComEngine.SNode;
 
@@ -47,6 +48,7 @@ public class SMPatterns {
 	public static byte CObjectUpdate = 0x12;
 	public static byte CObjectDelete = 0x17;
 	
+	//TODO sort this out
 	public static byte CAnimationObjectCreate = 0x13;
 	
 	public static SM getConnectToServerMessage(String nameString){
@@ -101,7 +103,7 @@ public class SMPatterns {
 		entity.getLookDir().addToBufferAsBigVector(buffer);
 		entity.getMoveDir().addToBufferAsBigVector(buffer);
 		entity.getAcclDir().addToBufferAsBigVector(buffer);
-		buffer.put((byte)entity.getLife());
+		buffer.putShort((short)entity.getLife());
 		buffer.put((byte)entity.getPlayer().getKills());
 		buffer.put((byte)entity.getPlayer().getDeaths());
 		return message;
@@ -150,14 +152,21 @@ public class SMPatterns {
 		buffer.put(CObjectCreate);
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SBullet){
+			SBullet bullet = (SBullet) object;
 			buffer.put((byte)20); //TODO remove hard coded bullet type id
-			buffer.putShort((short)(((SBullet)object).getOwner().getId().get()));
-			object.getPos().addToBufferAsBigVector(buffer);
-			object.getLookDir().addToBufferAsBigVector(buffer);
-			((SBullet) object).getMoveDir().addToBufferAsBigVector(buffer);
+			buffer.putShort((short)(bullet.getOwner().getId().get()));
+			bullet.getPos().addToBufferAsBigVector(buffer);
+			bullet.getLookDir().addToBufferAsBigVector(buffer);
+			bullet.getMoveDir().addToBufferAsBigVector(buffer);
+		} else if (object instanceof SPowerUp){
+			SPowerUp powerUp = (SPowerUp) object;
+			buffer.put((byte)40); //TODO remove hard coded power up type id
+			buffer.put(powerUp.getType());
+			powerUp.getPos().addToBufferAsBigVector(buffer);
 		}
 		return message;
 	}
+	
 	public static SM getAnimationObjectCreateMessage(SVector pos){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
@@ -165,6 +174,7 @@ public class SMPatterns {
 		pos.addToBufferAsBigVector(buffer);
 		return message;
 	}
+	
 	public static SM getObjectDeleteMessage(SObject object){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();

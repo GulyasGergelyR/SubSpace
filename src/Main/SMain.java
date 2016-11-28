@@ -134,7 +134,23 @@ public class SMain {
 			e.printStackTrace();
 		}
 		try {
-            Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
+			 DisplayMode[] modes = Display.getAvailableDisplayModes();
+             int max = 0;
+             DisplayMode biggest = new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight);
+             for (int i=0;i<modes.length;i++) {
+                 DisplayMode current = modes[i];
+                 if (current.getWidth()*current.getHeight() > max){
+                	 max = current.getWidth()*current.getHeight();
+                	 biggest = current;
+                 }
+                 
+             }
+             System.out.println("Resolution: "+biggest.getWidth()+"x"+biggest.getHeight()+" "+biggest.getFrequency()+" Hz");
+            //Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
+            Display.setDisplayMode(biggest);
+            Specifications.WindowWidth = biggest.getWidth();
+            Specifications.WindowHeight = biggest.getHeight();
+            Display.setFullscreen(true);
             Display.create();
         } catch (LWJGLException e) {
             e.printStackTrace();

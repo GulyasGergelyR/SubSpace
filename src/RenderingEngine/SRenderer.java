@@ -225,14 +225,17 @@ public class SRenderer {
 		}
 	}
 	
+	private static void DrawHud(){
+		
+	}
+	
 	private static void Draw(SRenderObject SRO)
 	{
-		
 		float x = SRO.v.getX();
 		float y = SRO.v.getY();
 		float scale = SRO.scale;
 		float rotateBy = SRO.rotateBy;
-		float transparency = SRO.transparency;
+		//float transparency = SRO.transparency;
 		Texture texture = SRO.texture;
 		/*
 		int alpha = (int)(transparency*255);

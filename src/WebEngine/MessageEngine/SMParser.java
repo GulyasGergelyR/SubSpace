@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import GameEngine.SId;
 import GameEngine.SPlayer;
 import GameEngine.ObjectEngine.SExplosion;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SPlayer.PlayerState;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
@@ -36,7 +37,7 @@ public class SMParser {
 		entity.setLookDir(parseBigVector(buffer));
 		entity.setMoveDir(parseBigVector(buffer));
 		entity.setAcclDir(parseBigVector(buffer));
-		entity.setLife(buffer.get());
+		entity.setLife(buffer.getShort());
 		entity.getPlayer().setKills(buffer.get());
 		entity.getPlayer().setDeaths(buffer.get());
 		//TODO check if this is needed - posUpdated
@@ -105,6 +106,10 @@ public class SMParser {
 			object = new SBullet(ownerId, pos, lookdir, movedir);
 			object.setId(new SId(id));
 			SMain.getGameInstance().addObject(object);
+		} else if (objectTypeId == 40){  // TODO remove hard coded power up type id
+			byte powerUpType = buffer.get();
+			SVector pos = parseBigVector(buffer);
+			SPowerUpFactory.createNewPowerUpAtClient(pos, id, powerUpType);
 		}
 	}
 	public static void parseAnimationObjectCreateMessage(SM message){

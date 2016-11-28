@@ -20,6 +20,7 @@ import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
+	protected float maxLife = 100;
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
@@ -43,7 +44,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
-		this.life = 100;
+		this.life = maxLife;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
@@ -73,7 +74,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	
 	public boolean gotHit(float damage){
 		this.life -= damage;
-		if (this.life < 0){
+		if (this.life <= 0){
 			this.life = 100;
 			Random random = new Random();
 			this.pos = new SVector(random.nextFloat()*1000-500,random.nextFloat()*1000-500);
@@ -93,6 +94,13 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public void setLife(float life){
 		this.life = life;
 	}
+	public float getMaxLife() {
+		return maxLife;
+	}
+	public void setMaxLife(float maxLife) {
+		this.maxLife = maxLife;
+	}
+
 	public SPlayer getPlayer() {
 		return player;
 	}

@@ -23,8 +23,8 @@ public class SBullet extends SMobile{
 		super();
 		//TODO add SSimpleBulletControl here
 		this.owner = SMain.getGameInstance().getEntityById(ownerId);
-		this.getBody().setTexture("res/object/bullet/bullet.png");
-		this.getBody().setScale(2.0f);
+		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
+		this.getBody().setScale(0.25f);
 		this.getBody().setColor(this.owner.getBody().getColor());
 		this.pos = pos;
 		this.lookDir = lookdir;
@@ -36,9 +36,9 @@ public class SBullet extends SMobile{
 		//used at server side
 		super();
 		this.owner = owner;
-		this.getBody().setTexture("res/object/bullet/bullet.png");
-		this.getBody().setHitbox(new SHitboxSpherical(this, 5));
-		this.getBody().setScale(2.0f);
+		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
+		this.getBody().setHitbox(new SHitboxSpherical(this, 40));
+		this.getBody().setScale(0.25f);
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));

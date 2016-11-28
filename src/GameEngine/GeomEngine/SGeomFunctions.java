@@ -10,8 +10,6 @@ public class SGeomFunctions {
 		if (hitbox1 instanceof SHitboxSpherical || hitbox2 instanceof SHitboxSpherical){
 			if (hitbox1 instanceof SHitboxSpherical && hitbox2 instanceof SHitboxSpherical){
 				float d = object1.getPos().d(object2.getPos());
-				if (d<60)
-					System.out.println(object2.getId()+" "+d+" "+((SHitboxSpherical)hitbox1).getRadius()+" "+((SHitboxSpherical)hitbox2).getRadius() );
 				if (object1.getPos().d(object2.getPos()) <=
 					((SHitboxSpherical)hitbox1).getRadius()+((SHitboxSpherical)hitbox2).getRadius()){
 					return true;

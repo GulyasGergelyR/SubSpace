@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Random;
 
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBackGround;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -165,6 +168,18 @@ public class SGameInstance {
 		UpdateEntities();
 		UpdateObjects();
 		UpdateAnimationObjects();
+		UpdateFactories();
+	}
+	
+	protected void UpdateFactories(){
+		if (SMain.IsServer()){
+			Random random = new Random();
+			if (random.nextFloat()>0.9f){
+				SPowerUpFactory.tryToCreateNewPowerUpAtServer(
+						new SVector(random.nextFloat()*8000 -4000, random.nextFloat()*8000 -4000),
+						SPowerUpFactory.PowerUpHeal);
+			}
+		}
 	}
 	
 	protected void UpdateEntities(){
@@ -181,6 +196,10 @@ public class SGameInstance {
 				        		SM message = SMPatterns.getEntityCreateMessage(player);
 				        		SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        	}
+				        }
+				        for(SObject object : objects){
+				        	SM message = SMPatterns.getObjectCreateMessage(object);
+				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
 				        entity.setObjectState(ObjectState.Active);
 			    }else {

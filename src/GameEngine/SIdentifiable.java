@@ -22,7 +22,7 @@ public class SIdentifiable {
 		return this.Id.equals(id);
 	}
 	public boolean equals(int id){
-		return (this.Id.get() == id);
+		return (this.Id.equals(id));
 	}
 	@Override
 	public boolean equals(Object obj) {
