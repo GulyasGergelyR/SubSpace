@@ -189,6 +189,7 @@ public class SMain {
 		}
 	}
 	public static void StartClient(){
+		SResLoader.getAudio("res/audio/ambient.wav").playAsMusic(1.0f, 0.05f, true);
 		while (!Display.isCloseRequested()) {
 			gameInstance.UpdateGame();
 			gameInstance.CheckMessages();

@@ -101,7 +101,9 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		return life;
 	}
 	public void setLife(float life){
-		this.life = life;
+		if (life > maxLife)
+			this.life = maxLife;
+		else this.life = life;
 	}
 	public float getMaxLife() {
 		return maxLife;
