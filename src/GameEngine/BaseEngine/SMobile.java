@@ -25,11 +25,12 @@ public abstract class SMobile extends SObject{
 		moveDir = new SVector();
 		acclDir = new SVector();
 		aimLookDir = new SVector(lookDir);
+		/*
 		if (SMain.IsServer()){
 			controller = new SControlServer(this);
 		}else{
 			controller = new SControlClient(this);
-		}
+		}*/
 	}
 	@Deprecated
 	public SMobile(SVector pos, SVector look_dir, String texture)

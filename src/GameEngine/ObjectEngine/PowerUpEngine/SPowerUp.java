@@ -1,7 +1,6 @@
 package GameEngine.ObjectEngine.PowerUpEngine;
 
 import GameEngine.BaseEngine.SMobile;
-import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
@@ -17,7 +16,7 @@ public class SPowerUp extends SMobile{
 		super();
 		this.pos = new SVector(pos);
 		this.getBody().setTexture("res/object/powerup/powerupring.png");
-		this.getBody().setScale(0.1f);
+		this.getBody().setScale(0.15f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 120));
 	}
 	public boolean applyToEntity(SEntity entity){return false;}

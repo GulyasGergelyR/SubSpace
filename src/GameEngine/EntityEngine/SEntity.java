@@ -20,7 +20,7 @@ import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
-	protected float maxLife = 100;
+	protected float maxLife = 150;
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
@@ -30,7 +30,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		super();
 		this.pos = new SVector(250.0f,250.0f);
 		this.getBody().setTexture("res/entity/spaceshipv1.png");
-		this.getBody().setScale(0.05f);
+		this.getBody().setScale(1.0f);
+		this.getBody().setDrawScale(0.05f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
 		this.setController(new SHumanControlClient(this));
 	}
@@ -38,18 +39,26 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public SEntity(SPlayer player){
 		super();
 		this.pos = new SVector(250.0f,250.0f);
-		this.getBody().setTexture("res/entity/spaceshipv1.png");
-		this.getBody().setScale(0.1f);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
+		this.getBody().setTexture("res/entity/spaceshipv3.png");
+		this.getBody().setScale(1.0f);
+		this.getBody().setDrawScale(0.1f);
+		this.getBody().setHitbox(new SHitboxSpherical(this, 768*getBody().getDrawScale()));
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
-		this.life = maxLife;
+		this.life = 100;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
 		SWeapon weapon = new SWeapon(this);
 		activeWeapon = weapon;
+		if (SMain.IsServer()){
+			setObjectState(ObjectState.Initialization);
+		}
+		else{
+			setObjectState(ObjectState.Ghost);
+		}
+		
 		if (player.getPlayerState().equals(PlayerState.local)){
 			System.out.println("Created local player at: "+SMain.getCommunicationHandler().getUDPRole());
 			this.setController(new SHumanControlClient(this));

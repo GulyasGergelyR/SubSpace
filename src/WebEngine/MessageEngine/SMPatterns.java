@@ -1,5 +1,6 @@
 package WebEngine.MessageEngine;
 
+import java.io.ObjectOutputStream.PutField;
 import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
@@ -40,6 +41,7 @@ public class SMPatterns {
 	public static byte MEntity = 0x14;
 	public static byte CEntityCreate = 0x19;
 	public static byte CEntityUpdate = 0x1A;
+	public static byte CEntityUpdateState = 0x1B;
 	public static byte CEntityDelete = 0x1F;
 	
 	//0001 0xxx Object commands
@@ -106,6 +108,15 @@ public class SMPatterns {
 		buffer.putShort((short)entity.getLife());
 		buffer.put((byte)entity.getPlayer().getKills());
 		buffer.put((byte)entity.getPlayer().getDeaths());
+		return message;
+	}
+	public static SM getEntityUpdateStateMessage(SEntity entity){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CEntityUpdateState);
+		buffer.putShort((short)entity.getId().get());
+		buffer.put(entity.getObjectStateId());
+		
 		return message;
 	}
 	public static SM getEntityCreateMessage(SPlayer player){

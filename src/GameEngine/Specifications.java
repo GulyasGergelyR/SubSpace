@@ -18,26 +18,30 @@ public final class Specifications {
 	public static final List<String> ComCommands = new ArrayList<>(EntityCommands.size()+
 												ObjectCommands.size()+ServerCommands.size());
 	
-	public static String[] resourcePathStrings;
+	//public static String[] resourcePathStrings;
+	public static List<String> resourcePathStrings = new ArrayList<String>();
+	public static List<String> audioPathStrings = new ArrayList<String>();
 	
 	public static void InitSpecifications(){
 		ComCommands.addAll(EntityCommands);
 		ComCommands.addAll(ObjectCommands);
 		ComCommands.addAll(ServerCommands);
 		
-		
 		//TODO create automatic import
-		resourcePathStrings = new String[11];
-		resourcePathStrings[0] = "res/entity/spaceshipv1.png";
-		resourcePathStrings[1] = "res/entity/prob.png";
-		resourcePathStrings[2] = "res/dot.png";
-		resourcePathStrings[3] = "res/entity/spaceshipv2.png";
-		resourcePathStrings[4] = "res/object/background/bg1.png";
-		resourcePathStrings[5] = "res/object/bullet/bullet.png";
-		resourcePathStrings[6] = "res/object/bullet/yellowbullet.png";
-		resourcePathStrings[7] = "res/object/bullet/bluebullet.png";
-		resourcePathStrings[8] = "res/object/explosion/explosion.png";
-		resourcePathStrings[9] = "res/object/powerup/powerupring.png";
-		resourcePathStrings[10] = "res/object/powerup/powerupheal.png";
+		resourcePathStrings.add("res/entity/spaceshipv1.png");
+		resourcePathStrings.add("res/entity/spaceshipv2.png");
+		resourcePathStrings.add("res/entity/spaceshipv3.png");
+		resourcePathStrings.add("res/dot.png");
+		resourcePathStrings.add("res/object/background/bg1.png");
+		resourcePathStrings.add("res/object/bullet/bullet.png");
+		resourcePathStrings.add("res/object/bullet/yellowbullet.png");
+		resourcePathStrings.add("res/object/bullet/bluebullet.png");
+		resourcePathStrings.add("res/object/explosion/explosion.png");
+		resourcePathStrings.add("res/object/powerup/powerupring.png");
+		resourcePathStrings.add("res/object/powerup/powerupheal.png");
+		
+		audioPathStrings.add("res/audio/ambient.wav");
+		audioPathStrings.add("res/audio/single_laser_shot.wav");
+		audioPathStrings.add("res/audio/small_blast.wav");
 	}
 }

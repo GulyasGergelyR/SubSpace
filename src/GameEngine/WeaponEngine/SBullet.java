@@ -2,6 +2,8 @@ package GameEngine.WeaponEngine;
 
 import java.util.Random;
 
+import GameEngine.SPlayer;
+import GameEngine.SResLoader;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.ControlEngine.SSimpleBulletControlClient;
 import GameEngine.ControlEngine.SSimpleBulletControlServer;
@@ -31,6 +33,20 @@ public class SBullet extends SMobile{
 		this.moveDir = movedir;
 		this.maxSpeed = 100;
 		this.setController(new SSimpleBulletControlClient(this));
+		
+		SPlayer localPlayer = SMain.getGameInstance().getLocalPlayer();
+		if (localPlayer.getEntity().getObjectState().equals(ObjectState.Active))
+		{
+			SVector playerPos = localPlayer.getEntity().getPos();
+			float dist = playerPos.d(pos);
+			float maxDistance = 2000;
+			if (dist < maxDistance){
+				float maxVolume = 0.05f;
+				float volume = (maxDistance-dist)*maxVolume/maxDistance;
+				SResLoader.getAudio("res/audio/single_laser_shot.wav").playAsSoundEffect(1.0f, volume, false);
+			}
+		}
+		
 	}
 	public SBullet(SEntity owner){
 		//used at server side

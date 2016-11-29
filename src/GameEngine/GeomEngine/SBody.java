@@ -10,13 +10,15 @@ public class SBody {
 	protected SHitbox hitbox;
 	protected String texture;
 	protected float scale;	
+	protected float drawScale;
 	protected Color color;
 	
-	public SBody(SObject owner, SHitbox hitbox, String texture, float scale){
+	public SBody(SObject owner, SHitbox hitbox, String texture, float scale, float drawScale){
 		this.owner = owner;
 		this.hitbox = hitbox;
 		this.texture = texture;
 		this.scale = scale;
+		this.drawScale = drawScale;
 		this.color = new Color(255,255,255,0);
 	}
 		
@@ -38,6 +40,16 @@ public class SBody {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+	public float getDrawScale() {
+		return drawScale;
+	}
+	public float getCurrentDrawScale() {
+		return drawScale*scale;
+	}
+	public void setDrawScale(float drawScale) {
+		this.drawScale = drawScale;
+	}
+
 	public Color getColor() {
 		return color;
 	}

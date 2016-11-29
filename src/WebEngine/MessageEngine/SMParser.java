@@ -43,6 +43,10 @@ public class SMParser {
 		//TODO check if this is needed - posUpdated
 		entity.setPosUpdated();
 	}
+	public static void parseEntityUpdateStateMessage(SM message, SEntity entity){
+		ByteBuffer buffer = message.getBuffer();
+		entity.setObjectState(buffer.get());
+	}
 	public static void parseEntityCreateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);

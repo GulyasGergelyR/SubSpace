@@ -279,6 +279,9 @@ public class SCommunicationHandler {
 				else if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
 					addEntityMessage(message);
 				}
+				else if (command == SMPatterns.CEntityUpdateState){ 	//Server updates Entity information
+					addEntityMessage(message);
+				}
 				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity
 					addEntityMessage(message);
 				}
@@ -330,7 +333,6 @@ public class SCommunicationHandler {
 				}
 				//TODO add normal entity creation
 				SEntity entity = new SEntity(client.getPlayer());
-				entity.setObjectState(ObjectState.Initialization);
 				SMain.getGameInstance().addEntity(entity);
 				SMain.getGameInstance().addPlayer(client.getPlayer());
 				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);

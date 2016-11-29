@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import org.newdawn.slick.openal.SoundStore;
 
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer.PlayerState;
@@ -164,6 +165,7 @@ public class SMain {
 	
 	private static void initResources() {
 		SResLoader.addSpriteArray(Specifications.resourcePathStrings);
+		SResLoader.addAudioArray(Specifications.audioPathStrings);
 	}
 
 	public static void StartServer(boolean serverWindow){
@@ -193,6 +195,7 @@ public class SMain {
 			renderGL();
 			Display.update();
             Display.sync(Specifications.FPS_M); // cap fps to 60fps
+            SoundStore.get().poll(0);
 			updateDelta();
 		}
 		Display.destroy();

@@ -202,6 +202,8 @@ public class SGameInstance {
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
 				        entity.setObjectState(ObjectState.Active);
+				        SM message = SMPatterns.getEntityUpdateStateMessage(entity);
+			        	SMain.getCommunicationHandler().SendMessage(message);
 			    }else {
 			    	entity.update();
 			    	if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
@@ -293,6 +295,13 @@ public class SGameInstance {
 					SEntity entity = getEntityById(id);
 					if (entity != null){
 						SMParser.parseEntityUpdateMessage(message, entity);
+					}
+				}
+				if (command == SMPatterns.CEntityUpdateState){ 	//Server updates Entity information
+					int id = SMParser.parseId(message.getBuffer());
+					SEntity entity = getEntityById(id);
+					if (entity != null){
+						SMParser.parseEntityUpdateStateMessage(message, entity);
 					}
 				}
 				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity

@@ -17,26 +17,62 @@ public abstract class SObject extends SIdentifiable {
 	public enum ObjectState{
 		Active, Ghost, Invisible, WaitingDelete, Initialization
 	}
+	public byte getObjectStateId(){
+		if (objectState.equals(ObjectState.Active))
+			return 5;
+		else if (objectState.equals(ObjectState.Ghost))
+			return 4;
+		else if (objectState.equals(ObjectState.Invisible))
+			return 3;
+		else if (objectState.equals(ObjectState.WaitingDelete))
+			return 1;
+		else if (objectState.equals(ObjectState.Initialization))
+			return 2;
+		return 0;
+	}
+	public ObjectState getObjectState() {
+		return objectState;
+	}
+	public void setObjectState(ObjectState objectState) {
+		this.objectState = objectState;
+	}
+	public void setObjectState(byte state) {
+		if (state == 5)
+			objectState = ObjectState.Active;
+		if (state == 4)
+			objectState = ObjectState.Ghost;
+		if (state == 3)
+			objectState = ObjectState.Invisible;
+		if (state == 1)
+			objectState = ObjectState.WaitingDelete;
+		if (state == 2)
+			objectState = ObjectState.Initialization;
+		
+	}
 	protected ObjectState objectState = ObjectState.Active;
+	
+	
+	
+	
 	
 	//Initialize
 	public SObject()
 	{
 		this.pos = new SVector();
 		this.lookDir = new SVector(1,0);
-		this.body = new SBody(this, new SHitbox(this), "res/entity/spaceshipv1.png", 1.0f);
+		this.body = new SBody(this, new SHitbox(this), "res/entity/spaceshipv1.png", 1.0f, 1.0f);
 	}
 	public SObject(SVector pos, SVector lookDir, String texture)
 	{
 		this.pos = pos;
 		this.lookDir = lookDir;
-		this.body = new SBody(this, new SHitbox(this), texture, 1.0f);
+		this.body = new SBody(this, new SHitbox(this), texture, 1.0f, 1.0f);
 	}
 	public SObject(SObject o)
 	{
 		this.pos = o.pos;
 		this.lookDir = o.lookDir;
-		this.body = new SBody(this, o.getBody().getHitbox().SHCopy(this), o.getBody().getTexture(), o.getBody().getScale());
+		this.body = new SBody(this, o.getBody().getHitbox().SHCopy(this), o.getBody().getTexture(), o.getBody().getScale(), o.getBody().getDrawScale());
 	}
 	// Properties
 	public SVector getPos() {
@@ -62,12 +98,6 @@ public abstract class SObject extends SIdentifiable {
 	public void setPosUpdated(){
 		posUpdated = true;
 	}
-	public ObjectState getObjectState() {
-		return objectState;
-	}
-	public void setObjectState(ObjectState objectState) {
-		this.objectState = objectState;
-	}
 	public SBody getBody() {
 		return body;
 	}
@@ -77,8 +107,8 @@ public abstract class SObject extends SIdentifiable {
 	// functions
 	public List<SRenderObject> getDrawables(){
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
-		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getScale(), 1.0f, body.getColor()));
+		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor()));
 		return list;
-	}	
+	}
 	public void update(){}
 }
