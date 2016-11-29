@@ -9,6 +9,8 @@ import org.newdawn.slick.Color;
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerState;
+import GameEngine.ControlEngine.SControl;
+import GameEngine.ControlEngine.SControlClient;
 import GameEngine.ControlEngine.SHumanControlClient;
 import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.GeomEngine.SVector;
@@ -42,7 +44,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.getBody().setTexture("res/entity/spaceshipv3.png");
 		this.getBody().setScale(1.0f);
 		this.getBody().setDrawScale(0.1f);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 768*getBody().getDrawScale()));
+		this.getBody().setHitbox(new SHitboxSpherical(this, 768/2*getBody().getDrawScale()));
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
@@ -67,6 +69,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			this.setController(new SHumanControlServer(this));
 		} else {
 			System.out.println("Created lan player at client");
+			this.setController(new SControlClient(this));
 		}
 	}
 		

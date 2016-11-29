@@ -53,8 +53,9 @@ public class SBullet extends SMobile{
 		super();
 		this.owner = owner;
 		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
-		this.getBody().setHitbox(new SHitboxSpherical(this, 40));
-		this.getBody().setScale(0.25f);
+		this.getBody().setHitbox(new SHitboxSpherical(this, 10));
+		this.getBody().setDrawScale(0.25f);
+		this.getBody().setScale(1.0f);
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));

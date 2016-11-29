@@ -195,6 +195,8 @@ public class SGameInstance {
 				        	if (!player.equals(entity)){
 				        		SM message = SMPatterns.getEntityCreateMessage(player);
 				        		SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+						        SM messageEntityState = SMPatterns.getEntityUpdateStateMessage(player.getEntity());
+					        	SMain.getCommunicationHandler().SendMessageToNode(messageEntityState, entity.getId().get());
 				        	}
 				        }
 				        for(SObject object : objects){

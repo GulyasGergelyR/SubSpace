@@ -3,7 +3,6 @@ package GameEngine.ObjectEngine;
 import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 
@@ -32,11 +31,12 @@ public class SExplosion extends SObject{
 				float dist = playerPos.d(pos);
 				float maxDistance = 2000;
 				if (dist < maxDistance){
-					float maxVolume = 0.5f;
+					float maxVolume = 0.2f;
 					float volume = (maxDistance-dist)*maxVolume/maxDistance;
 					SResLoader.getAudio("res/audio/small_blast.wav").playAsSoundEffect(1.0f, volume, false);
 				}
 			}
+			firstTime = false;
 		}
 		
 		this.getBody().setScale(this.getBody().getScale()+growing);
