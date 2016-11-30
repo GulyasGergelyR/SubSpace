@@ -7,6 +7,7 @@ public class SBulletExplosion extends SExplosion{
 		super(pos);
 		this.maxLife = 8;
 		this.size = 0.2f;
+		this.getBody().setDrawScale(size);
 		this.audioString = "res/audio/single_laser_shot.wav";
 	}
 
@@ -14,5 +15,4 @@ public class SBulletExplosion extends SExplosion{
 	protected void playSoundEffect(float speed, float volume) {
 		super.playSoundEffect(0.3f, volume);
 	}
-	
 }

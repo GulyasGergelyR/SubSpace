@@ -39,7 +39,7 @@ public class SBullet extends SMobile{
 		{
 			SVector playerPos = localPlayer.getEntity().getPos();
 			float dist = playerPos.d(pos);
-			float maxDistance = 2000;
+			float maxDistance = 4000;
 			if (dist < maxDistance){
 				float maxVolume = 0.05f;
 				float volume = (maxDistance-dist)*maxVolume/maxDistance;
