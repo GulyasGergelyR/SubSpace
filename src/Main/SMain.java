@@ -152,6 +152,7 @@ public class SMain {
             Specifications.WindowWidth = biggest.getWidth();
             Specifications.WindowHeight = biggest.getHeight();
             Display.setFullscreen(true);
+            Display.setVSyncEnabled(true);
             Display.create();
         } catch (LWJGLException e) {
             e.printStackTrace();

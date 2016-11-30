@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
+import javax.swing.text.html.parser.Entity;
+
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
@@ -31,6 +33,7 @@ public class SGameInstance {
 	private LinkedList<SObject> objects;
 	private LinkedList<SObject> animationObjects;
 	private SBackGround backGround = new SBackGround();
+	
 	
 	private SFPS FPS;
 	private static int delta;

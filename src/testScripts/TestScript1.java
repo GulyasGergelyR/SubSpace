@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Locale;
 
 import GameEngine.Specifications;
+import GameEngine.GeomEngine.SVector;
 
 public class TestScript1 {
 	public static void main(String[] args) {
@@ -29,6 +30,13 @@ public class TestScript1 {
 		
 		System.out.println((125.52432f-((byte)125.52432f))*10000);
 		System.out.println(1000/Specifications.FPS_M*1000*1000);
+		
+		int currentLife = 3;
+		
+		SVector leftBottom = new SVector(1-((currentLife-1)/5+1)*0.2f, ((currentLife-1)%5)*0.2f);
+		SVector rightUpper = new SVector(1-((currentLife-1)/5)*0.2f, ((currentLife-1)%5+1)*0.2f);
+		System.out.println(leftBottom.getString());
+		System.out.println(rightUpper.getString());
 
 	}
 	private static void test1(){

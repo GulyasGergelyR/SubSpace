@@ -15,6 +15,9 @@ public class SRenderObject {
 	float transparency;
 	Color color;
 	
+	SVector leftBottom = new SVector(0,0);
+	SVector rightUpper = new SVector(1,1);
+	
 	public SRenderObject(String texture,SVector v){
 		this.texture = SResLoader.getTexture(texture);
 		this.v = v;
@@ -42,7 +45,20 @@ public class SRenderObject {
 		this.scale = scale;
 		this.transparency = transparency;
 		int alpha = (int)(transparency*255);
-		this.color = new Color(color.getRed(),color.getGreen(),color.getBlue(),alpha);;
+		this.color = new Color(color.getRed(),color.getGreen(),color.getBlue(),alpha);
 	}
+	public SRenderObject(String texture,SVector v,float rotateBy,float scale,float transparency, Color color, SVector leftBottom, SVector rightUpper){
+		this.texture = SResLoader.getTexture(texture);
+		this.v = v;
+		this.rotateBy = rotateBy;
+		this.scale = scale;
+		this.transparency = transparency;
+		int alpha = (int)(transparency*255);
+		this.color = new Color(color.getRed(),color.getGreen(),color.getBlue(),alpha);
+		
+		this.leftBottom = leftBottom;
+		this.rightUpper = rightUpper;
+	}
+	
 	
 }

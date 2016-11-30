@@ -29,7 +29,7 @@ public class SSimpleBulletControlServer extends SControlServer {
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
 					// add explosion to client
-					SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(Owner.getPos());
+					SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(Owner.getPos(), (byte)61);
 					SMain.getCommunicationHandler().SendMessage(explosionMessage);
 					break;
 				}
@@ -44,6 +44,9 @@ public class SSimpleBulletControlServer extends SControlServer {
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);
 				SMain.getCommunicationHandler().SendMessage(message);
+				
+				SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(Owner.getPos(), (byte)61);
+				SMain.getCommunicationHandler().SendMessage(explosionMessage);
 			}
 		}
 	}

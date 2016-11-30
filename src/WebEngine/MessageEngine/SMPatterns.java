@@ -1,6 +1,5 @@
 package WebEngine.MessageEngine;
 
-import java.io.ObjectOutputStream.PutField;
 import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
@@ -178,10 +177,11 @@ public class SMPatterns {
 		return message;
 	}
 	
-	public static SM getAnimationObjectCreateMessage(SVector pos){
+	public static SM getAnimationObjectCreateMessage(SVector pos, byte animationId){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CAnimationObjectCreate);
+		buffer.put(animationId);
 		pos.addToBufferAsBigVector(buffer);
 		return message;
 	}

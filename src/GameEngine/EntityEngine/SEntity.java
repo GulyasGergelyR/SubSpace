@@ -18,6 +18,8 @@ import GameEngine.WeaponEngine.SWeapon;
 import Main.SMain;
 import RenderingEngine.SRenderObject;
 import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
@@ -26,23 +28,11 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
-	
-	@Deprecated
-	public SEntity(){
-		super();
-		this.pos = new SVector(250.0f,250.0f);
-		this.getBody().setTexture("res/entity/spaceshipv1.png");
-		this.getBody().setScale(1.0f);
-		this.getBody().setDrawScale(0.05f);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 100f));
-		this.setController(new SHumanControlClient(this));
-	}
-	
 	public SEntity(SPlayer player){
 		super();
 		this.pos = new SVector(250.0f,250.0f);
 		this.getBody().setTexture("res/entity/spaceshipv3.png");
-		this.getBody().setScale(1.0f);
+		this.getBody().setScale(0.5f);
 		this.getBody().setDrawScale(0.1f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 768/2*getBody().getDrawScale()));
 		Random random = new Random();
@@ -87,9 +77,11 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public boolean gotHit(float damage){
 		this.life -= damage;
 		if (this.life <= 0){
+			SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
+			SMain.getCommunicationHandler().SendMessage(explosionMessage);
 			this.life = 100;
 			Random random = new Random();
-			this.pos = new SVector(random.nextFloat()*1000-500,random.nextFloat()*1000-500);
+			this.pos = new SVector(random.nextFloat()*4000-2000,random.nextFloat()*4000-2000);
 			this.moveDir = new SVector();
 			this.acclDir = new SVector();
 			this.lookDir = new SVector(1,0);

@@ -255,13 +255,13 @@ public class SRenderer {
 		
 		GL11.glBegin(GL11.GL_QUADS);
 		{
-			GL11.glTexCoord2f(0,0);
+			GL11.glTexCoord2f(SRO.leftBottom.getX(),SRO.leftBottom.getY()); //0,0
 			GL11.glVertex2f(x-texture.getTextureWidth()/2,y-texture.getTextureHeight()/2);
-			GL11.glTexCoord2f(0,1);
+			GL11.glTexCoord2f(SRO.leftBottom.getX(),SRO.rightUpper.getY()); //0,1
 			GL11.glVertex2f(x+texture.getTextureWidth()/2,y-texture.getTextureHeight()/2);
-			GL11.glTexCoord2f(1,1);
+			GL11.glTexCoord2f(SRO.rightUpper.getX(),SRO.rightUpper.getY()); //1,1
 			GL11.glVertex2f(x+texture.getTextureWidth()/2,y+texture.getTextureHeight()/2);
-			GL11.glTexCoord2f(1,0);
+			GL11.glTexCoord2f(SRO.rightUpper.getX(),SRO.leftBottom.getY()); //1,0
 			GL11.glVertex2f(x-texture.getTextureWidth()/2,y+texture.getTextureHeight()/2);
 		}
 		GL11.glEnd();

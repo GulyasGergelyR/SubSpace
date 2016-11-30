@@ -2,6 +2,7 @@ package testScripts;
 
 import java.util.LinkedList;
 
+import GameEngine.SPlayer;
 import GameEngine.ControlEngine.SControl;
 import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.EntityEngine.SEntity;
@@ -27,7 +28,7 @@ public class SMessageParser {
 		return true;
 	}
 	public static boolean ParseEntityCreateMessage(SMessage message){
-		SEntity entity = new SEntity();
+		/*SEntity entity = new SEntity(new SPlayer());
 		entity.setController(new SHumanControlServer(entity));
 		//entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
 		entity.setPos(SMessagePatterns.getPos(message));
@@ -36,7 +37,7 @@ public class SMessageParser {
 		entity.setAcclDir(SMessagePatterns.getAcclDir(message));
 		entity.setPosUpdated();
 		
-		SMain.getGameInstance().addEntity(entity);
+		SMain.getGameInstance().addEntity(entity);*/
 		return true;
 	}
 	public static boolean ParseClientInputMessage(SMessage message, SEntity entity){

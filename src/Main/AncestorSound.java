@@ -137,9 +137,17 @@ public class AncestorSound {
                     // play as a one off sound effect
                     aifEffect.playAsSoundEffect(1.0f, 0.5f, false);
                 }
+                if (Keyboard.getEventKey() == Keyboard.KEY_Z) {
+                    // play as a one off sound effect
+                    aifEffect.playAsSoundEffect(2.0f, 0.5f, false);
+                }
+                if (Keyboard.getEventKey() == Keyboard.KEY_U) {
+                    // play as a one off sound effect
+                    aifEffect.playAsSoundEffect(0.3f, 0.5f, false);
+                }
                 if (Keyboard.getEventKey() == Keyboard.KEY_T) {
                     // play as a one off sound effect
-                    wavEffect.playAsSoundEffect(0.8f, 0.5f, false);
+                    wavEffect.playAsSoundEffect(1.0f, 1.0f, false);
                 }
             }
         }

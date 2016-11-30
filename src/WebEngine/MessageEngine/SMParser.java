@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SId;
 import GameEngine.SPlayer;
+import GameEngine.ObjectEngine.SBulletExplosion;
 import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SPlayer.PlayerState;
@@ -119,9 +120,17 @@ public class SMParser {
 	public static void parseAnimationObjectCreateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		SObject object = null;
+		byte animationId = buffer.get();
 		SVector pos = parseBigVector(buffer);
-		object = new SExplosion(pos);
-		SMain.getGameInstance().addAnimationObject(object);
+		if (animationId == 60){
+			//explosion
+			object = new SExplosion(pos);
+			SMain.getGameInstance().addAnimationObject(object);
+		}
+		else if(animationId == 61){  //bullet explosion
+			object = new SBulletExplosion(pos);
+			SMain.getGameInstance().addAnimationObject(object);
+		}
 	}
 	public static void parseObjectUpdateMessage(SM message, SObject object){
 		ByteBuffer buffer = message.getBuffer();

@@ -37,8 +37,10 @@ public final class Specifications {
 		resourcePathStrings.add("res/object/bullet/yellowbullet.png");
 		resourcePathStrings.add("res/object/bullet/bluebullet.png");
 		resourcePathStrings.add("res/object/explosion/explosion.png");
+		resourcePathStrings.add("res/object/explosion/explosionv2.png");
 		resourcePathStrings.add("res/object/powerup/powerupring.png");
 		resourcePathStrings.add("res/object/powerup/powerupheal.png");
+		resourcePathStrings.add("res/object/wormhole/wormhole.png");
 		
 		audioPathStrings.add("res/audio/ambient.wav");
 		audioPathStrings.add("res/audio/single_laser_shot.wav");
