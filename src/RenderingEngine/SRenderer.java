@@ -54,6 +54,8 @@ public class SRenderer {
 		
 		SetTextViewPort();
 		DrawText();
+		
+		DrawHud();
 	}
 	
 	private void DrawBackGround(){
@@ -157,6 +159,7 @@ public class SRenderer {
 		}
 	}
 	
+	//Only serverside
 	private void deceideWhichPlayerToFollow(){
 		if(!SMain.IsServer()){
 			playerToFollow = gameInstance.getLocalPlayer();
@@ -226,7 +229,17 @@ public class SRenderer {
 	}
 	
 	private static void DrawHud(){
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0,
+				Specifications.WindowWidth,
+				Specifications.WindowHeight,
+				0, -1, 1);
+		glMatrixMode(GL_MODELVIEW);
 		
+		for(SRenderObject draw : SHud.DrawHud()){
+			Draw(draw);
+		}
 	}
 	
 	private static void Draw(SRenderObject SRO)

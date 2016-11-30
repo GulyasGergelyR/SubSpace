@@ -31,6 +31,7 @@ public final class Specifications {
 		resourcePathStrings.add("res/entity/spaceshipv1.png");
 		resourcePathStrings.add("res/entity/spaceshipv2.png");
 		resourcePathStrings.add("res/entity/spaceshipv3.png");
+		resourcePathStrings.add("res/entity/HealthBar.png");
 		resourcePathStrings.add("res/dot.png");
 		resourcePathStrings.add("res/object/background/bg1.png");
 		resourcePathStrings.add("res/object/bullet/bullet.png");
@@ -41,6 +42,11 @@ public final class Specifications {
 		resourcePathStrings.add("res/object/powerup/powerupring.png");
 		resourcePathStrings.add("res/object/powerup/powerupheal.png");
 		resourcePathStrings.add("res/object/wormhole/wormhole.png");
+		
+		resourcePathStrings.add("res/hud/MiniMap.png");
+		resourcePathStrings.add("res/hud/MiniMapLanPlayer.png");
+		resourcePathStrings.add("res/hud/MiniMapLocalPlayer.png");
+		resourcePathStrings.add("res/hud/MiniMapPowerUpHeal.png");
 		
 		audioPathStrings.add("res/audio/ambient.wav");
 		audioPathStrings.add("res/audio/single_laser_shot.wav");

@@ -32,13 +32,13 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		super();
 		this.pos = new SVector(250.0f,250.0f);
 		this.getBody().setTexture("res/entity/spaceshipv3.png");
-		this.getBody().setScale(0.5f);
+		this.getBody().setScale(0.8f);
 		this.getBody().setDrawScale(0.1f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 768/2*getBody().getDrawScale()));
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
-		this.life = 100;
+		this.life = maxLife;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
@@ -67,6 +67,11 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public List<SRenderObject> getDrawables() {
 		//TODO Add movement and life specific drawings
 		List<SRenderObject> list = super.getDrawables();
+		//Add health bar
+		SVector leftBottom = new SVector((maxLife-life)/maxLife*0.5f,0.0f);
+		SVector rightUpper = new SVector(0.5f+(maxLife-life)/maxLife*0.5f,1.0f);
+		
+		list.add(new SRenderObject("res/entity/HealthBar.png", pos.add(0,60*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper));
 		return list;
 	}
 	public void tryToFire(){
