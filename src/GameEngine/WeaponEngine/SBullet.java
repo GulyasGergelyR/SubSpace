@@ -60,7 +60,7 @@ public class SBullet extends SMobile{
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
 		this.maxSpeed = 100;
-		this.damage = 10;
+		this.damage = 5;
 		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
 		this.setController(new SSimpleBulletControlServer(this));
 	}

@@ -38,7 +38,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
-		this.life = maxLife;
+		this.life = 50;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
@@ -84,7 +84,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		if (this.life <= 0){
 			SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
 			SMain.getCommunicationHandler().SendMessage(explosionMessage);
-			this.life = 100;
+			this.life = maxLife;
 			Random random = new Random();
 			this.pos = new SVector(random.nextFloat()*4000-2000,random.nextFloat()*4000-2000);
 			this.moveDir = new SVector();

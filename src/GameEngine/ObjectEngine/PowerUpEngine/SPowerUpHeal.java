@@ -13,7 +13,7 @@ public class SPowerUpHeal extends SPowerUp{
 	@Override
 	public boolean applyToEntity(SEntity entity) {
 		if (entity.getLife() < entity.getMaxLife()){
-			entity.setLife(entity.getLife()+30);
+			entity.setLife(entity.getLife()+50);
 			return true;
 			}
 		else return false;

@@ -7,8 +7,8 @@ import WebEngine.MessageEngine.SMPatterns;
 
 public class SWeapon{
 	protected SEntity owner;
-	protected int coolTime = 5;
-	protected int lastTime = 5;
+	protected int coolTime = 7;
+	protected int lastTime = 7;
 	protected int clipSize = 0; // zero means it does not have to be reloaded
 	protected int maxAmmo = 0; // zero means there is infinite number of bullets
 	protected int ammoInClip = 0; 
