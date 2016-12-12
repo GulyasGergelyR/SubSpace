@@ -24,7 +24,7 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
-	protected float maxLife = 150;
+	protected float maxLife = 100;
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
@@ -38,7 +38,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
-		this.life = 50;
+		this.life = maxLife;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();

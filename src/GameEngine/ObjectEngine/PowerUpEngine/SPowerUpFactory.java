@@ -11,7 +11,7 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SPowerUpFactory {
 	public static final byte PowerUpHeal = 1;
 	protected static int currentNumberOfPowerUps = 0;
-	protected static final int NumberOfPowerUps = 6;
+	protected static final int NumberOfPowerUps = 3;
 	
 	public static void createNewPowerUpAtClient(SVector pos, int id, byte powerUpType){
 		if (powerUpType == PowerUpHeal){

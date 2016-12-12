@@ -2,12 +2,9 @@ package testScripts;
 
 import java.util.LinkedList;
 
-import GameEngine.SPlayer;
 import GameEngine.ControlEngine.SControl;
-import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
-import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
 
 @Deprecated

@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-import javax.swing.text.html.parser.Entity;
-
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
