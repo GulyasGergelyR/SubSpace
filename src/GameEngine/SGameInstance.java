@@ -6,11 +6,13 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
+import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBackGround;
+import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
@@ -43,6 +45,9 @@ public class SGameInstance {
 		entities = new ArrayList<SEntity>();
 		objects = new LinkedList<SObject>();
 		animationObjects = new LinkedList<SObject>();
+		
+		// Factories
+		SDebrisFactory.init();
 	}
 	public List<SPlayer> getPlayers(){
 		return players;
@@ -127,7 +132,7 @@ public class SGameInstance {
 		    }
 		}
 	}
-	private void removeObjectFromList(int Id){
+	public void removeObjectFromList(int Id){
 		ListIterator<SObject> iter = objects.listIterator();
 		while(iter.hasNext()){
 			SObject object = iter.next();
@@ -180,7 +185,11 @@ public class SGameInstance {
 						new SVector(random.nextFloat()*8000 -4000, random.nextFloat()*8000 -4000),
 						SPowerUpFactory.PowerUpHeal);
 			}
+			if (random.nextFloat()>0.5f){
+				SDebrisFactory.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
+			}
 		}
+		SDebrisFactory.UpdateObjects();
 	}
 	
 	protected void UpdateEntities(){
@@ -204,6 +213,11 @@ public class SGameInstance {
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
+				        // TODO refactor for factory
+				        for(SObject object : SDebrisFactory.getObjects()){
+				        	SM message = SMPatterns.getObjectCreateMessage(object);
+				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        }
 				        entity.setObjectState(ObjectState.Active);
 				        SM message = SMPatterns.getEntityUpdateStateMessage(entity);
 			        	SMain.getCommunicationHandler().SendMessage(message);
@@ -220,6 +234,22 @@ public class SGameInstance {
 	protected void UpdateObjects(){
 		if(!objects.isEmpty()){
 			ListIterator<SObject> iter = objects.listIterator();
+			while(iter.hasNext()){
+				SObject object = iter.next();
+			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+			        iter.remove();
+			    }else {
+			    	object.update();
+			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+				        iter.remove();
+				    }
+			    }
+			}
+		}
+	}
+	protected void UpdateObjects(LinkedList<SObject> list){
+		if(!list.isEmpty()){
+			ListIterator<SObject> iter = list.listIterator();
 			while(iter.hasNext()){
 				SObject object = iter.next();
 			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
@@ -265,8 +295,8 @@ public class SGameInstance {
 	private void SendObjectData(){
 		synchronized (objects) {
 			for(SObject object: objects){
-				SM message = SMPatterns.getObjectUpdateMessage(object);
-				SMain.getCommunicationHandler().SendMessage(message);
+				//SM message = SMPatterns.getObjectUpdateMessage(object);
+				//SMain.getCommunicationHandler().SendMessage(message);
 			}
 		}
 	}
@@ -334,14 +364,10 @@ public class SGameInstance {
 					SMParser.parseObjectCreateMessage(message);
 				}
 				else if (command == SMPatterns.CObjectUpdate){ 	//Server updates Object information
-					int id = SMParser.parseId(message.getBuffer());
-					SObject object = getObjectById(id);
-					if (object != null)
-						SMParser.parseObjectUpdateMessage(message, object);
+						SMParser.parseObjectUpdateMessage(message);
 				}
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
-					int id = SMParser.parseId(message.getBuffer());
-					removeObjectFromList(id);
+					SMParser.parseObjectDeleteMessage(message, this);
 				}
 				else if (command == SMPatterns.CAnimationObjectCreate){ 	//Server deleted Object
 					SMParser.parseAnimationObjectCreateMessage(message);

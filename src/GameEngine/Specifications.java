@@ -43,6 +43,7 @@ public final class Specifications {
 		resourcePathStrings.add("res/object/powerup/powerupring.png");
 		resourcePathStrings.add("res/object/powerup/powerupheal.png");
 		resourcePathStrings.add("res/object/wormhole/wormhole.png");
+		resourcePathStrings.add("res/object/asteroid/asteroid.png");
 		
 		resourcePathStrings.add("res/hud/MiniMap.png");
 		resourcePathStrings.add("res/hud/MiniMapLanPlayer.png");

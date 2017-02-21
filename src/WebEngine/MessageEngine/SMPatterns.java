@@ -7,6 +7,7 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.WeaponEngine.SBullet;
 import WebEngine.ComEngine.SNode;
@@ -147,14 +148,18 @@ public class SMPatterns {
 		return message;
 	}
 	
-	public static SM getObjectUpdateMessage(SObject object){
+	public static SM getObjectUpdateMessage(SMobile object){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectUpdate);
 		buffer.putShort((short)object.getId().get());
 		// Add vectors
-		object.getPos().addToBufferAsBigVector(buffer);
-		object.getLookDir().addToBufferAsBigVector(buffer);
+		if (object instanceof SAsteroid){
+			SAsteroid asteroid = (SAsteroid) object;
+			buffer.put((byte)50);
+			asteroid.getPos().addToBufferAsBigVector(buffer);
+			asteroid.getMoveDir().addToBufferAsBigVector(buffer);
+		}
 		return message;
 	}
 	public static SM getObjectCreateMessage(SObject object){
@@ -174,6 +179,13 @@ public class SMPatterns {
 			buffer.put((byte)40); //TODO remove hard coded power up type id
 			buffer.put(powerUp.getType());
 			powerUp.getPos().addToBufferAsBigVector(buffer);
+		} else if (object instanceof SAsteroid){
+			SAsteroid asteroid = (SAsteroid) object;
+			buffer.put((byte)50); //TODO remove hard coded power up type id
+			buffer.put(asteroid.getType());
+			asteroid.getPos().addToBufferAsBigVector(buffer);
+			asteroid.getMoveDir().addToBufferAsBigVector(buffer);
+			buffer.putShort((short)(asteroid.getBody().getScale()*1000));
 		}
 		return message;
 	}
@@ -192,6 +204,9 @@ public class SMPatterns {
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectDelete);
 		buffer.putShort((short)object.getId().get());
+		if (object instanceof SAsteroid){
+			buffer.put((byte)50);
+		}
 		return message;
 	}
 	

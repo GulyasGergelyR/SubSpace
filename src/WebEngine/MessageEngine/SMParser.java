@@ -2,16 +2,20 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
+import GameEngine.SGameInstance;
 import GameEngine.SId;
 import GameEngine.SPlayer;
-import GameEngine.ObjectEngine.SBulletExplosion;
-import GameEngine.ObjectEngine.SExplosion;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SPlayer.PlayerState;
+import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SBulletExplosion;
+import GameEngine.ObjectEngine.SExplosion;
+import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
+import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
 import WebEngine.ComEngine.SNode;
@@ -116,6 +120,12 @@ public class SMParser {
 			byte powerUpType = buffer.get();
 			SVector pos = parseBigVector(buffer);
 			SPowerUpFactory.createNewPowerUpAtClient(pos, id, powerUpType);
+		} else if (objectTypeId == 50){  // TODO remove hard coded power up type id
+			byte debriesType = buffer.get();
+			SVector pos = parseBigVector(buffer);
+			SVector moveDir = parseBigVector(buffer);
+			float scale = buffer.getShort() / 1000.0f;
+			SDebrisFactory.createNewDebrisAtClient(pos, moveDir, scale, id, debriesType);
 		}
 	}
 	public static void parseAnimationObjectCreateMessage(SM message){
@@ -133,9 +143,24 @@ public class SMParser {
 			SMain.getGameInstance().addAnimationObject(object);
 		}
 	}
-	public static void parseObjectUpdateMessage(SM message, SObject object){
+	public static void parseObjectUpdateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
-		object.setPos(parseBigVector(buffer));
-		object.setLookDir(parseBigVector(buffer));
+		int id = SMParser.parseId(buffer);
+		int objectTypeId = buffer.get();
+		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
+			SAsteroid asteroid = (SAsteroid) SDebrisFactory.getObjectById(id);
+			asteroid.setPos(parseBigVector(buffer));
+			asteroid.setMoveDir(parseBigVector(buffer));
+		}
+	}
+	public static void parseObjectDeleteMessage(SM message, SGameInstance gameInstance){
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMParser.parseId(buffer);
+		int type = buffer.get();
+		if (type == 0){
+			gameInstance.removeObjectFromList(id);
+		}else if (type == 50){
+			SDebrisFactory.removeObjectFromList(id);
+		}
 	}
 }

@@ -27,7 +27,6 @@ public class SWeapon{
 	
 	public boolean tryIt(){
 		if (cooled()){
-			((SEntity)owner).gotHit(5);
 			fireIt();
 			return true;
 		}else{

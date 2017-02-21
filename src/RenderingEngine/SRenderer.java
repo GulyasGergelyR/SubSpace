@@ -20,12 +20,14 @@ import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.Color;
+
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import Main.SMain;
 import WebEngine.ComEngine.SNode;
 
@@ -63,6 +65,11 @@ public class SRenderer {
 	}
 	private void DrawObjects(){
 		for (SObject object : gameInstance.getObjects()){
+			if (object.getObjectState() == ObjectState.Active){
+				Draw(object.getDrawables());
+			}
+		}
+		for (SObject object : SDebrisFactory.getObjects()){
 			if (object.getObjectState() == ObjectState.Active){
 				Draw(object.getDrawables());
 			}

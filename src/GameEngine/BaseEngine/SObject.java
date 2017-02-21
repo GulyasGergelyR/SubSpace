@@ -51,10 +51,6 @@ public abstract class SObject extends SIdentifiable {
 	}
 	protected ObjectState objectState = ObjectState.Active;
 	
-	
-	
-	
-	
 	//Initialize
 	public SObject()
 	{
