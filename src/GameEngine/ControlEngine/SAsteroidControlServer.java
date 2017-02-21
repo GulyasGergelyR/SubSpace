@@ -37,15 +37,17 @@ public class SAsteroidControlServer extends SControlServer{
 				break;
 			}
 		}*/
-		if (++sendCounter > maxSendCounter){
+		if (sendCounter > maxSendCounter){
 			sendCounter = 0;
 			SM message = SMPatterns.getObjectUpdateMessage(Owner);
 			SMain.getCommunicationHandler().SendMessage(message);
+		}else{
+			sendCounter++;
 		}
 		
 		if (Owner.getObjectState().equals(ObjectState.Active)){
-			if ((Math.abs(Owner.getPos().getX()) > 4000) || 
-					(Math.abs(Owner.getPos().getY()) > 4000)){
+			if ((Math.abs(Owner.getPos().getX()) > 5500) || 
+					(Math.abs(Owner.getPos().getY()) > 5500)){
 				// Delete this
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);

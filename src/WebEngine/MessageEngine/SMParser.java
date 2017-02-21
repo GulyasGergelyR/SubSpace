@@ -147,7 +147,7 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		int objectTypeId = buffer.get();
-		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
+		if (objectTypeId == 50){  // TODO remove hard coded bullet type id
 			SAsteroid asteroid = (SAsteroid) SDebrisFactory.getObjectById(id);
 			asteroid.setPos(parseBigVector(buffer));
 			asteroid.setMoveDir(parseBigVector(buffer));

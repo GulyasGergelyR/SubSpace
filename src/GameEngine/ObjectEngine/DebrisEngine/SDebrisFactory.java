@@ -12,7 +12,7 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SDebrisFactory extends SFactory {
 	public static final byte Asteroid = 1;
 	protected static int currentNumberOfAsteroids = 0;
-	protected static final int NumberOfAsteroid = 20;
+	protected static final int NumberOfAsteroid = 50;
 	
 	protected static String FactoryName = "DebrisFactory";
 	
@@ -29,10 +29,11 @@ public class SDebrisFactory extends SFactory {
 			if (currentNumberOfAsteroids >= NumberOfAsteroid)
 				return;
 			Random random = new Random();
-			SVector pos = new SVector(random.nextFloat()*8000 -4000, random.nextFloat()*8000 -4000);
+			SVector pos = new SVector(random.nextFloat()*200-100+(random.nextInt(2)*2-1)*5000, 
+									  random.nextFloat()*200-100+(random.nextInt(2)*2-1)*5000);
 			float rate = random.nextFloat()*90.0f + 10.0f;
-			float speed = 20 * rate / 100.0f + 5;
-			float scale = 4 * (1 - rate / 100.0f) + 0.5f;
+			float speed = 25 * rate / 100.0f + 5;
+			float scale = 4 * (1 - rate / 100.0f) + 1.0f;
 			SVector moveDir = new SVector((random.nextFloat()*2 - 1) * speed, (random.nextFloat()*2 - 1) * speed);
 			SAsteroid asteroid = new SAsteroid(pos, moveDir, scale);
 			addObject(asteroid);

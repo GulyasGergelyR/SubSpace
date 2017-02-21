@@ -19,7 +19,7 @@ public class SAsteroid extends SDebris {
 		this.lookDir = new SVector(1, 0).rotate(random.nextInt(360));
 		this.getBody().setTexture("res/object/asteroid/asteroid.png");
 		this.getBody().setScale(scale);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 40));
+		this.getBody().setHitbox(new SHitboxSpherical(this, 50));
 		if (SMain.IsServer()){
 			this.setController(new SAsteroidControlServer(this));
 		}else{
