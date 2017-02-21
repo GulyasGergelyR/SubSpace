@@ -39,6 +39,7 @@ public class SMParser {
 		entity.setMoveDir(parseBigVector(buffer));
 		entity.setAcclDir(parseBigVector(buffer));
 		entity.setLife(buffer.getShort());
+		entity.setShield(buffer.getShort());
 		entity.getPlayer().setKills(buffer.get());
 		entity.getPlayer().setDeaths(buffer.get());
 		//TODO check if this is needed - posUpdated

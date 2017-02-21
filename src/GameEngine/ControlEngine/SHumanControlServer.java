@@ -68,6 +68,7 @@ public class SHumanControlServer extends SControlServer{
 	@Override
 	protected void Act() {
 		super.Act();
+		((SEntity)Owner).rechargeShield();
 		// Firing weapon
 		if (mouseStates[0]){
 			((SEntity)Owner).tryToFire();

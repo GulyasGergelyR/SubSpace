@@ -12,6 +12,7 @@ public class SBody {
 	protected float scale;	
 	protected float drawScale;
 	protected Color color;
+	protected float z;
 	
 	public SBody(SObject owner, SHitbox hitbox, String texture, float scale, float drawScale){
 		this.owner = owner;
@@ -57,4 +58,7 @@ public class SBody {
 		this.color = color;
 	}
 	
+	public float get_Z(){
+		return this.z;
+	}
 }

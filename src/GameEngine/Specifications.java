@@ -6,7 +6,7 @@ import java.util.List;
 
 public final class Specifications {
 	public static final int FPS_M = 60;
-	public static final int DataLength = 39;
+	public static final int DataLength = 41;
 	public static int WindowWidth = 1280;
 	public static int WindowHeight = 768;
 	
@@ -32,6 +32,7 @@ public final class Specifications {
 		resourcePathStrings.add("res/entity/spaceshipv2.png");
 		resourcePathStrings.add("res/entity/spaceshipv3.png");
 		resourcePathStrings.add("res/entity/HealthBar.png");
+		resourcePathStrings.add("res/entity/ShieldBar.png");
 		resourcePathStrings.add("res/dot.png");
 		resourcePathStrings.add("res/object/background/bg1.png");
 		resourcePathStrings.add("res/object/bullet/bullet.png");
@@ -48,6 +49,7 @@ public final class Specifications {
 		resourcePathStrings.add("res/hud/MiniMapLocalPlayer.png");
 		resourcePathStrings.add("res/hud/MiniMapPowerUpHeal.png");
 		resourcePathStrings.add("res/hud/HudHealthBar.png");
+		resourcePathStrings.add("res/hud/HudShieldBar.png");
 		resourcePathStrings.add("res/hud/HudHealthBarGrid.png");
 		
 		audioPathStrings.add("res/audio/ambient.wav");

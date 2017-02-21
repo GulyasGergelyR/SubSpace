@@ -105,6 +105,7 @@ public class SMPatterns {
 		entity.getMoveDir().addToBufferAsBigVector(buffer);
 		entity.getAcclDir().addToBufferAsBigVector(buffer);
 		buffer.putShort((short)entity.getLife());
+		buffer.putShort((short)entity.getShield());
 		buffer.put((byte)entity.getPlayer().getKills());
 		buffer.put((byte)entity.getPlayer().getDeaths());
 		return message;

@@ -24,7 +24,13 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
-	protected float maxLife = 100;
+	protected float shield;
+	protected float maxLife = 50;
+	protected float maxShield = 100;
+	protected float shieldRechargeRate = 0.2f;
+	protected float shieldRechargeDelay = 0;
+	protected float maxShieldRechargeDelay = 120; 
+	
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
@@ -39,6 +45,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
 		this.life = maxLife;
+		//this.shield = maxShield;
+		this.shieldRechargeDelay = this.maxShieldRechargeDelay;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
@@ -66,12 +74,17 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	@Override
 	public List<SRenderObject> getDrawables() {
 		//TODO Add movement and life specific drawings
-		List<SRenderObject> list = super.getDrawables();
+		List<SRenderObject> list = new ArrayList<SRenderObject>();
+		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), 2.0f));
 		//Add health bar
-		SVector leftBottom = new SVector((maxLife-life)/maxLife*0.5f,0.0f);
-		SVector rightUpper = new SVector(0.5f+(maxLife-life)/maxLife*0.5f,1.0f);
-		
-		list.add(new SRenderObject("res/entity/HealthBar.png", pos.add(0,60*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper));
+		SVector leftBottom = new SVector((maxShield-shield)/maxShield*0.5f,0.0f);
+		SVector rightUpper = new SVector(0.5f+(maxShield-shield)/maxShield*0.5f,1.0f);
+		// Shield
+		list.add(new SRenderObject("res/entity/ShieldBar.png", pos.add(0,62*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 2.1f));
+		//Life
+		SVector leftBottomLife = new SVector((maxLife-life)/maxLife*0.5f,0.0f);
+		SVector rightUpperLife = new SVector(0.5f+(maxLife-life)/maxLife*0.5f,1.0f);
+		list.add(new SRenderObject("res/entity/HealthBar.png", pos.add(0,55*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottomLife, rightUpperLife, 2.1f));
 		return list;
 	}
 	public void tryToFire(){
@@ -80,22 +93,33 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	}
 	
 	public boolean gotHit(float damage){
-		this.life -= damage;
-		if (this.life <= 0){
-			SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
-			SMain.getCommunicationHandler().SendMessage(explosionMessage);
-			this.life = maxLife;
-			Random random = new Random();
-			this.pos = new SVector(random.nextFloat()*4000-2000,random.nextFloat()*4000-2000);
-			this.moveDir = new SVector();
-			this.acclDir = new SVector();
-			this.lookDir = new SVector(1,0);
-			this.player.addDeath(1);
-			return true;
+		//if we got hit then do not allow shield recharge
+		this.shieldRechargeDelay = this.maxShieldRechargeDelay;
+		if (damage > this.shield){
+			// if it breaks our shield
+			damage -= this.shield;
+			this.shield = 0.0f;
+			this.life -= damage;
+			if (this.life <= 0){
+				SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
+				SMain.getCommunicationHandler().SendMessage(explosionMessage);
+				this.life = maxLife;
+				Random random = new Random();
+				this.pos = new SVector(random.nextFloat()*4000-2000,random.nextFloat()*4000-2000);
+				this.moveDir = new SVector();
+				this.acclDir = new SVector();
+				this.lookDir = new SVector(1,0);
+				this.player.addDeath(1);
+				return true;
+			}
+			else {
+				return false;
+			}
 		}
-		else {
-			return false;
+		else{
+			this.shield -= damage;
 		}
+		return false;
 	}
 	public float getLife(){
 		return life;
@@ -115,5 +139,44 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public SPlayer getPlayer() {
 		return player;
 	}
+
+	public float getShield() {
+		return shield;
+	}
+
+	public void setShield(float shield) {
+		this.shield = shield;
+	}
+
+	public float getMaxShield() {
+		return maxShield;
+	}
+
+	public float getShieldRechargeRate() {
+		return shieldRechargeRate;
+	}
+
+	public float getShieldRechargeDelay() {
+		return shieldRechargeDelay;
+	}
 	
+	public void rechargeShield(){
+		if (this.getSpeed() < 1.0f)
+			this.shieldRechargeDelay -= 3;
+		else{
+			this.shieldRechargeDelay--;
+		}
+		if (this.shieldRechargeDelay <= 0){
+			this.shieldRechargeDelay = 0;
+			if (this.getSpeed() < 1.0f)
+				this.shield += this.shieldRechargeRate * 2;
+			else{
+				this.shield += this.shieldRechargeRate;
+			}
+			
+			if (this.shield > this.maxShield){
+				this.shield = this.maxShield;
+			}
+		}
+	}
 }

@@ -26,7 +26,7 @@ public class SBackGround extends SObject{
 		float picSize = 2048 * getBody().getScale();
 		for (int i=0;i<size; i++)
 			for (int j=0;j<size; j++){
-				list.add(new SRenderObject(body.getTexture(), new SVector((i-(size/2))*picSize,(j-(size/2))*picSize), lookDir.getAngle(), body.getScale(), 1.0f, new Color(255,255,255,0)));
+				list.add(new SRenderObject(body.getTexture(), new SVector((i-(size/2))*picSize,(j-(size/2))*picSize), lookDir.getAngle(), body.getScale(), 1.0f, new Color(255,255,255,0), -0.01f));
 			}
 		return list;
 	}

@@ -104,7 +104,7 @@ public class SRenderer {
 			glOrtho(x-Specifications.WindowWidth/2,
 					x+Specifications.WindowWidth/2,
 					y+Specifications.WindowHeight/2,
-					y-Specifications.WindowHeight/2, -1, 1);
+					y-Specifications.WindowHeight/2, -10, 10);
 			glMatrixMode(GL_MODELVIEW);
 		}
 	}
@@ -115,7 +115,7 @@ public class SRenderer {
 		glOrtho(0,
 				Specifications.WindowWidth,
 				Specifications.WindowHeight,
-				0, -1, 1);
+				0, -10, 10);
 		glMatrixMode(GL_MODELVIEW);
 		if (!SMain.IsServer()){
 			DrawTextOfPlayer(playerToFollow, 0);
@@ -143,19 +143,20 @@ public class SRenderer {
 		int textSize = 200;
 		if(entity.getObjectState().equals(ObjectState.Active) 
 				|| entity.getObjectState().equals(ObjectState.Ghost)){
+			float textPos = Specifications.WindowHeight - 500;
 			if (SMain.IsServer()){
-				font.drawString(30+i*textSize, Specifications.WindowHeight-190, "Name: "+player.getName(), Color.yellow); //x, y, string to draw, color
-				font.drawString(30+i*textSize, Specifications.WindowHeight-170, "Address: "+player.getClientNode().getAddress().toString(), Color.yellow); //x, y, string to draw, color
-				font.drawString(30+i*textSize, Specifications.WindowHeight-150, "Pos: "+entity.getPos().getString(), Color.yellow); //x, y, string to draw, color
-			} 
+				font.drawString(30+i*textSize, textPos, "Name: "+player.getName(), Color.yellow); //x, y, string to draw, color
+				font.drawString(30+i*textSize, textPos+20, "Address: "+player.getClientNode().getAddress().toString(), Color.yellow); //x, y, string to draw, color
+				font.drawString(30+i*textSize, textPos+40, "Pos: "+entity.getPos().getString(), Color.yellow); //x, y, string to draw, color
+			}
 			float delta = gameInstance.getDelta();
 			if (delta > 0){
-				font.drawString(30+i*textSize, Specifications.WindowHeight-130, "fps: "+(int)(1000/delta), Color.yellow); //x, y, string to draw, color
+				font.drawString(30+i*textSize, textPos+60, "fps: "+(int)(1000/delta), Color.yellow); //x, y, string to draw, color
 			}
-			font.drawString(30+i*textSize, Specifications.WindowHeight-110, "Life: "+entity.getLife(), Color.yellow); //x, y, string to draw, color
-			font.drawString(30+i*textSize, Specifications.WindowHeight-90, "kills: "+player.getKills(), Color.yellow); //x, y, string to draw, color
-			font.drawString(30+i*textSize, Specifications.WindowHeight-70, "death: "+player.getDeaths(), Color.yellow); //x, y, string to draw, color
-			font.drawString(30+i*textSize, Specifications.WindowHeight-50, "ping: "+player.getClientNode().getPing(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, textPos+80, "Life: "+entity.getLife(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, textPos+100, "Kills: "+player.getKills(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, textPos+120, "Death: "+player.getDeaths(), Color.yellow); //x, y, string to draw, color
+			font.drawString(30+i*textSize, textPos+140, "Ping: "+player.getClientNode().getPing(), Color.yellow); //x, y, string to draw, color
 		}
 	}
 	
@@ -200,7 +201,7 @@ public class SRenderer {
 			glOrtho(-size*Specifications.WindowWidth/2,
 					size*Specifications.WindowWidth/2,
 					-size*Specifications.WindowHeight/2,
-					size*Specifications.WindowHeight/2, -1, 1);
+					size*Specifications.WindowHeight/2, -10, 10);
 			glMatrixMode(GL_MODELVIEW);
 			return;
 		}
@@ -217,7 +218,7 @@ public class SRenderer {
 			glOrtho(x-(Specifications.WindowWidth/2)*size,
 					x+(Specifications.WindowWidth/2)*size,
 					y-(Specifications.WindowHeight/2)*size,
-					y+(Specifications.WindowHeight/2)*size, -1, 1);
+					y+(Specifications.WindowHeight/2)*size, -10, 10);
 			glMatrixMode(GL_MODELVIEW);
 		}
 	}
@@ -234,7 +235,7 @@ public class SRenderer {
 		glOrtho(0,
 				Specifications.WindowWidth,
 				Specifications.WindowHeight,
-				0, -1, 1);
+				0, -10, 10);
 		glMatrixMode(GL_MODELVIEW);
 		
 		for(SRenderObject draw : SHud.DrawHud()){
@@ -269,13 +270,13 @@ public class SRenderer {
 		GL11.glBegin(GL11.GL_QUADS);
 		{
 			GL11.glTexCoord2f(SRO.leftBottom.getX(),SRO.leftBottom.getY()); //0,0
-			GL11.glVertex2f(x-texture.getTextureWidth()/2,y-texture.getTextureHeight()/2);
+			GL11.glVertex3f(x-texture.getTextureWidth()/2,y-texture.getTextureHeight()/2, SRO.get_Z());
 			GL11.glTexCoord2f(SRO.leftBottom.getX(),SRO.rightUpper.getY()); //0,1
-			GL11.glVertex2f(x+texture.getTextureWidth()/2,y-texture.getTextureHeight()/2);
+			GL11.glVertex3f(x+texture.getTextureWidth()/2,y-texture.getTextureHeight()/2, SRO.get_Z());
 			GL11.glTexCoord2f(SRO.rightUpper.getX(),SRO.rightUpper.getY()); //1,1
-			GL11.glVertex2f(x+texture.getTextureWidth()/2,y+texture.getTextureHeight()/2);
+			GL11.glVertex3f(x+texture.getTextureWidth()/2,y+texture.getTextureHeight()/2, SRO.get_Z());
 			GL11.glTexCoord2f(SRO.rightUpper.getX(),SRO.leftBottom.getY()); //1,0
-			GL11.glVertex2f(x-texture.getTextureWidth()/2,y+texture.getTextureHeight()/2);
+			GL11.glVertex3f(x-texture.getTextureWidth()/2,y+texture.getTextureHeight()/2, SRO.get_Z());
 		}
 		GL11.glEnd();
 		glPopMatrix();
