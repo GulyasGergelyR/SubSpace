@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.SId;
-import GameEngine.SPlayer.PlayerState;
+import GameEngine.SPlayer.PlayerType;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
@@ -326,7 +326,7 @@ public class SCommunicationHandler {
 				return;
 			}
 			else{
-				client = new SNode(message.getAddress(), message.getPort(), name, PlayerState.lan);
+				client = new SNode(message.getAddress(), message.getPort(), name, PlayerType.lan);
 				synchronized (nodes) {
 					nodes.add(client);
 					System.out.println("Client added: "+client.getName());

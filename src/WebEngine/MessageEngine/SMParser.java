@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import GameEngine.SGameInstance;
 import GameEngine.SId;
 import GameEngine.SPlayer;
-import GameEngine.SPlayer.PlayerState;
+import GameEngine.SPlayer.PlayerType;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
@@ -52,6 +52,7 @@ public class SMParser {
 	public static void parseEntityUpdateStateMessage(SM message, SEntity entity){
 		ByteBuffer buffer = message.getBuffer();
 		entity.setObjectState(buffer.get());
+		entity.setPlayerGameState(buffer.get());
 	}
 	public static void parseEntityCreateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
@@ -74,7 +75,7 @@ public class SMParser {
 				nameBytes[i] = buffer.get();
 			 }
 			 String name = new String(nameBytes);
-			 SPlayer player = new SPlayer(id, name, PlayerState.lan);
+			 SPlayer player = new SPlayer(id, name, PlayerType.lan);
 			 SEntity entity = new SEntity(player);
 			 SMain.getGameInstance().addPlayer(player);
 			 SMain.getGameInstance().addEntity(entity);
@@ -149,6 +150,9 @@ public class SMParser {
 		int objectTypeId = buffer.get();
 		if (objectTypeId == 50){  // TODO remove hard coded bullet type id
 			SAsteroid asteroid = (SAsteroid) SDebrisFactory.getObjectById(id);
+			if (asteroid == null){
+				return;
+			}
 			asteroid.setPos(parseBigVector(buffer));
 			asteroid.setMoveDir(parseBigVector(buffer));
 		}

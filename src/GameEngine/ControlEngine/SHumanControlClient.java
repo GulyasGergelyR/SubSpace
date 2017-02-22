@@ -5,6 +5,8 @@ import org.lwjgl.input.Mouse;
 
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
+import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
@@ -13,6 +15,7 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SHumanControlClient extends SControlClient{
 	
 	private int keys[] = {Keyboard.KEY_W, Keyboard.KEY_A, Keyboard.KEY_S, Keyboard.KEY_D};
+	private int spawnCounter = 0;
 	
 	public SHumanControlClient(SMobile mobile) {
 		super(mobile);
@@ -54,5 +57,19 @@ public class SHumanControlClient extends SControlClient{
 		SVector aimLookDir = new SVector(M_x-Specifications.WindowWidth/2, M_y-Specifications.WindowHeight/2);
 		SM message = SMPatterns.getClientUpdateMessage(Owner, command, aimLookDir);
 		SMain.getCommunicationHandler().SendMessage(message);
+		
+		if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Respawning)){
+			spawnCounter++;
+			if (spawnCounter >= 60) {
+				spawnCounter = 0;
+			}
+			if ((spawnCounter / 30 ) % 2 == 0){
+				Owner.getBody().setTransparency(0.5f);
+			} else {
+				Owner.getBody().setTransparency(1.0f);
+			}
+		} else if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Dead)){
+			spawnCounter = 0;
+		}
 	}
 }

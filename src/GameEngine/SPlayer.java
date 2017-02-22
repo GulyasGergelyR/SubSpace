@@ -7,9 +7,9 @@ public class SPlayer extends SIdentifiable{
 	private SNode clientNode;
 	private SEntity entity = null;
 	private String name;
-	private PlayerState playerState;
+	private PlayerType playerType;
 	
-	public enum PlayerState{
+	public enum PlayerType{
 		local, lan
 	}
 	
@@ -18,14 +18,14 @@ public class SPlayer extends SIdentifiable{
 	private int deaths;
 	
 	// clientNode is just for the local for everybody at server side
-	public SPlayer(SNode clientNode, String name, PlayerState playerState){
+	public SPlayer(SNode clientNode, String name, PlayerType playerState){
 		this.setClientNode(clientNode);
-		this.playerState = playerState;
+		this.playerType = playerState;
 		this.name = name;
 	}
-	public SPlayer(int id, String name, PlayerState playerState){
+	public SPlayer(int id, String name, PlayerType playerState){
 		this.Id = new SId(id);
-		this.playerState = playerState;
+		this.playerType = playerState;
 		this.name = name;
 	}
 	public SNode getClientNode() {
@@ -49,11 +49,11 @@ public class SPlayer extends SIdentifiable{
 		this.entity = entity;
 		this.entity.inheritIdFrom(this);  // player inherits Id from node, now entity inherits id from player
 	}
-	public PlayerState getPlayerState() {
-		return playerState;
+	public PlayerType getPlayerType() {
+		return playerType;
 	}
-	public void setPlayerState(PlayerState playerState) {
-		this.playerState = playerState;
+	public void setPlayerType(PlayerType playerState) {
+		this.playerType = playerState;
 	}
 	public int getKills() {
 		return kills;

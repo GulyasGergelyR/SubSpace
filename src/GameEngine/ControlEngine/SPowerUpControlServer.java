@@ -3,6 +3,7 @@ package GameEngine.ControlEngine;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
@@ -20,7 +21,9 @@ public class SPowerUpControlServer extends SControlServer{
 	@Override
 	protected void Think() {
 		for(SEntity entity : SMain.getGameInstance().getEntities()){
-			if (SGeomFunctions.intersects(entity, Owner)){
+			if (SGeomFunctions.intersects(entity, Owner) &&
+					entity.getPlayerGameState().equals(PlayerGameState.Alive) &&
+					entity.getObjectState().equals(ObjectState.Active)){
 				if (!((SPowerUp)Owner).applyToEntity(entity))
 					continue;
 				Owner.setObjectState(ObjectState.WaitingDelete);

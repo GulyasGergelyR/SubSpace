@@ -46,7 +46,6 @@ public class SBullet extends SMobile{
 				SResLoader.getAudio("res/audio/single_laser_shot.wav").playAsSoundEffect(1.0f, volume, false);
 			}
 		}
-		
 	}
 	public SBullet(SEntity owner){
 		//used at server side
@@ -56,6 +55,7 @@ public class SBullet extends SMobile{
 		this.getBody().setHitbox(new SHitboxSpherical(this, 10));
 		this.getBody().setDrawScale(0.25f);
 		this.getBody().setScale(1.0f);
+		this.getBody().setMass(0.02f);
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));

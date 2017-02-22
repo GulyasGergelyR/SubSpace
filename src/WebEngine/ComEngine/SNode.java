@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import GameEngine.SId;
 import GameEngine.SIdentifiable;
 import GameEngine.SPlayer;
-import GameEngine.SPlayer.PlayerState;
+import GameEngine.SPlayer.PlayerType;
 
 public class SNode extends SIdentifiable{
 	private InetAddress address;
@@ -15,7 +15,7 @@ public class SNode extends SIdentifiable{
 	private float ping = 1.0f;
 	private SPlayer player;
 	
-	public SNode(InetAddress address, int port, String name, PlayerState playerState){
+	public SNode(InetAddress address, int port, String name, PlayerType playerState){
 		super();
 		this.address = address;
 		this.player = new SPlayer(this, name, playerState);

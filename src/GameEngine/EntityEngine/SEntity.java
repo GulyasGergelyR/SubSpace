@@ -8,7 +8,8 @@ import org.newdawn.slick.Color;
 
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.SPlayer;
-import GameEngine.SPlayer.PlayerState;
+import GameEngine.SPlayer.PlayerType;
+import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.ControlEngine.SControl;
 import GameEngine.ControlEngine.SControlClient;
 import GameEngine.ControlEngine.SHumanControlClient;
@@ -34,6 +35,11 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
 	
+	public enum PlayerGameState{
+		Alive, Dead, Respawning
+	}
+	protected PlayerGameState playerGameState = PlayerGameState.Dead;
+	
 	public SEntity(SPlayer player){
 		super();
 		this.pos = new SVector(250.0f,250.0f);
@@ -58,7 +64,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			setObjectState(ObjectState.Ghost);
 		}
 		
-		if (player.getPlayerState().equals(PlayerState.local)){
+		if (player.getPlayerType().equals(PlayerType.local)){
 			System.out.println("Created local player at: "+SMain.getCommunicationHandler().getUDPRole());
 			this.setController(new SHumanControlClient(this));
 		}else if(SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){
@@ -74,21 +80,36 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	public List<SRenderObject> getDrawables() {
 		//TODO Add movement and life specific drawings
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
-		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), 2.0f));
-		//Add health bar
-		SVector leftBottom = new SVector((maxShield-shield)/maxShield*0.5f,0.0f);
-		SVector rightUpper = new SVector(0.5f+(maxShield-shield)/maxShield*0.5f,1.0f);
-		// Shield
-		list.add(new SRenderObject("res/entity/ShieldBar.png", pos.add(0,62*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 2.1f));
-		//Life
-		SVector leftBottomLife = new SVector((maxLife-life)/maxLife*0.5f,0.0f);
-		SVector rightUpperLife = new SVector(0.5f+(maxLife-life)/maxLife*0.5f,1.0f);
-		list.add(new SRenderObject("res/entity/HealthBar.png", pos.add(0,55*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottomLife, rightUpperLife, 2.1f));
+		if (playerGameState.equals(PlayerGameState.Alive)){
+			list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), 2.0f));
+			//Add health bar
+			SVector leftBottom = new SVector((maxShield-shield)/maxShield*0.5f,0.0f);
+			SVector rightUpper = new SVector(0.5f+(maxShield-shield)/maxShield*0.5f,1.0f);
+			// Shield
+			list.add(new SRenderObject("res/entity/ShieldBar.png", pos.add(0,62*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 2.1f));
+			//Life
+			SVector leftBottomLife = new SVector((maxLife-life)/maxLife*0.5f,0.0f);
+			SVector rightUpperLife = new SVector(0.5f+(maxLife-life)/maxLife*0.5f,1.0f);
+			list.add(new SRenderObject("res/entity/HealthBar.png", pos.add(0,55*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottomLife, rightUpperLife, 2.1f));
+		} else if (playerGameState.equals(PlayerGameState.Respawning)){
+			list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), body.getTransparency(), body.getColor(), 2.0f));
+		}
+		
 		return list;
 	}
 	public void tryToFire(){
 		if (!activeWeapon.tryIt())
 			activeWeapon.coolIt();
+	}
+	
+	public void respawn(){
+		this.life = maxLife;
+		this.shield = maxShield;
+		Random random = new Random();
+		this.pos = new SVector(random.nextFloat()*7000-3500,random.nextFloat()*7000-3500);
+		this.moveDir = new SVector();
+		this.acclDir = new SVector();
+		this.lookDir = new SVector(1,0);
 	}
 	
 	public boolean gotHit(float damage){
@@ -102,12 +123,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			if (this.life <= 0){
 				SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
 				SMain.getCommunicationHandler().SendMessage(explosionMessage);
-				this.life = maxLife;
-				Random random = new Random();
-				this.pos = new SVector(random.nextFloat()*4000-2000,random.nextFloat()*4000-2000);
-				this.moveDir = new SVector();
-				this.acclDir = new SVector();
-				this.lookDir = new SVector(1,0);
+				setPlayerGameState(PlayerGameState.Dead);
 				this.player.addDeath(1);
 				return true;
 			}
@@ -177,5 +193,34 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 				this.shield = this.maxShield;
 			}
 		}
+	}
+
+	public PlayerGameState getPlayerGameState() {
+		return playerGameState;
+	}
+
+	public void setPlayerGameState(PlayerGameState playerGameState) {
+		this.playerGameState = playerGameState;
+		if (SMain.IsServer()){
+			SM message = SMPatterns.getEntityUpdateStateMessage(this);
+	    	SMain.getCommunicationHandler().SendMessage(message);
+		}
+	}
+	public byte getPlayerGameStateId(){
+		if (playerGameState.equals(PlayerGameState.Alive))
+			return 1;
+		else if (playerGameState.equals(PlayerGameState.Respawning))
+			return 2;
+		else if (playerGameState.equals(PlayerGameState.Dead))
+			return 3;
+		return 0;
+	}
+	public void setPlayerGameState(byte state) {
+		if (state == 1)
+			playerGameState = PlayerGameState.Alive;
+		if (state == 2)
+			playerGameState = PlayerGameState.Respawning;
+		if (state == 3)
+			playerGameState = PlayerGameState.Dead;
 	}
 }

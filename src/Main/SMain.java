@@ -31,7 +31,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.openal.SoundStore;
 
 import GameEngine.SGameInstance;
-import GameEngine.SPlayer.PlayerState;
+import GameEngine.SPlayer.PlayerType;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
 import GameEngine.SyncEngine.SServerTimer;
@@ -127,7 +127,7 @@ public class SMain {
 		SNode server;
 		try {
 			InetAddress address = InetAddress.getLocalHost();
-			node = new SNode(address, 0, address.getHostName(), PlayerState.local);
+			node = new SNode(address, 0, address.getHostName(), PlayerType.local);
 			gameInstance.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNodeAsClient(9089, 9090);

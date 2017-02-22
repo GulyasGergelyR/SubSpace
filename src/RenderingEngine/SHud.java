@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.newdawn.slick.Color;
 
-import GameEngine.SPlayer.PlayerState;
+import GameEngine.SPlayer.PlayerType;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
@@ -44,7 +44,7 @@ public class SHud {
 				float y = (entity.getPos().getY()+5*1024)/5/2048 * miniMapSize;
 				if (x<0 || x > miniMapSize || y < 0 || y> miniMapSize)
 					continue;
-				if (entity.getPlayer().getPlayerState().equals(PlayerState.local)){
+				if (entity.getPlayer().getPlayerType().equals(PlayerType.local)){
 					drawables.add(new SRenderObject("res/hud/MiniMapLocalPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 1.0f, new Color(255,255,255,0), 8.2f));				
 				}
 				else 
@@ -56,7 +56,7 @@ public class SHud {
 				if (object.getObjectState().equals(ObjectState.Active)){
 					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
 					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;
-					drawables.add(new SRenderObject("res/hud/MiniMapPowerUpHeal.png",new SVector(x, Specifications.WindowHeight-y), 0.0f, 0.5f, 0.7f, new Color(255,255,255,0), 8.1f));
+					drawables.add(new SRenderObject("res/hud/MiniMapPowerUpHeal.png",new SVector(x, Specifications.WindowHeight-y), 0.0f, 0.5f, 1.0f, new Color(255,255,255,0), 8.1f));
 				}
 			}
 		}
@@ -66,7 +66,7 @@ public class SHud {
 				if (object.getObjectState().equals(ObjectState.Active)){
 					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
 					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;
-					drawables.add(new SRenderObject("res/hud/MiniMapAsteroid.png",new SVector(x, Specifications.WindowHeight-y), object.getLookDir().getAngle(), 0.2f * object.getBody().getCurrentDrawScale(), 0.4f, new Color(255,255,255,0), 8.05f));
+					drawables.add(new SRenderObject("res/hud/MiniMapAsteroid.png",new SVector(x, Specifications.WindowHeight-y), object.getLookDir().getAngle(), 0.2f * object.getBody().getCurrentDrawScale(), 0.2f, new Color(255,255,255,0), 8.05f));
 				}
 			}
 		}

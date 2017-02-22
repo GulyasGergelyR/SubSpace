@@ -14,6 +14,7 @@ public class SBody {
 	protected Color color;
 	protected float z;
 	protected float mass;
+	protected float transparency = 1.0f;
 	
 	public SBody(SObject owner, SHitbox hitbox, String texture, float scale, float drawScale){
 		this.owner = owner;
@@ -69,6 +70,14 @@ public class SBody {
 	
 	public void setMass(float mass){
 		this.mass = mass;
+	}
+
+	public float getTransparency() {
+		return transparency;
+	}
+
+	public void setTransparency(float transparency) {
+		this.transparency = transparency;
 	}
 	
 }

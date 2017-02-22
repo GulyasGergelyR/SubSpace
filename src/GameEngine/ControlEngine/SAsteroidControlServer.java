@@ -3,6 +3,7 @@ package GameEngine.ControlEngine;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
@@ -17,7 +18,8 @@ public class SAsteroidControlServer extends SControlServer{
 	@Override
 	protected void Think() {
 		for(SEntity entity : SMain.getGameInstance().getEntities()){
-			if (entity.getObjectState().equals(ObjectState.Active)){
+			if (entity.getObjectState().equals(ObjectState.Active) &&
+					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				if (SGeomFunctions.intersects(entity, Owner)){
 					if (SGeomFunctions.collide((SAsteroid)Owner, entity)){
 						if (!entity.gotHit(20)){

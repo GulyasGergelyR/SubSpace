@@ -117,6 +117,7 @@ public class SMPatterns {
 		buffer.put(CEntityUpdateState);
 		buffer.putShort((short)entity.getId().get());
 		buffer.put(entity.getObjectStateId());
+		buffer.put(entity.getPlayerGameStateId());
 		
 		return message;
 	}
