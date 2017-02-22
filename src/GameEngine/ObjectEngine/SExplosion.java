@@ -24,6 +24,7 @@ public class SExplosion extends SObject{
 	public SExplosion(SVector pos){
 		super();
 		this.pos = new SVector(pos);
+		System.out.println(this.pos.getString());
 		this.getBody().setTexture("res/object/explosion/explosionv2.png");
 		this.getBody().setScale(1.0f);
 		this.getBody().setDrawScale(size);
@@ -61,8 +62,8 @@ public class SExplosion extends SObject{
 	public List<SRenderObject> getDrawables() {
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
 		int Life = currentLife;
-		SVector leftBottom = new SVector(((Life-1)%8)*0.125f, ((Life-1)/8+1)*0.125f);
-		SVector rightUpper = new SVector(((Life-1)%8+1)*0.125f, ((Life-1)/8)*0.125f);
+		SVector leftBottom = new SVector(((Life-1)%8)*0.125f+0.0058f, ((Life-1)/8)*0.125f+0.028f+0.097f);
+		SVector rightUpper = new SVector(((Life-1)%8)*0.125f+0.0058f+0.097f, ((Life-1)/8)*0.125f+0.028f);
 		
 		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), leftBottom, rightUpper, 0.0101f));
 		return list;

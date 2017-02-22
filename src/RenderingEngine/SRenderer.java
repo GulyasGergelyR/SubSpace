@@ -2,6 +2,7 @@ package RenderingEngine;
 
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
@@ -10,6 +11,8 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.awt.Font;
 import java.util.List;
@@ -17,9 +20,9 @@ import java.util.ListIterator;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.Color;
 
 import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
@@ -29,7 +32,6 @@ import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import Main.SMain;
-import WebEngine.ComEngine.SNode;
 
 //TODO create SDrawObject and replace texture
 
@@ -124,6 +126,7 @@ public class SRenderer {
 				Specifications.WindowHeight,
 				0, -10, 10);
 		glMatrixMode(GL_MODELVIEW);
+		
 		if (!SMain.IsServer()){
 			DrawTextOfPlayer(playerToFollow, 0);
 		}else{
