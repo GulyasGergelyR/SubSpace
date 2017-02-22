@@ -13,6 +13,7 @@ public class SBody {
 	protected float drawScale;
 	protected Color color;
 	protected float z;
+	protected float mass;
 	
 	public SBody(SObject owner, SHitbox hitbox, String texture, float scale, float drawScale){
 		this.owner = owner;
@@ -61,4 +62,13 @@ public class SBody {
 	public float get_Z(){
 		return this.z;
 	}
+	
+	public float getMass(){
+		return mass;
+	}
+	
+	public void setMass(float mass){
+		this.mass = mass;
+	}
+	
 }

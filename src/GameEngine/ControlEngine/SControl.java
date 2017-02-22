@@ -3,6 +3,8 @@ package GameEngine.ControlEngine;
 import GameEngine.BaseEngine.SMobile;
 
 public class SControl {
+	protected int sendCounter = 0;
+	protected int maxSendCounter = 60;
 	protected SMobile Owner;
 	
 	public SControl(SMobile mobile){
@@ -13,4 +15,19 @@ public class SControl {
 	protected void Think(){}
 	protected void Act(){}
 	public void ThinkAndAct(){}
+	
+	public int getSendCounter() {
+		return sendCounter;
+	}
+	public void setSendCounter(int sendCounter) {
+		this.sendCounter = sendCounter;
+	}
+	public int getMaxSendCounter() {
+		return maxSendCounter;
+	}
+	public void setMaxSendCounter(int maxSendCounter) {
+		this.maxSendCounter = maxSendCounter;
+	}
+	
+	
 }

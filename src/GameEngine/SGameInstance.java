@@ -188,6 +188,7 @@ public class SGameInstance {
 			if (random.nextFloat()>0.5f){
 				SDebrisFactory.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
 			}
+			SDebrisFactory.collisionCheckInFactory();
 		}
 		SDebrisFactory.UpdateObjects();
 	}

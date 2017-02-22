@@ -45,8 +45,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;
 		this.life = maxLife;
-		//this.shield = maxShield;
-		this.shieldRechargeDelay = this.maxShieldRechargeDelay;
+		this.shield = maxShield;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();

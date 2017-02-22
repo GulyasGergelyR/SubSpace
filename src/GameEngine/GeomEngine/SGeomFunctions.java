@@ -1,5 +1,6 @@
 package GameEngine.GeomEngine;
 
+import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 
 public class SGeomFunctions {
@@ -37,5 +38,31 @@ public class SGeomFunctions {
 			}
 		}
 		return false;
+	}
+	
+	public static boolean collide(SMobile mobile1, SMobile mobile2){
+		SVector n = mobile2.getPos().sub(mobile1.getPos());
+		float cv1 = n.getProjection(mobile1.getMoveDir());
+		float cv2 = n.getProjection(mobile2.getMoveDir());
+		
+		if (cv1 < 0 && cv2 > 0)
+			return false;
+		
+		float m1 = mobile1.getBody().getMass();
+		float m2 = mobile2.getBody().getMass();
+		/*
+		float imp1 = m1 * cv1;
+		float imp2 = m2 * cv2;
+		float en1 = 0.5f * imp1 * cv1;
+		float en2 = 0.5f * imp2 * cv2;*/
+		float k = 1.0f;
+		float vs = (m1*cv1+m2*cv2)/(m1+m2);
+		float cV1 = vs - k*(cv1-vs);
+		float cV2 = vs + k*(vs-cv2);
+		SVector v1delta = n.setLength(-cv1+cV1);
+		mobile1.setMoveDir(mobile1.getMoveDir().add(v1delta));
+		SVector v2delta = n.setLength(-cv2+cV2);
+		mobile2.setMoveDir(mobile2.getMoveDir().add(v2delta));
+		return true;
 	}
 }

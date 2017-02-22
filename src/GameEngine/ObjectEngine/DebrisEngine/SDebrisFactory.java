@@ -1,9 +1,13 @@
 package GameEngine.ObjectEngine.DebrisEngine;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.Random;
-import java.util.Vector;
 
 import GameEngine.SId;
+import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;
@@ -13,7 +17,7 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SDebrisFactory extends SFactory {
 	public static final byte Asteroid = 1;
 	protected static int currentNumberOfAsteroids = 0;
-	protected static final int NumberOfAsteroid = 50;
+	protected static final int NumberOfAsteroid = 80;
 	
 	protected static String FactoryName = "DebrisFactory";
 	
@@ -31,9 +35,9 @@ public class SDebrisFactory extends SFactory {
 				return;
 			Random random = new Random();
 			int section = random.nextInt(4);
-			float rate = random.nextFloat()*90.0f + 10.0f;
-			float speed = 25 * rate*rate / 10000.0f + 5;
-			float scale = 4 * (1 - rate*rate / 10000.0f) + 1.0f;
+			float rate = random.nextFloat()*100.0f;
+			float speed = 30 * rate*rate / 10000.0f + 5;
+			float scale = 4 * (1 - rate*rate / 10000.0f) + 0.8f;
 			
 			SVector pos = new SVector();
 			SVector moveDir = new SVector();
@@ -54,9 +58,7 @@ public class SDebrisFactory extends SFactory {
 						  random.nextFloat()*200-100-5000);
 				moveDir = new SVector((random.nextFloat()*2 - 1), random.nextFloat()).setLength(speed);
 			}
-				
 			
-			//SVector moveDir = new SVector((random.nextFloat()*2 - 1) * speed, (random.nextFloat()*2 - 1) * speed);
 			SAsteroid asteroid = new SAsteroid(pos, moveDir, scale);
 			addObject(asteroid);
 			SM message = SMPatterns.getObjectCreateMessage(asteroid);
@@ -67,6 +69,42 @@ public class SDebrisFactory extends SFactory {
 	public static void deletedDebris(byte debrisType){
 		if (debrisType == Asteroid){
 			currentNumberOfAsteroids--;
+		}
+	}
+	
+	public static void collisionCheckInFactory(){
+		// Asteroid checks
+		// Hack around types:
+		// we build an array list which has a better performance for this
+		boolean[] update = new boolean[objects.size()];
+		
+		ArrayList<SObject> temps = new ArrayList<SObject>(objects);
+		for (int i=0; i<temps.size()-1; i++){
+			SObject currentObject = temps.get(i);
+			if (currentObject instanceof SAsteroid && 
+					currentObject.getObjectState().equals(ObjectState.Active)){
+				for (int j=i+1;j<temps.size(); j++){
+					SObject contra = temps.get(j);
+					if (contra instanceof SAsteroid &&
+						contra.getObjectState().equals(ObjectState.Active) &&
+						!contra.equals(currentObject)){
+						if (SGeomFunctions.intersects(contra, currentObject)){
+							if (SGeomFunctions.collide((SAsteroid)currentObject, (SAsteroid)contra)){
+								update[i] = true;
+								update[j] = true;
+							}
+						}
+					}
+				}
+			}
+		}
+		for (int i=0; i< update.length; i++){
+			if (update[i]){
+				SAsteroid asteroid = (SAsteroid)temps.get(i);
+				asteroid.getController().setSendCounter(0);
+				SM message = SMPatterns.getObjectUpdateMessage(asteroid);
+				SMain.getCommunicationHandler().SendMessage(message);
+			}
 		}
 	}
 }

@@ -60,16 +60,16 @@ public class SHud {
 				}
 			}
 		}
-		/*
+		
 		for(SObject object : SDebrisFactory.getObjects()){
 			if (object instanceof SAsteroid){
 				if (object.getObjectState().equals(ObjectState.Active)){
 					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
 					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;
-					drawables.add(new SRenderObject("res/hud/MiniMapAsteroid.png",new SVector(x, Specifications.WindowHeight-y), object.getLookDir().getAngle(), 0.2f * object.getBody().getCurrentDrawScale(), 0.7f, new Color(255,255,255,0), 8.1f));
+					drawables.add(new SRenderObject("res/hud/MiniMapAsteroid.png",new SVector(x, Specifications.WindowHeight-y), object.getLookDir().getAngle(), 0.2f * object.getBody().getCurrentDrawScale(), 0.4f, new Color(255,255,255,0), 8.05f));
 				}
 			}
-		}*/
+		}
 		
 		return drawables;
 	}

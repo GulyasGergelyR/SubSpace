@@ -104,4 +104,10 @@ public class SVector {
 	public float d(SVector v){
 		return this.sub(v).l();
 	}
+	public float scalar(SVector v){
+		return this.x*v.x + this.y*v.y;
+	}
+	public float getProjection(SVector v){
+		return this.norm().scalar(v);
+	}
 }
