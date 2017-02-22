@@ -24,7 +24,6 @@ public class SExplosion extends SObject{
 	public SExplosion(SVector pos){
 		super();
 		this.pos = new SVector(pos);
-		System.out.println(this.pos.getString());
 		this.getBody().setTexture("res/object/explosion/explosionv2.png");
 		this.getBody().setScale(1.0f);
 		this.getBody().setDrawScale(size);

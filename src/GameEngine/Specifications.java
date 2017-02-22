@@ -49,6 +49,7 @@ public final class Specifications {
 		resourcePathStrings.add("res/hud/MiniMapLanPlayer.png");
 		resourcePathStrings.add("res/hud/MiniMapLocalPlayer.png");
 		resourcePathStrings.add("res/hud/MiniMapPowerUpHeal.png");
+		resourcePathStrings.add("res/hud/MiniMapAsteroid.png");
 		resourcePathStrings.add("res/hud/HudHealthBar.png");
 		resourcePathStrings.add("res/hud/HudShieldBar.png");
 		resourcePathStrings.add("res/hud/HudHealthBarGrid.png");

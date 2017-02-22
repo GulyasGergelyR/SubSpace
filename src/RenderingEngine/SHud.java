@@ -1,17 +1,19 @@
 package RenderingEngine;
 
+import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.newdawn.slick.Color;
 
 import GameEngine.SPlayer.PlayerState;
-import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
+import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import Main.SMain;
 
@@ -43,10 +45,10 @@ public class SHud {
 				if (x<0 || x > miniMapSize || y < 0 || y> miniMapSize)
 					continue;
 				if (entity.getPlayer().getPlayerState().equals(PlayerState.local)){
-					drawables.add(new SRenderObject("res/hud/MiniMapLocalPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 0.7f, new Color(255,255,255,0), 8.2f));				
+					drawables.add(new SRenderObject("res/hud/MiniMapLocalPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 1.0f, new Color(255,255,255,0), 8.2f));				
 				}
 				else 
-					drawables.add(new SRenderObject("res/hud/MiniMapLanPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 0.7f, new Color(255,255,255,0), 8.2f));
+					drawables.add(new SRenderObject("res/hud/MiniMapLanPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 1f, new Color(255,255,255,0), 8.2f));
 			}
 		}
 		for(SObject object : SMain.getGameInstance().getObjects()){
@@ -58,6 +60,16 @@ public class SHud {
 				}
 			}
 		}
+		/*
+		for(SObject object : SDebrisFactory.getObjects()){
+			if (object instanceof SAsteroid){
+				if (object.getObjectState().equals(ObjectState.Active)){
+					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
+					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;
+					drawables.add(new SRenderObject("res/hud/MiniMapAsteroid.png",new SVector(x, Specifications.WindowHeight-y), object.getLookDir().getAngle(), 0.2f * object.getBody().getCurrentDrawScale(), 0.7f, new Color(255,255,255,0), 8.1f));
+				}
+			}
+		}*/
 		
 		return drawables;
 	}
