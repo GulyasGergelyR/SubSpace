@@ -56,6 +56,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
 		SWeapon weapon = new SWeapon(this);
+		weapons.add(weapon);
 		activeWeapon = weapon;
 		if (SMain.IsServer()){
 			setObjectState(ObjectState.Initialization);
@@ -222,5 +223,12 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			playerGameState = PlayerGameState.Respawning;
 		if (state == 3)
 			playerGameState = PlayerGameState.Dead;
+	}
+	
+	public List<SWeapon> getWeapons(){
+		return weapons;
+	}
+	public SWeapon getActiveWeapon(){
+		return activeWeapon;
 	}
 }

@@ -31,6 +31,7 @@ import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import Main.SMain;
 
 //TODO create SDrawObject and replace texture
@@ -67,6 +68,11 @@ public class SRenderer {
 	}
 	private void DrawObjects(){
 		for (SObject object : gameInstance.getObjects()){
+			if (object.getObjectState() == ObjectState.Active){
+				Draw(object.getDrawables());
+			}
+		}
+		for (SObject object : SPowerUpFactory.getObjects()){
 			if (object.getObjectState() == ObjectState.Active){
 				Draw(object.getDrawables());
 			}

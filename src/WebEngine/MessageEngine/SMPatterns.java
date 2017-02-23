@@ -207,6 +207,8 @@ public class SMPatterns {
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SAsteroid){
 			buffer.put((byte)50);
+		} else if (object instanceof SPowerUp){
+			buffer.put((byte)40);
 		}
 		return message;
 	}

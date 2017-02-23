@@ -163,7 +163,10 @@ public class SMParser {
 		int type = buffer.get();
 		if (type == 0){
 			gameInstance.removeObjectFromList(id);
-		}else if (type == 50){
+		}else if (type == 40){
+			SPowerUpFactory.removeObjectFromList(id);
+		}
+		else if (type == 50){
 			SDebrisFactory.removeObjectFromList(id);
 		}
 	}

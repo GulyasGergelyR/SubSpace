@@ -13,29 +13,47 @@ import WebEngine.MessageEngine.SMPatterns;
 
 public class SPowerUpControlServer extends SControlServer{
 	
-	
+	// For being activeS
+	protected int duration = 0;  // it means its there forever
+	protected int currentTime = 0;
+		
 	public SPowerUpControlServer(SMobile mobile){
 		super(mobile);
 	}
 	
 	@Override
 	protected void Think() {
-		for(SEntity entity : SMain.getGameInstance().getEntities()){
-			if (SGeomFunctions.intersects(entity, Owner) &&
-					entity.getPlayerGameState().equals(PlayerGameState.Alive) &&
-					entity.getObjectState().equals(ObjectState.Active)){
-				if (!((SPowerUp)Owner).applyToEntity(entity))
-					continue;
+		if (duration > 0){
+			currentTime++;
+			if (currentTime >= duration){
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);
 				SMain.getCommunicationHandler().SendMessage(message);
-				SPowerUpFactory.powerUpApplied();
-				break;
+				return;
+			}
+		}
+		
+		for(SEntity entity : SMain.getGameInstance().getEntities()){
+			if(	entity.getPlayerGameState().equals(PlayerGameState.Alive) &&
+					entity.getObjectState().equals(ObjectState.Active)){
+				if (SGeomFunctions.intersects(entity, Owner)){
+					if (!((SPowerUp)Owner).applyToEntity(entity))
+						continue;
+					Owner.setObjectState(ObjectState.WaitingDelete);
+					SM message = SMPatterns.getObjectDeleteMessage(Owner);
+					SMain.getCommunicationHandler().SendMessage(message);
+					SPowerUpFactory.powerUpApplied(((SPowerUp)Owner).getType());
+					break;
+				}
 			}
 		}
 	}
 	@Override
 	public void ThinkAndAct() {
 		Think();
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
 	}
 }

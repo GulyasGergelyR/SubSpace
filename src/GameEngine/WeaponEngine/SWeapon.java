@@ -16,6 +16,8 @@ public class SWeapon{
 	
 	protected SBullet baseBullet;
 	
+	protected boolean burstMode;  // for burst effect
+	
 	public SWeapon(SEntity owner){
 		this.owner = owner;
 		baseBullet = new SBullet(owner);
@@ -53,7 +55,15 @@ public class SWeapon{
 	}
 	
 	private void createBullet(){
-		for(int i=0;i<1;i++){
+		if (burstMode){
+			for(int i=0;i<5;i++){
+				SBullet bullet = baseBullet.createBullet();
+				bullet.setMoveDir(bullet.getMoveDir().rotate((i-2)*15.0f));
+				SMain.getGameInstance().addObject(bullet);
+				SM message = SMPatterns.getObjectCreateMessage(bullet);
+				SMain.getCommunicationHandler().SendMessage(message);
+			}
+		} else{
 			SBullet bullet = baseBullet.createBullet();
 			SMain.getGameInstance().addObject(bullet);
 			SM message = SMPatterns.getObjectCreateMessage(bullet);
@@ -61,4 +71,10 @@ public class SWeapon{
 		}
 		lastTime = 0;
 	}
+
+	public void setBurstMode(boolean burstMode) {
+		this.burstMode = burstMode;
+	}
+	
+	
 }

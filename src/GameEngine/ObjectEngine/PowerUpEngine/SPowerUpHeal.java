@@ -4,6 +4,9 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 
 public class SPowerUpHeal extends SPowerUp{
+	protected static int currentNumberOfPowerUps = 0;
+	protected static int maxNumberOfPowerUps = 3;
+	
 	public SPowerUpHeal(SVector pos){
 		super(pos);
 		this.type = SPowerUpFactory.PowerUpHeal;

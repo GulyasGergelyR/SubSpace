@@ -6,5 +6,4 @@ public class SSimpleWeapon extends SWeapon {
 	public SSimpleWeapon(SEntity owner){
 		super(owner);
 	}
-	
 }

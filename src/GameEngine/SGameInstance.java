@@ -13,6 +13,7 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
+import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
@@ -48,6 +49,8 @@ public class SGameInstance {
 		
 		// Factories
 		SDebrisFactory.init();
+		SPowerUpFactory.init();
+		SEffectFactory.init();
 	}
 	public List<SPlayer> getPlayers(){
 		return players;
@@ -180,16 +183,19 @@ public class SGameInstance {
 	protected void UpdateFactories(){
 		if (SMain.IsServer()){
 			Random random = new Random();
-			if (random.nextFloat()>0.9f){
-				SPowerUpFactory.tryToCreateNewPowerUpAtServer(
-						new SVector(random.nextFloat()*8000 -4000, random.nextFloat()*8000 -4000),
-						SPowerUpFactory.PowerUpHeal);
+			if (random.nextFloat()>0.5f){
+				SPowerUpFactory.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 			}
 			if (random.nextFloat()>0.5f){
+				SPowerUpFactory.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
+			}
+			if (random.nextFloat()>0.1f){
 				SDebrisFactory.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
 			}
 			SDebrisFactory.collisionCheckInFactory();
+			SEffectFactory.UpdateObjects();
 		}
+		SPowerUpFactory.UpdateObjects();
 		SDebrisFactory.UpdateObjects();
 	}
 	
@@ -216,6 +222,10 @@ public class SGameInstance {
 				        }
 				        // TODO refactor for factory
 				        for(SObject object : SDebrisFactory.getObjects()){
+				        	SM message = SMPatterns.getObjectCreateMessage(object);
+				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        }
+				        for(SObject object : SPowerUpFactory.getObjects()){
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }

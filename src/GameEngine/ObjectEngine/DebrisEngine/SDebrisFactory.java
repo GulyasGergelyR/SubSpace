@@ -1,7 +1,8 @@
 package GameEngine.ObjectEngine.DebrisEngine;
 
-import java.awt.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Random;
 
 import GameEngine.SId;
@@ -9,17 +10,17 @@ import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SObject.ObjectState;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
-import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SDebrisFactory extends SFactory {
+public class SDebrisFactory {
 	public static final byte Asteroid = 1;
 	protected static int currentNumberOfAsteroids = 0;
 	protected static final int NumberOfAsteroid = 80;
 	
 	protected static String FactoryName = "DebrisFactory";
+	
 	
 	public static void createNewDebrisAtClient(SVector pos, SVector moveDir, float scale, int id, byte debrisType){
 		if (debrisType == Asteroid){
@@ -106,5 +107,56 @@ public class SDebrisFactory extends SFactory {
 				SMain.getCommunicationHandler().SendMessage(message);
 			}
 		}
+	}
+	
+	protected static LinkedList<SObject> objects;
+	
+	public static void init(){
+		objects = new LinkedList<SObject>();
+	}
+	
+	public static void UpdateObjects(){
+		if(!objects.isEmpty()){
+			ListIterator<SObject> iter = objects.listIterator();
+			while(iter.hasNext()){
+				SObject object = iter.next();
+			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+			        iter.remove();
+			    }else {
+			    	object.update();
+			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+				        iter.remove();
+				    }
+			    }
+			}
+		}
+	}
+	
+	public static void addObject(SObject object){
+		objects.add(object);
+	}
+	
+	public static LinkedList<SObject> getObjects(){
+		return objects;
+	}
+	
+	public static void removeObjectFromList(int Id){
+		ListIterator<SObject> iter = objects.listIterator();
+		while(iter.hasNext()){
+			SObject object = iter.next();
+		    if(object.equals(Id)){
+		        iter.remove();
+		        break;
+		    }
+		}
+	}
+	
+	public static SObject getObjectById(int Id){
+		for(SObject object : objects){
+			if (object.equals(Id))
+				return object;
+		}
+		System.out.printf("Object was not found in '%s', with Id: "+Id, FactoryName);
+		return null;
 	}
 }
