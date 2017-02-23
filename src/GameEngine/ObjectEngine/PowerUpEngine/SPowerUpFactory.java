@@ -16,20 +16,20 @@ public class SPowerUpFactory extends SFactory{
 	public static final byte PowerUpForceBoost = 3;
 	
 	protected static int currentNumberOfPowerUps = 0;
-	protected static final int maxNumberOfPowerUps = 3;
+	protected static final int maxNumberOfPowerUps = 10;
 	
 	public static void createNewPowerUpAtClient(SVector pos, int id, byte powerUpType){
+		SPowerUp powerUp = new SPowerUp(new SVector(0,0));
 		if (powerUpType == PowerUpHeal){
-			SPowerUpHeal powerUpHeal = new SPowerUpHeal(pos);
-			powerUpHeal.setController(new SControl(powerUpHeal));
-			powerUpHeal.setId(new SId(id));
-			SMain.getGameInstance().addObject(powerUpHeal);
+			powerUp = new SPowerUpHeal(pos);
 		} else if (powerUpType == PowerUpBurst){
-			SPowerUpBurst powerUpBurst = new SPowerUpBurst(pos);
-			powerUpBurst.setController(new SControl(powerUpBurst));
-			powerUpBurst.setId(new SId(id));
-			addObject(powerUpBurst);
+			powerUp = new SPowerUpBurst(pos);
+		} else if (powerUpType == PowerUpForceBoost){
+			powerUp = new SPowerUpForceBoost(pos);
 		}
+		powerUp.setController(new SControl(powerUp));
+		powerUp.setId(new SId(id));
+		addObject(powerUp);
 	}
 	public static void tryToCreateNewPowerUpAtServer(byte powerUpType){
 		Random random = new Random();
@@ -40,7 +40,7 @@ public class SPowerUpFactory extends SFactory{
 			if (SPowerUpHeal.currentNumberOfPowerUps >= SPowerUpHeal.maxNumberOfPowerUps)
 				return;
 			SPowerUpHeal powerUpHeal = new SPowerUpHeal(pos);
-			SMain.getGameInstance().addObject(powerUpHeal);
+			addObject(powerUpHeal);
 			SM message = SMPatterns.getObjectCreateMessage(powerUpHeal);
 			SMain.getCommunicationHandler().SendMessage(message);
 			SPowerUpHeal.currentNumberOfPowerUps++;
@@ -52,12 +52,22 @@ public class SPowerUpFactory extends SFactory{
 			SM message = SMPatterns.getObjectCreateMessage(powerUpBurst);
 			SMain.getCommunicationHandler().SendMessage(message);
 			SPowerUpBurst.currentNumberOfPowerUps++;
+		} else if (powerUpType == PowerUpForceBoost) {
+			if (SPowerUpForceBoost.currentNumberOfPowerUps >= SPowerUpForceBoost.maxNumberOfPowerUps)
+				return;
+			SPowerUpForceBoost powerUpForceBoost = new SPowerUpForceBoost(pos);
+			addObject(powerUpForceBoost);
+			SM message = SMPatterns.getObjectCreateMessage(powerUpForceBoost);
+			SMain.getCommunicationHandler().SendMessage(message);
+			SPowerUpForceBoost.currentNumberOfPowerUps++;
 		}
 	}
 	public static void powerUpApplied(byte powerUpType){
 		if (powerUpType == PowerUpHeal){
 			SPowerUpHeal.currentNumberOfPowerUps--;
 		} else if (powerUpType == PowerUpBurst) {
+			SPowerUpBurst.currentNumberOfPowerUps--;
+		} else if (powerUpType == PowerUpForceBoost) {
 			SPowerUpBurst.currentNumberOfPowerUps--;
 		}
 	}

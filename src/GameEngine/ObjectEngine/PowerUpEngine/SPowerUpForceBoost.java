@@ -3,28 +3,28 @@ package GameEngine.ObjectEngine.PowerUpEngine;
 import GameEngine.ControlEngine.SPowerUpControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
-import GameEngine.ObjectEngine.EffectEngine.SEffectBurst;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
+import GameEngine.ObjectEngine.EffectEngine.SEffectForceBoost;
 import Main.SMain;
 
-public class SPowerUpBurst extends SPowerUp {
+public class SPowerUpForceBoost extends SPowerUp {
 	protected static int currentNumberOfPowerUps = 0;
 	protected static int maxNumberOfPowerUps = 3;
 	
-	public SPowerUpBurst(SVector pos) {
+	public SPowerUpForceBoost(SVector pos) {
 		super(pos);
-		this.type = SPowerUpFactory.PowerUpBurst;
-		this.getBody().setTexture("res/object/powerup/powerupburst.png");
+		this.type = SPowerUpFactory.PowerUpForceBoost;
+		this.getBody().setTexture("res/object/powerup/powerupforceboost.png");
 		this.setLookDir(new SVector(0, -1));
 		if (SMain.IsServer()){
-			((SPowerUpControlServer)this.getController()).setDuration(900);
+			((SPowerUpControlServer)this.getController()).setDuration(1100);
 		}
 	}
 
 	@Override
 	public boolean applyToEntity(SEntity entity) {
-		SEffectBurst effectBurst = new SEffectBurst(entity);
-		SEffectFactory.addEffect(effectBurst);
+		SEffectForceBoost effectForceBoost = new SEffectForceBoost(entity);
+		SEffectFactory.addEffect(effectForceBoost);
 		return true;
 	}
 }

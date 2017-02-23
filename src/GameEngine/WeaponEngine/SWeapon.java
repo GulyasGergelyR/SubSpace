@@ -23,7 +23,7 @@ public class SWeapon{
 		baseBullet = new SBullet(owner);
 	}
 	
-	protected SBullet getBaseBullet() {
+	public SBullet getBaseBullet() {
 		return baseBullet;
 	}
 	

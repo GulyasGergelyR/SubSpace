@@ -29,6 +29,7 @@ public class SPowerUpControlServer extends SControlServer{
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);
 				SMain.getCommunicationHandler().SendMessage(message);
+				SPowerUpFactory.powerUpApplied(((SPowerUp)Owner).getType());
 				return;
 			}
 		}

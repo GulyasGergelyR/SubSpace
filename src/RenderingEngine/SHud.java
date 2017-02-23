@@ -14,6 +14,9 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpBurst;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import Main.SMain;
 
@@ -51,13 +54,17 @@ public class SHud {
 					drawables.add(new SRenderObject("res/hud/MiniMapLanPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 1f, new Color(255,255,255,0), 8.2f));
 			}
 		}
-		for(SObject object : SMain.getGameInstance().getObjects()){
+		for(SObject object : SPowerUpFactory.getObjects()){
+			String res = "";
 			if (object instanceof SPowerUpHeal){
-				if (object.getObjectState().equals(ObjectState.Active)){
-					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
-					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;
-					drawables.add(new SRenderObject("res/hud/MiniMapPowerUpHeal.png",new SVector(x, Specifications.WindowHeight-y), 0.0f, 0.5f, 1.0f, new Color(255,255,255,0), 8.1f));
-				}
+				res =  "res/hud/MiniMapPowerUpHeal.png";
+			} else {
+				res =  "res/hud/MiniMapPowerUpBox.png";
+			}
+			if (object.getObjectState().equals(ObjectState.Active)){
+				float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
+				float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;
+				drawables.add(new SRenderObject(res,new SVector(x, Specifications.WindowHeight-y), 0.0f, 0.5f, 1.0f, new Color(255,255,255,0), 8.1f));
 			}
 		}
 		

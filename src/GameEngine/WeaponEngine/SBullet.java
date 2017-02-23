@@ -18,7 +18,7 @@ public class SBullet extends SMobile{
 	protected float damage;
 	
 	public SBullet createBullet(){
-		return new SBullet(owner);
+		return new SBullet(owner, this);
 	}
 	public SBullet(int ownerId, SVector pos, SVector lookdir, SVector movedir){
 		//used at client side
@@ -47,6 +47,23 @@ public class SBullet extends SMobile{
 			}
 		}
 	}
+	public SBullet(SEntity owner, SBullet bullet){
+		//used at server side
+		super();
+		this.owner = owner;
+		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
+		this.getBody().setHitbox(new SHitboxSpherical(this, 10));
+		this.getBody().setDrawScale(0.25f);
+		this.getBody().setScale(bullet.getBody().getScale());
+		this.getBody().setMass(bullet.getBody().getMass());
+		this.lookDir = new SVector(owner.getLookDir());
+		Random random = new Random();
+		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
+		this.maxSpeed = bullet.getMaxSpeed();
+		this.damage = 5;
+		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
+		this.setController(new SSimpleBulletControlServer(this));
+	}
 	public SBullet(SEntity owner){
 		//used at server side
 		super();
@@ -55,7 +72,7 @@ public class SBullet extends SMobile{
 		this.getBody().setHitbox(new SHitboxSpherical(this, 10));
 		this.getBody().setDrawScale(0.25f);
 		this.getBody().setScale(1.0f);
-		this.getBody().setMass(0.02f);
+		this.getBody().setMass(0.03f);
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));

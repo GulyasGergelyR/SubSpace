@@ -156,7 +156,7 @@ public class SDebrisFactory {
 			if (object.equals(Id))
 				return object;
 		}
-		System.out.printf("Object was not found in '%s', with Id: "+Id, FactoryName);
+		System.out.printf("Object was not found in '%s', with Id: "+Id+"\n", FactoryName);
 		return null;
 	}
 }
