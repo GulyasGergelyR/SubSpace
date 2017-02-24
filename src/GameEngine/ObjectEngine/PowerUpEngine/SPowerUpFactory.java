@@ -68,7 +68,7 @@ public class SPowerUpFactory extends SFactory{
 		} else if (powerUpType == PowerUpBurst) {
 			SPowerUpBurst.currentNumberOfPowerUps--;
 		} else if (powerUpType == PowerUpForceBoost) {
-			SPowerUpBurst.currentNumberOfPowerUps--;
+			SPowerUpForceBoost.currentNumberOfPowerUps--;
 		}
 	}
 }
