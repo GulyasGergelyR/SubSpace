@@ -2,12 +2,15 @@ package GameEngine.ControlEngine;
 
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
+import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
@@ -41,13 +44,13 @@ public class SSimpleBulletControlServer extends SControlServer {
 				}
 			}
 		}
-		for(SObject object : SDebrisFactory.getObjects()){
+		for(SUpdatable object : SFH.Debris.getObjects()){
 			if (object.getObjectState().equals(ObjectState.Active)){
-				if (SGeomFunctions.intersects(object, Owner) ){
+				if (SGeomFunctions.intersects((SDebris)object, Owner) ){
 					SVector pos = new SVector(Owner.getPos());
 					if (SGeomFunctions.collide((SAsteroid)object, Owner)){
-						((SAsteroid)object).getController().setSendCounter(0);
-						SM message = SMPatterns.getObjectUpdateMessage((SAsteroid)object);
+						((SDebris)object).getController().setSendCounter(0);
+						SM message = SMPatterns.getObjectUpdateMessage((SDebris)object);
 						SMain.getCommunicationHandler().SendMessage(message);
 					}
 					Owner.setObjectState(ObjectState.WaitingDelete);

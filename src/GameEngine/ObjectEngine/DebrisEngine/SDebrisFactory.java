@@ -1,28 +1,30 @@
 package GameEngine.ObjectEngine.DebrisEngine;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Random;
 
 import GameEngine.SId;
-import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SDebrisFactory {
+public class SDebrisFactory extends SFactory<SDebris>{
 	public static final byte Asteroid = 1;
 	protected static int currentNumberOfAsteroids = 0;
 	protected static final int NumberOfAsteroid = 80;
 	
-	protected static String FactoryName = "DebrisFactory";
+	public SDebrisFactory(){
+		super();
+		this.FactoryName = "Debris factory";
+	}
 	
 	
-	public static void createNewDebrisAtClient(SVector pos, SVector moveDir, float scale, int id, byte debrisType){
+	public void createNewDebrisAtClient(SVector pos, SVector moveDir, float scale, int id, byte debrisType){
 		if (debrisType == Asteroid){
 			SAsteroid asteroid = new SAsteroid(pos, moveDir, scale);
 			asteroid.setId(new SId(id));
@@ -30,7 +32,7 @@ public class SDebrisFactory {
 		}
 	}
 	
-	public static void tryToCreateNewDebrisAtServer(byte debrisType){
+	public void tryToCreateNewDebrisAtServer(byte debrisType){
 		if (debrisType == Asteroid){
 			if (currentNumberOfAsteroids >= NumberOfAsteroid)
 				return;
@@ -67,30 +69,33 @@ public class SDebrisFactory {
 			currentNumberOfAsteroids++;
 		}
 	}
-	public static void deletedDebris(byte debrisType){
+	public void deletedDebris(byte debrisType){
 		if (debrisType == Asteroid){
 			currentNumberOfAsteroids--;
 		}
 	}
 	
-	public static void collisionCheckInFactory(){
+	public void collisionCheckInFactory(){
 		// Asteroid checks
 		// Hack around types:
 		// we build an array list which has a better performance for this
 		boolean[] update = new boolean[objects.size()];
 		
-		ArrayList<SObject> temps = new ArrayList<SObject>(objects);
+		ArrayList<SAsteroid> temps = new ArrayList<SAsteroid>(objects.size());
+		for (SUpdatable element : objects){
+			temps.add((SAsteroid)element); 
+		}
 		for (int i=0; i<temps.size()-1; i++){
-			SObject currentObject = temps.get(i);
+			SAsteroid currentObject = temps.get(i);
 			if (currentObject instanceof SAsteroid && 
 					currentObject.getObjectState().equals(ObjectState.Active)){
 				for (int j=i+1;j<temps.size(); j++){
-					SObject contra = temps.get(j);
+					SAsteroid contra = temps.get(j);
 					if (contra instanceof SAsteroid &&
 						contra.getObjectState().equals(ObjectState.Active) &&
 						!contra.equals(currentObject)){
 						if (SGeomFunctions.intersects(contra, currentObject)){
-							if (SGeomFunctions.collide((SAsteroid)currentObject, (SAsteroid)contra)){
+							if (SGeomFunctions.collide(currentObject, contra)){
 								update[i] = true;
 								update[j] = true;
 							}
@@ -101,62 +106,11 @@ public class SDebrisFactory {
 		}
 		for (int i=0; i< update.length; i++){
 			if (update[i]){
-				SAsteroid asteroid = (SAsteroid)temps.get(i);
+				SAsteroid asteroid = temps.get(i);
 				asteroid.getController().setSendCounter(0);
 				SM message = SMPatterns.getObjectUpdateMessage(asteroid);
 				SMain.getCommunicationHandler().SendMessage(message);
 			}
 		}
-	}
-	
-	protected static LinkedList<SObject> objects;
-	
-	public static void init(){
-		objects = new LinkedList<SObject>();
-	}
-	
-	public static void UpdateObjects(){
-		if(!objects.isEmpty()){
-			ListIterator<SObject> iter = objects.listIterator();
-			while(iter.hasNext()){
-				SObject object = iter.next();
-			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
-			        iter.remove();
-			    }else {
-			    	object.update();
-			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
-				        iter.remove();
-				    }
-			    }
-			}
-		}
-	}
-	
-	public static void addObject(SObject object){
-		objects.add(object);
-	}
-	
-	public static LinkedList<SObject> getObjects(){
-		return objects;
-	}
-	
-	public static void removeObjectFromList(int Id){
-		ListIterator<SObject> iter = objects.listIterator();
-		while(iter.hasNext()){
-			SObject object = iter.next();
-		    if(object.equals(Id)){
-		        iter.remove();
-		        break;
-		    }
-		}
-	}
-	
-	public static SObject getObjectById(int Id){
-		for(SObject object : objects){
-			if (object.equals(Id))
-				return object;
-		}
-		System.out.printf("Object was not found in '%s', with Id: "+Id+"\n", FactoryName);
-		return null;
 	}
 }

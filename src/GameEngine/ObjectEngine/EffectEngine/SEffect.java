@@ -1,8 +1,9 @@
 package GameEngine.ObjectEngine.EffectEngine;
 
 import GameEngine.BaseEngine.SMobile;
+import GameEngine.BaseEngine.SUpdatable;
 
-public class SEffect {
+public class SEffect extends SUpdatable{
 	protected SMobile Owner;
 	protected int currentTime = 0;
 	protected int duration = 100;
@@ -22,7 +23,8 @@ public class SEffect {
 		
 	}
 	
-	protected void update(){
+	@Override
+	public void update(){
 		currentTime++;
 		if (currentTime >= duration){
 			end();
@@ -52,6 +54,12 @@ public class SEffect {
 	public void setEffectState(EffectState effectState) {
 		this.effectState = effectState;
 	}
+
+	@Override
+	public boolean shouldBeDeleted() {
+		return this.effectState.equals(EffectState.Finished);
+	}
+	
 	
 	
 }

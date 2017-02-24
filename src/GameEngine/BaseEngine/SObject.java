@@ -3,53 +3,16 @@ package GameEngine.BaseEngine;
 import java.util.ArrayList;
 import java.util.List;
 
-import GameEngine.SIdentifiable;
 import GameEngine.GeomEngine.SBody;
 import GameEngine.GeomEngine.SHitbox;
 import GameEngine.GeomEngine.SVector;
 import RenderingEngine.SRenderObject;
 
-public abstract class SObject extends SIdentifiable {
+public abstract class SObject extends SUpdatable {
 	protected SVector pos;
 	protected SVector lookDir;
 	protected SBody body;
 	protected boolean posUpdated;
-	public enum ObjectState{
-		Active, Ghost, Invisible, WaitingDelete, Initialization
-	}
-	public byte getObjectStateId(){
-		if (objectState.equals(ObjectState.Active))
-			return 5;
-		else if (objectState.equals(ObjectState.Ghost))
-			return 4;
-		else if (objectState.equals(ObjectState.Invisible))
-			return 3;
-		else if (objectState.equals(ObjectState.WaitingDelete))
-			return 1;
-		else if (objectState.equals(ObjectState.Initialization))
-			return 2;
-		return 0;
-	}
-	public ObjectState getObjectState() {
-		return objectState;
-	}
-	public void setObjectState(ObjectState objectState) {
-		this.objectState = objectState;
-	}
-	public void setObjectState(byte state) {
-		if (state == 5)
-			objectState = ObjectState.Active;
-		if (state == 4)
-			objectState = ObjectState.Ghost;
-		if (state == 3)
-			objectState = ObjectState.Invisible;
-		if (state == 1)
-			objectState = ObjectState.WaitingDelete;
-		if (state == 2)
-			objectState = ObjectState.Initialization;
-		
-	}
-	protected ObjectState objectState = ObjectState.Active;
 	
 	//Initialize
 	public SObject()
@@ -106,5 +69,4 @@ public abstract class SObject extends SIdentifiable {
 		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), body.get_Z()));
 		return list;
 	}
-	public void update(){}
 }

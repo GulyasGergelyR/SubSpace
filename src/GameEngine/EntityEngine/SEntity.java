@@ -6,14 +6,12 @@ import java.util.Random;
 
 import org.newdawn.slick.Color;
 
-import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerType;
-import GameEngine.BaseEngine.SObject.ObjectState;
-import GameEngine.ControlEngine.SControl;
 import GameEngine.ControlEngine.SControlClient;
 import GameEngine.ControlEngine.SHumanControlClient;
 import GameEngine.ControlEngine.SHumanControlServer;
+import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.WeaponEngine.SWeapon;
 import Main.SMain;

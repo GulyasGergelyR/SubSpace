@@ -1,10 +1,11 @@
 package GameEngine.ControlEngine;
 
 import GameEngine.BaseEngine.SMobile;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import Main.SMain;
@@ -49,7 +50,7 @@ public class SAsteroidControlServer extends SControlServer{
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);
 				SMain.getCommunicationHandler().SendMessage(message);
-				SDebrisFactory.deletedDebris(SDebrisFactory.Asteroid);
+				SFH.Debris.deletedDebris(SDebrisFactory.Asteroid);
 				}
 			}
 		}

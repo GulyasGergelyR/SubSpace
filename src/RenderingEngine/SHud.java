@@ -1,6 +1,5 @@
 package RenderingEngine;
 
-import java.security.acl.Owner;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,13 +8,12 @@ import org.newdawn.slick.Color;
 import GameEngine.SPlayer.PlayerType;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
-import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpBurst;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import Main.SMain;
@@ -68,8 +66,9 @@ public class SHud {
 			}
 		}
 		
-		for(SObject object : SDebrisFactory.getObjects()){
+		for(SUpdatable object : SFH.Debris.getObjects()){
 			if (object instanceof SAsteroid){
+				object = (SAsteroid) object;
 				if (object.getObjectState().equals(ObjectState.Active)){
 					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
 					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;

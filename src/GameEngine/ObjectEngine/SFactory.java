@@ -3,27 +3,26 @@ package GameEngine.ObjectEngine;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable;
 
-public class SFactory {
-	protected static LinkedList<SObject> objects;
-	protected static String FactoryName = "None";
+public class SFactory<Type> {
+	protected LinkedList<SUpdatable> objects;
+	protected String FactoryName = "None";
 	
-	public static void init(){
-		objects = new LinkedList<SObject>();
+	public SFactory(){
+		objects = new LinkedList<SUpdatable>();
 	}
 	
-	public static void UpdateObjects(){
+	public void UpdateObjects(){
 		if(!objects.isEmpty()){
-			ListIterator<SObject> iter = objects.listIterator();
+			ListIterator<SUpdatable> iter = objects.listIterator();
 			while(iter.hasNext()){
-				SObject object = iter.next();
-			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+				SUpdatable object = iter.next();
+			    if(object.shouldBeDeleted()){
 			        iter.remove();
 			    }else {
 			    	object.update();
-			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
+			    	if(object.shouldBeDeleted()){
 				        iter.remove();
 				    }
 			    }
@@ -31,18 +30,18 @@ public class SFactory {
 		}
 	}
 	
-	public static void addObject(SObject object){
+	public void addObject(SUpdatable object){
 		objects.add(object);
 	}
 	
-	public static LinkedList<SObject> getObjects(){
+	public LinkedList<SUpdatable> getObjects(){
 		return objects;
 	}
 	
-	public static void removeObjectFromList(int Id){
-		ListIterator<SObject> iter = objects.listIterator();
+	public void removeObjectFromList(int Id){
+		ListIterator<SUpdatable> iter = objects.listIterator();
 		while(iter.hasNext()){
-			SObject object = iter.next();
+			SUpdatable object = iter.next();
 		    if(object.equals(Id)){
 		        iter.remove();
 		        break;
@@ -50,12 +49,13 @@ public class SFactory {
 		}
 	}
 	
-	public static SObject getObjectById(int Id){
-		for(SObject object : objects){
+	@SuppressWarnings("unchecked")
+	public Type getObjectById(int Id){
+		for(SUpdatable object : objects){
 			if (object.equals(Id))
-				return object;
+				return (Type)object;
 		}
-		System.out.printf("Object was not found in '%s', with Id: "+Id+"\n", FactoryName);
+		System.out.printf("Object was not found in '%s' factory, with Id: "+Id+"\n", FactoryName);
 		return null;
 	}
 }

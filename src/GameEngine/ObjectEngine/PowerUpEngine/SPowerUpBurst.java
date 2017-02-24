@@ -3,8 +3,8 @@ package GameEngine.ObjectEngine.PowerUpEngine;
 import GameEngine.ControlEngine.SPowerUpControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.EffectEngine.SEffectBurst;
-import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import Main.SMain;
 
 public class SPowerUpBurst extends SPowerUp {
@@ -24,7 +24,7 @@ public class SPowerUpBurst extends SPowerUp {
 	@Override
 	public boolean applyToEntity(SEntity entity) {
 		SEffectBurst effectBurst = new SEffectBurst(entity);
-		SEffectFactory.addEffect(effectBurst);
+		SFH.Effects.addObject(effectBurst);
 		return true;
 	}
 }

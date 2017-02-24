@@ -3,7 +3,7 @@ package GameEngine.ObjectEngine.PowerUpEngine;
 import GameEngine.ControlEngine.SPowerUpControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
-import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.EffectEngine.SEffectForceBoost;
 import Main.SMain;
 
@@ -24,7 +24,7 @@ public class SPowerUpForceBoost extends SPowerUp {
 	@Override
 	public boolean applyToEntity(SEntity entity) {
 		SEffectForceBoost effectForceBoost = new SEffectForceBoost(entity);
-		SEffectFactory.addEffect(effectForceBoost);
+		SFH.Effects.addObject(effectForceBoost);
 		return true;
 	}
 }

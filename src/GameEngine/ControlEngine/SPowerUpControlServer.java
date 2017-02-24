@@ -1,12 +1,12 @@
 package GameEngine.ControlEngine;
 
 import GameEngine.BaseEngine.SMobile;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
@@ -29,7 +29,7 @@ public class SPowerUpControlServer extends SControlServer{
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);
 				SMain.getCommunicationHandler().SendMessage(message);
-				SPowerUpFactory.powerUpApplied(((SPowerUp)Owner).getType());
+				SFH.PowerUps.powerUpApplied(((SPowerUp)Owner).getType());
 				return;
 			}
 		}
@@ -43,7 +43,7 @@ public class SPowerUpControlServer extends SControlServer{
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
-					SPowerUpFactory.powerUpApplied(((SPowerUp)Owner).getType());
+					SFH.PowerUps.powerUpApplied(((SPowerUp)Owner).getType());
 					break;
 				}
 			}

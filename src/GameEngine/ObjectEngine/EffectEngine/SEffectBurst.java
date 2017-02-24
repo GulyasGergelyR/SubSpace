@@ -14,8 +14,6 @@ public class SEffectBurst extends SEffect{
 		((SEntity)Owner).getActiveWeapon().setBurstMode(true);
 	}
 	
-	
-	
 	@Override
 	protected void restore() {
 		((SEntity)Owner).getActiveWeapon().setBurstMode(false);
