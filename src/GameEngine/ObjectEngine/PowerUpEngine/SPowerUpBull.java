@@ -5,28 +5,28 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
-import GameEngine.ObjectEngine.EffectEngine.SEffectBurst;
+import GameEngine.ObjectEngine.EffectEngine.SEffectBull;
 import Main.SMain;
 
-public class SPowerUpBurst extends SPowerUp {
+public class SPowerUpBull extends SPowerUp {
 	protected static int currentNumberOfPowerUps = 0;
-	protected static int maxNumberOfPowerUps = 3;
+	protected static int maxNumberOfPowerUps = 10;
 	
-	public SPowerUpBurst(SVector pos) {
+	public SPowerUpBull(SVector pos){
 		super(pos);
-		this.type = SPowerUpFactory.PowerUpBurst;
-		this.getBody().setTexture("res/object/powerup/powerupburst.png");
+		this.type = SPowerUpFactory.PowerUpBull;
+		this.getBody().setTexture("res/object/powerup/powerupbull.png");
 		this.setLookDir(new SVector(0, -1));
 		if (SMain.IsServer()){
 			((SPowerUpControlServer)this.getController()).setDuration(900);
 		}
 	}
-
+	
 	@Override
 	public boolean applyToEntity(SEntity entity) {
-		SEffectBurst effectBurst = new SEffectBurst(entity);
-		if (effectBurst.getEffectState().equals(EffectState.Active)){
-			SFH.Effects.addObject(effectBurst);
+		SEffectBull effectBull = new SEffectBull(entity);
+		if (effectBull.getEffectState().equals(EffectState.Active)){
+			SFH.Effects.addObject(effectBull);
 			return true;
 		} else{
 			return false;

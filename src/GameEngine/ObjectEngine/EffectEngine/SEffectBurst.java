@@ -12,17 +12,13 @@ public class SEffectBurst extends SEffect{
 	@Override
 	protected void applyToOwner() {
 		((SEntity)Owner).getActiveWeapon().setBurstMode(true);
+		((SEntity)Owner).getActiveWeapon().setCoolTime(3);
 	}
 	
 	@Override
-	protected void restore() {
+	protected boolean restore() {
 		((SEntity)Owner).getActiveWeapon().setBurstMode(false);
-	}
-
-	@Override
-	protected void affect() {
-		applyToOwner();
-	}
-	
-	
+		((SEntity)Owner).getActiveWeapon().setCoolTime(7);
+		return false;
+	}	
 }

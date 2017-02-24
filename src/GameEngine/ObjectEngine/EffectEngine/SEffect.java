@@ -1,5 +1,7 @@
 package GameEngine.ObjectEngine.EffectEngine;
 
+import java.util.ListIterator;
+
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable;
 
@@ -11,12 +13,36 @@ public class SEffect extends SUpdatable{
 	public enum EffectState{
 		Active, Finished
 	}
-	protected EffectState effectState;
+	protected EffectState effectState = EffectState.Active;
 	
 	public SEffect(SMobile Owner){
+		super();
 		this.Owner = Owner;
-		applyToOwner();
-		setEffectState(EffectState.Active);
+		if (canBeApplied()){
+			checkPrevious();
+			applyToOwner();
+			Owner.addEffect(this);
+			setEffectState(EffectState.Active);
+		} else{
+			setEffectState(EffectState.Finished);
+		}
+	}
+	
+	protected boolean canBeApplied(){
+		//default is that we could apply the effect
+		return true;
+	}
+	
+	private void checkPrevious(){
+		ListIterator<SEffect> iter = Owner.getAppliedEffects().listIterator();
+		while(iter.hasNext()){
+			SEffect effect = iter.next();
+			if (effect.getClass().equals(this.getClass())){
+				this.receiveParameters(effect);
+		        iter.remove();
+		        break;
+		    }
+		}
 	}
 	
 	protected void applyToOwner(){
@@ -27,9 +53,10 @@ public class SEffect extends SUpdatable{
 	public void update(){
 		currentTime++;
 		if (currentTime >= duration){
-			end();
-			restore();
-			setEffectState(EffectState.Finished);
+			if (!restore()){
+				Owner.removeEffect(this);
+				setEffectState(EffectState.Finished);
+			}
 		} else {
 			affect();
 		}
@@ -39,11 +66,12 @@ public class SEffect extends SUpdatable{
 		
 	}
 	
-	protected void restore(){
-		
+	protected boolean restore(){
+		//by default we remove the effect
+		return false;
 	}
 	
-	protected void end(){
+	protected void receiveParameters(SEffect effect){
 		
 	}
 

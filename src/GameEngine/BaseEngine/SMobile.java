@@ -19,39 +19,12 @@ public abstract class SMobile extends SObject{
 	private SControl controller;
 	
 	//Initialize
-	public SMobile()
-	{
+	public SMobile(){
 		super();
 		moveDir = new SVector();
 		acclDir = new SVector();
 		aimLookDir = new SVector(lookDir);
-		/*
-		if (SMain.IsServer()){
-			controller = new SControlServer(this);
-		}else{
-			controller = new SControlClient(this);
-		}*/
 	}
-	@Deprecated
-	public SMobile(SVector pos, SVector look_dir, String texture)
-	{
-		super(pos, look_dir, texture);
-	}
-	@Deprecated
-	public SMobile(SMobile m)
-	{
-		super(m);
-		this.moveDir = new SVector(m.moveDir);
-		this.acclDir = new SVector(m.acclDir);
-		this.aimLookDir = new SVector(m.lookDir);
-		this.maxSpeed = m.maxSpeed;
-		this.rotSpeed = m.rotSpeed;  
-		this.maxRotSpeed = m.maxRotSpeed;
-		this.maxAcceleration = m.maxAcceleration;
-		this.rotAcceleration = m.rotAcceleration;  
-		this.maxRotAcceleration = m.maxRotAcceleration;  
-	}
-	//get-set
 	
 	public float getSpeed() {
 		return moveDir.l();

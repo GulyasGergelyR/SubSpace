@@ -3,17 +3,17 @@ package GameEngine.GeomEngine;
 import GameEngine.BaseEngine.SObject;
 
 public class SHitbox {
-	protected SObject owner;
+	protected SObject Owner;
 	
 	public SHitbox(SObject owner){
-		this.owner = owner;
+		this.Owner = owner;
 	}
 	
 	public SObject getOwner() {
-		return owner;
+		return Owner;
 	}
 	public void setOwner(SObject owner) {
-		this.owner = owner;
+		this.Owner = owner;
 	}
 	
 	public SHitbox SHCopy(SObject owner){

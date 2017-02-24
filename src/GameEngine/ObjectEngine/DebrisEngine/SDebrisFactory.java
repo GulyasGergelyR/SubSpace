@@ -16,7 +16,7 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SDebrisFactory extends SFactory<SDebris>{
 	public static final byte Asteroid = 1;
 	protected static int currentNumberOfAsteroids = 0;
-	protected static final int NumberOfAsteroid = 80;
+	protected static final int NumberOfAsteroid = 120;
 	
 	public SDebrisFactory(){
 		super();
@@ -39,7 +39,7 @@ public class SDebrisFactory extends SFactory<SDebris>{
 			Random random = new Random();
 			int section = random.nextInt(4);
 			float rate = random.nextFloat()*100.0f;
-			float speed = 30 * rate*rate / 10000.0f + 5;
+			float speed = 50 * rate*rate / 10000.0f + 5;
 			float scale = 4 * (1 - rate*rate / 10000.0f) + 0.8f;
 			
 			SVector pos = new SVector();

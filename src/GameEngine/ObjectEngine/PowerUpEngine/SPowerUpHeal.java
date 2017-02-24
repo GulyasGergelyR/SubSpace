@@ -1,7 +1,9 @@
 package GameEngine.ObjectEngine.PowerUpEngine;
 
+import GameEngine.ControlEngine.SPowerUpControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import Main.SMain;
 
 public class SPowerUpHeal extends SPowerUp{
 	protected static int currentNumberOfPowerUps = 0;
@@ -11,6 +13,10 @@ public class SPowerUpHeal extends SPowerUp{
 		super(pos);
 		this.type = SPowerUpFactory.PowerUpHeal;
 		this.getBody().setTexture("res/object/powerup/powerupheal.png");
+		this.setLookDir(new SVector(0, -1));
+		if (SMain.IsServer()){
+			((SPowerUpControlServer)this.getController()).setDuration(1500);
+		}
 	}
 
 	@Override

@@ -47,6 +47,10 @@ public class SGeomFunctions {
 		
 		if (cv1 < 0 && cv2 > 0)
 			return false;
+		if (cv1>0 && cv1 < cv2)
+			return false;
+		if (cv1<0 && cv1 < cv2)
+			return false;
 		
 		float m1 = mobile1.getBody().getMass();
 		float m2 = mobile2.getBody().getMass();

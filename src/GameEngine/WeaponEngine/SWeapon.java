@@ -1,12 +1,15 @@
 package GameEngine.WeaponEngine;
 
+import java.util.Random;
+
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
 public class SWeapon{
-	protected SEntity owner;
+	protected SEntity Owner;
 	protected int coolTime = 7;
 	protected int lastTime = 7;
 	protected int clipSize = 0; // zero means it does not have to be reloaded
@@ -19,7 +22,7 @@ public class SWeapon{
 	protected boolean burstMode;  // for burst effect
 	
 	public SWeapon(SEntity owner){
-		this.owner = owner;
+		this.Owner = owner;
 		baseBullet = new SBullet(owner);
 	}
 	
@@ -56,9 +59,11 @@ public class SWeapon{
 	
 	private void createBullet(){
 		if (burstMode){
-			for(int i=0;i<5;i++){
+			for(int i=0;i<4;i++){
+				Random random = new Random();
 				SBullet bullet = baseBullet.createBullet();
-				bullet.setMoveDir(bullet.getMoveDir().rotate((i-2)*15.0f));
+				bullet.setMoveDir(bullet.getMoveDir().rotate(random.nextFloat()*45.0f-22.5f));
+				bullet.setLookDir(new SVector(bullet.getMoveDir()));
 				SMain.getGameInstance().addObject(bullet);
 				SM message = SMPatterns.getObjectCreateMessage(bullet);
 				SMain.getCommunicationHandler().SendMessage(message);
@@ -74,6 +79,14 @@ public class SWeapon{
 
 	public void setBurstMode(boolean burstMode) {
 		this.burstMode = burstMode;
+	}
+
+	public int getCoolTime() {
+		return coolTime;
+	}
+
+	public void setCoolTime(int coolTime) {
+		this.coolTime = coolTime;
 	}
 	
 	

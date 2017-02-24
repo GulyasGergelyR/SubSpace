@@ -5,12 +5,13 @@ import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_GREATER;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_GREATER;
+import static org.lwjgl.opengl.GL11.glAlphaFunc;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glColor4f;
@@ -18,7 +19,6 @@ import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
-import static org.lwjgl.opengl.GL11.glAlphaFunc;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -37,7 +37,6 @@ import GameEngine.Specifications;
 import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.ComEngine.SNode;
 
 public class SMain {
@@ -45,6 +44,11 @@ public class SMain {
 	private static SGameInstance gameInstance;
 	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
+	
+	private enum AppRole{
+		Server, Client
+	}
+	private static AppRole appRole;
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -95,13 +99,14 @@ public class SMain {
 	}
 	
 	public static void InitServer(boolean serverWindow){
+		appRole = AppRole.Server;
 		Init();
 		System.out.println("Starting server...");
 		SNode node;
 		try {
 			node = new SNode(InetAddress.getLocalHost(), 0, 1); // server gets special id 1
 			communicationHandler.setLocalNode(node);
-			communicationHandler.createUDPNodeAsServer(9090, 9089);
+			communicationHandler.createUDPNode(9090, 9089);
 			System.out.println("Server is running...");
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
@@ -122,6 +127,7 @@ public class SMain {
 		}
 	}
 	public static void InitClient(byte[] ipAddr){
+		appRole = AppRole.Client;
 		Init();
 		SNode node;
 		SNode server;
@@ -130,9 +136,7 @@ public class SMain {
 			node = new SNode(address, 0, address.getHostName(), PlayerType.local);
 			gameInstance.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
-			communicationHandler.createUDPNodeAsClient(9089, 9090);
-			//byte[] ipAddr = new byte[]{(byte)192, (byte)168, 1, 104};
-			//byte[] ipAddr = new byte[]{(byte)134, (byte)255, (byte)89, (byte)249};
+			communicationHandler.createUDPNode(9089, 9090);
 			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server gets special id 1
 			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {
@@ -212,7 +216,10 @@ public class SMain {
 	}
 	
 	public static boolean IsServer(){
-		return communicationHandler.getUDPRole().equals(UDPRole.Server);
+		return appRole.equals(AppRole.Server);
+	}
+	public static String getAppRole(){
+		return appRole.toString();
 	}
 	
 	public static SCommunicationHandler getCommunicationHandler(){

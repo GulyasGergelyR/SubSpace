@@ -21,6 +21,7 @@ public class SAsteroid extends SDebris {
 		this.getBody().setScale(scale);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 48));
 		this.getBody().setMass(scale*scale);
+		this.setMaxSpeed(80.0f);
 		if (SMain.IsServer()){
 			this.setController(new SAsteroidControlServer(this));
 		}else{

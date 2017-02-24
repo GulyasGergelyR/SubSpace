@@ -16,7 +16,6 @@ import GameEngine.GeomEngine.SVector;
 import GameEngine.WeaponEngine.SWeapon;
 import Main.SMain;
 import RenderingEngine.SRenderObject;
-import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
@@ -29,6 +28,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected float shieldRechargeRate = 0.2f;
 	protected float shieldRechargeDelay = 0;
 	protected float maxShieldRechargeDelay = 120; 
+	
+	protected boolean undamagable = false;
 	
 	protected List<SWeapon> weapons;
 	protected SWeapon activeWeapon;
@@ -64,9 +65,9 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		}
 		
 		if (player.getPlayerType().equals(PlayerType.local)){
-			System.out.println("Created local player at: "+SMain.getCommunicationHandler().getUDPRole());
+			System.out.println("Created local player at: "+SMain.getAppRole());
 			this.setController(new SHumanControlClient(this));
-		}else if(SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){
+		}else if(SMain.IsServer()){
 			System.out.println("Created lan player at server");
 			this.setController(new SHumanControlServer(this));
 		} else {
@@ -112,6 +113,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	}
 	
 	public boolean gotHit(float damage){
+		if (undamagable)
+			return false;
 		//if we got hit then do not allow shield recharge
 		this.shieldRechargeDelay = this.maxShieldRechargeDelay;
 		if (damage > this.shield){
@@ -228,5 +231,13 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	}
 	public SWeapon getActiveWeapon(){
 		return activeWeapon;
+	}
+
+	public boolean isUndamagable() {
+		return undamagable;
+	}
+
+	public void setUndamagable(boolean undamagable) {
+		this.undamagable = undamagable;
 	}
 }

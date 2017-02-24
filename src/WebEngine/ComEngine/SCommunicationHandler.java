@@ -27,9 +27,9 @@ public class SCommunicationHandler {
 	private SUDPNode udpNode;
 	private SNode localNode;
 	
-	private UDPRole udpRole;
+	private UDPRole1 udpRole1;
 	
-	public enum UDPRole{
+	public enum UDPRole1{
 		Server, Client 
 	}
 	
@@ -138,9 +138,6 @@ public class SCommunicationHandler {
 	}
 	
 	////////////////////////UDPNode\\\\\\\\\\\\\\\\\\\\\\
-	public UDPRole getUDPRole(){
-		return udpRole;
-	}
 	
 	public void CloseUDPNode(){
 		if(localNode.getState().equals(ConnectionState.Connected)){
@@ -149,15 +146,7 @@ public class SCommunicationHandler {
 		if (udpNode != null)
 			udpNode.Close();
 	}
-	public void createUDPNodeAsClient(int receivePort, int transmitPort){
-		udpRole = UDPRole.Client;
-		createUDPNode(receivePort, transmitPort);
-	}
-	public void createUDPNodeAsServer(int receivePort, int transmitPort){
-		udpRole = UDPRole.Server;
-		createUDPNode(receivePort, transmitPort);
-	}
-	private void createUDPNode(int receivePort, int transmitPort){
+	public void createUDPNode(int receivePort, int transmitPort){
 		if(receivePort==transmitPort){
 			System.out.println("Ports must be different");
 			return;
@@ -174,7 +163,6 @@ public class SCommunicationHandler {
 	
 	////////////////////////Connect-Disconnect\\\\\\\\\\\\\\\\\\\\\\
 	public void ConnectToServer(SNode server){
-		udpRole = UDPRole.Client;
 		this.server = server;
 		SM message = SMPatterns.getConnectToServerMessage(localNode.getName());
 		udpNode.SendMessage(message, server);
@@ -200,11 +188,10 @@ public class SCommunicationHandler {
 	
 	////////////////////////////Message\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void SendMessage(SM message){
-		if(udpRole.equals(UDPRole.Client)){
+		if(!SMain.IsServer()){
 			if (localNode.getState().equals(ConnectionState.Connected))
 				udpNode.SendMessage(message, server);
-		}
-		else if(udpRole.equals(UDPRole.Server)){
+		} else{
 			synchronized (nodes) {
 				for(SNode node : nodes){
 					udpNode.SendMessage(message, node);
@@ -248,7 +235,7 @@ public class SCommunicationHandler {
 			byte command = message.getCommandId();
 			//System.out.println("Received command: "+String.format("%02x", command & 0xff));
 			////////////////////////SERVER\\\\\\\\\\\\\\\\\\\\\\
-			if(udpRole.equals(UDPRole.Server)){
+			if(SMain.IsServer()){
 				if (command == SMPatterns.CConnect){ 		//connect client
 					ParseConnectCommand(message);
 				}
@@ -266,7 +253,7 @@ public class SCommunicationHandler {
 				}
 			}
 			////////////////////////CLIENT\\\\\\\\\\\\\\\\\\\\\\
-			else if(udpRole.equals(UDPRole.Client)){
+			else{
 				if (command == SMPatterns.CConnectNotAllowed){ 		//connection is not allowed
 					ParseConnectNotAllowedCommand(message);
 				}

@@ -5,8 +5,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
 import GameEngine.Specifications;
+import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.ComEngine.SNode;
 import WebEngine.MessageEngine.SM;
 
@@ -43,12 +43,6 @@ public class SUDPNode {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	    /*
-	    if(communicationHandler.getUDPRole().equals(UDPRole.Server))
-	    	System.out.println("Data Sent from Server "+String.format("%02x", message.getData()[0] & 0xff));
-	    if(communicationHandler.getUDPRole().equals(UDPRole.Client))
-	    	System.out.println("Data Sent from Client "+String.format("%02x", message.getData()[0] & 0xff));
-	    	*/
 	}
 	
 	private class Listener extends SCommunicationThread{
@@ -64,18 +58,12 @@ public class SUDPNode {
                 try {
 					socket.receive(receivePacket);
 				} catch (IOException e) {
-					if(communicationHandler.getUDPRole().equals(UDPRole.Server))
-						System.out.println("Server listener is shutting down, because:\n\t"+e.getMessage());
-					else if(communicationHandler.getUDPRole().equals(UDPRole.Client))
-						System.out.println("Client listener is shutting down, because:\n\t"+e.getMessage());
+					System.out.printf("%s listener is shutting down, because:\n\t"+e.getMessage()+"\n", SMain.getAppRole());
+					
 					running = false;
 					break;
 				}
                 communicationHandler.ParseMessageFromDatagramPacket(receivePacket);
-                // TODO Remove junk below
-                //String sentence = new String(receivePacket.getData());
-                //if(sentence.length()>0)
-                	//System.out.println("RECEIVED: " + sentence);
             }
 		}
 	}

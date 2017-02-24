@@ -1,11 +1,15 @@
 package GameEngine.BaseEngine;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import GameEngine.GeomEngine.SBody;
 import GameEngine.GeomEngine.SHitbox;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.EffectEngine.SEffect;
+import Main.SMain;
 import RenderingEngine.SRenderObject;
 
 public abstract class SObject extends SUpdatable {
@@ -14,24 +18,16 @@ public abstract class SObject extends SUpdatable {
 	protected SBody body;
 	protected boolean posUpdated;
 	
+	protected LinkedList<SEffect> appliedEffects;
+	
 	//Initialize
-	public SObject()
-	{
+	public SObject(){
+		if (SMain.IsServer()){
+			appliedEffects = new LinkedList<SEffect>();
+		}
 		this.pos = new SVector();
 		this.lookDir = new SVector(1,0);
 		this.body = new SBody(this, new SHitbox(this), "res/entity/spaceshipv1.png", 1.0f, 1.0f);
-	}
-	public SObject(SVector pos, SVector lookDir, String texture)
-	{
-		this.pos = pos;
-		this.lookDir = lookDir;
-		this.body = new SBody(this, new SHitbox(this), texture, 1.0f, 1.0f);
-	}
-	public SObject(SObject o)
-	{
-		this.pos = o.pos;
-		this.lookDir = o.lookDir;
-		this.body = new SBody(this, o.getBody().getHitbox().SHCopy(this), o.getBody().getTexture(), o.getBody().getScale(), o.getBody().getDrawScale());
 	}
 	// Properties
 	public SVector getPos() {
@@ -63,10 +59,35 @@ public abstract class SObject extends SUpdatable {
 	public void setBody(SBody body) {
 		this.body = body;
 	}
+	public LinkedList<SEffect> getAppliedEffects() {
+		return appliedEffects;
+	}
+	public void addEffect(SEffect effect){
+		appliedEffects.add(effect);
+	}
+	public void removeEffect(Object id){
+		ListIterator<SEffect> iter = appliedEffects.listIterator();
+		while(iter.hasNext()){
+			SEffect object = iter.next();
+		    if(object.equals(Id)){
+		        iter.remove();
+		        break;
+		    }
+		}
+	}
+	public SEffect getObjectById(int Id){
+		for(SEffect object : appliedEffects){
+			if (object.equals(Id))
+				return object;
+		}
+		System.out.printf("Object was not found in appliedEffect of object %d, with Id: "+Id+"\n", getId().get());
+		return null;
+	}
 	// functions
 	public List<SRenderObject> getDrawables(){
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
 		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), body.get_Z()));
 		return list;
 	}
+	
 }

@@ -12,27 +12,23 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
-import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SCommunicationHandler.UDPRole;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;
 
 public class SGameInstance {
-	@Deprecated
-	private SPlayer localPlayer;
 	
-	//TODO decide whether to use player or entity array!
+	private SPlayer localPlayer;
 	
 	private List<SPlayer> players;
 	private List<SEntity> entities;
 	private LinkedList<SObject> objects;
 	private LinkedList<SObject> animationObjects;
-	private SBackGround backGround = new SBackGround();
+	private SBackGround backGround;
 	
 	
 	private SFPS FPS;
@@ -40,6 +36,7 @@ public class SGameInstance {
 	
 	public SGameInstance(){
 		FPS = new SFPS();
+		backGround = new SBackGround();
 		backGround.getBody().setTexture("res/object/background/bg1.png");
 		players = new ArrayList<SPlayer>();
 		entities = new ArrayList<SEntity>();
@@ -49,6 +46,7 @@ public class SGameInstance {
 		// Factories
 		SFH.initFactories();
 	}
+	
 	public List<SPlayer> getPlayers(){
 		return players;
 	}
@@ -183,13 +181,16 @@ public class SGameInstance {
 			if (random.nextFloat()>0.9f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 			}
-			if (random.nextFloat()>0.9995f){
+			if (random.nextFloat()>0.999f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
 			}
-			if (random.nextFloat()>0.9995f){
+			if (random.nextFloat()>0.999f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
 			}
-			if (random.nextFloat()>0.7f){
+			if (random.nextFloat()>0.5){
+				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBull);
+			}
+			if (random.nextFloat()>0.9f){
 				SFH.Debris.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
 			}
 			SFH.Debris.collisionCheckInFactory();
@@ -220,7 +221,6 @@ public class SGameInstance {
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
-				        // TODO refactor for factory
 				        for(SObject object : SFH.Debris.getObjects()){
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
@@ -325,7 +325,7 @@ public class SGameInstance {
 		while(i < current_length){
 			SM message = communicationHandler.popEntityMessage();
 			byte command = message.getCommandId();
-			if (SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){  // Client input
+			if (SMain.IsServer()){  // Client input
 				if (command == SMPatterns.CClientInput){ 	//Client input (pressed key, mouse moved, mouse click)
 					int id = SMParser.parseId(message.getBuffer());
 					SEntity entity = getEntityById(id);
@@ -368,7 +368,7 @@ public class SGameInstance {
 		while(i < current_length){
 			SM message = communicationHandler.popObjectMessage();
 			byte command = message.getCommandId();
-			if (SMain.getCommunicationHandler().getUDPRole().equals(UDPRole.Server)){  // Client input
+			if (SMain.IsServer()){  // Client input
 				
 			}else{
 				if (command == SMPatterns.CObjectCreate){ 	//Server created Object

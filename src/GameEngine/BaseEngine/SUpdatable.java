@@ -3,6 +3,10 @@ package GameEngine.BaseEngine;
 import GameEngine.SIdentifiable;
 
 public class SUpdatable extends SIdentifiable{
+	public SUpdatable(){
+		super();
+	}
+	
 	public enum ObjectState{
 		Active, Ghost, Invisible, WaitingDelete, Initialization
 	}
