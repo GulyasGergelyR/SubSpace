@@ -33,7 +33,7 @@ public class SIdentifiable {
 			return equals((SId)obj);
 		}
 		else if (obj instanceof Integer){
-			return equals((Integer)obj);
+			return equals(((Integer)obj).intValue());
 		}
 		return false;
 	}

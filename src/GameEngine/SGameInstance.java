@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
-import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBackGround;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
@@ -48,9 +47,7 @@ public class SGameInstance {
 		animationObjects = new LinkedList<SObject>();
 		
 		// Factories
-		SDebrisFactory.init();
-		SPowerUpFactory.init();
-		SEffectFactory.init();
+		SFH.initFactories();
 	}
 	public List<SPlayer> getPlayers(){
 		return players;
@@ -184,22 +181,22 @@ public class SGameInstance {
 		if (SMain.IsServer()){
 			Random random = new Random();
 			if (random.nextFloat()>0.9f){
-				SPowerUpFactory.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
+				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 			}
 			if (random.nextFloat()>0.9995f){
-				SPowerUpFactory.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
+				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
 			}
 			if (random.nextFloat()>0.9995f){
-				SPowerUpFactory.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
+				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
 			}
-			if (random.nextFloat()>0.1f){
-				SDebrisFactory.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
+			if (random.nextFloat()>0.7f){
+				SFH.Debris.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
 			}
-			SDebrisFactory.collisionCheckInFactory();
-			SEffectFactory.UpdateObjects();
+			SFH.Debris.collisionCheckInFactory();
+			SFH.Effects.UpdateObjects();
 		}
-		SPowerUpFactory.UpdateObjects();
-		SDebrisFactory.UpdateObjects();
+		SFH.PowerUps.UpdateObjects();
+		SFH.Debris.UpdateObjects();
 	}
 	
 	protected void UpdateEntities(){
@@ -207,7 +204,7 @@ public class SGameInstance {
 			ListIterator<SEntity> iter = entities.listIterator();
 			while(iter.hasNext()){
 				SEntity entity = iter.next();
-				if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
+				if(entity.shouldBeDeleted()){
 			        iter.remove();
 			        removePlayerFromList(entity.getId().get());
 				}else if(entity.getObjectState().equals(ObjectState.Initialization)){
@@ -224,11 +221,11 @@ public class SGameInstance {
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
 				        // TODO refactor for factory
-				        for(SObject object : SDebrisFactory.getObjects()){
+				        for(SObject object : SFH.Debris.getObjects()){
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
-				        for(SObject object : SPowerUpFactory.getObjects()){
+				        for(SObject object : SFH.PowerUps.getObjects()){
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
@@ -237,7 +234,7 @@ public class SGameInstance {
 			        	SMain.getCommunicationHandler().SendMessage(message);
 			    }else {
 			    	entity.update();
-			    	if(entity.getObjectState().equals(ObjectState.WaitingDelete)){
+			    	if(entity.shouldBeDeleted()){
 				        iter.remove();
 				        removePlayerFromList(entity.getId().get());
 				    }

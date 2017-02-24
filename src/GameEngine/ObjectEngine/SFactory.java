@@ -6,18 +6,18 @@ import java.util.ListIterator;
 import GameEngine.BaseEngine.SUpdatable;
 
 public class SFactory<Type> {
-	protected LinkedList<SUpdatable> objects;
+	protected LinkedList<Type> objects;
 	protected String FactoryName = "None";
 	
 	public SFactory(){
-		objects = new LinkedList<SUpdatable>();
+		objects = new LinkedList<Type>();
 	}
 	
 	public void UpdateObjects(){
 		if(!objects.isEmpty()){
-			ListIterator<SUpdatable> iter = objects.listIterator();
+			ListIterator<Type> iter = objects.listIterator();
 			while(iter.hasNext()){
-				SUpdatable object = iter.next();
+				SUpdatable object = (SUpdatable)iter.next();
 			    if(object.shouldBeDeleted()){
 			        iter.remove();
 			    }else {
@@ -30,18 +30,18 @@ public class SFactory<Type> {
 		}
 	}
 	
-	public void addObject(SUpdatable object){
+	public void addObject(Type object){
 		objects.add(object);
 	}
 	
-	public LinkedList<SUpdatable> getObjects(){
+	public LinkedList<Type> getObjects(){
 		return objects;
 	}
 	
 	public void removeObjectFromList(int Id){
-		ListIterator<SUpdatable> iter = objects.listIterator();
+		ListIterator<Type> iter = objects.listIterator();
 		while(iter.hasNext()){
-			SUpdatable object = iter.next();
+			SUpdatable object = (SUpdatable)iter.next();
 		    if(object.equals(Id)){
 		        iter.remove();
 		        break;
@@ -49,9 +49,8 @@ public class SFactory<Type> {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Type getObjectById(int Id){
-		for(SUpdatable object : objects){
+		for(Type object : objects){
 			if (object.equals(Id))
 				return (Type)object;
 		}

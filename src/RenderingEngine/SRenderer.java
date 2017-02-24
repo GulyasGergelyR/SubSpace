@@ -2,7 +2,6 @@ package RenderingEngine;
 
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
-import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glOrtho;
@@ -11,8 +10,6 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.awt.Font;
 import java.util.List;
@@ -28,8 +25,9 @@ import GameEngine.SGameInstance;
 import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import Main.SMain;
@@ -72,12 +70,12 @@ public class SRenderer {
 				Draw(object.getDrawables());
 			}
 		}
-		for (SObject object : SPowerUpFactory.getObjects()){
+		for (SObject object : SFH.PowerUps.getObjects()){
 			if (object.getObjectState() == ObjectState.Active){
 				Draw(object.getDrawables());
 			}
 		}
-		for (SObject object : SDebrisFactory.getObjects()){
+		for (SObject object : SFH.Debris.getObjects()){
 			if (object.getObjectState() == ObjectState.Active){
 				Draw(object.getDrawables());
 			}

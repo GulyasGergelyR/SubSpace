@@ -44,7 +44,7 @@ public class SSimpleBulletControlServer extends SControlServer {
 				}
 			}
 		}
-		for(SUpdatable object : SFH.Debris.getObjects()){
+		for(SDebris object : SFH.Debris.getObjects()){
 			if (object.getObjectState().equals(ObjectState.Active)){
 				if (SGeomFunctions.intersects((SDebris)object, Owner) ){
 					SVector pos = new SVector(Owner.getPos());

@@ -13,6 +13,7 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBulletExplosion;
 import GameEngine.ObjectEngine.SExplosion;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
@@ -120,13 +121,13 @@ public class SMParser {
 		} else if (objectTypeId == 40){  // TODO remove hard coded power up type id
 			byte powerUpType = buffer.get();
 			SVector pos = parseBigVector(buffer);
-			SPowerUpFactory.createNewPowerUpAtClient(pos, id, powerUpType);
-		} else if (objectTypeId == 50){  // TODO remove hard coded power up type id
+			SFH.PowerUps.createNewPowerUpAtClient(pos, id, powerUpType);
+		} else if (objectTypeId == 50){  // TODO remove hard coded debris type id
 			byte debriesType = buffer.get();
 			SVector pos = parseBigVector(buffer);
 			SVector moveDir = parseBigVector(buffer);
 			float scale = buffer.getShort() / 1000.0f;
-			SDebrisFactory.createNewDebrisAtClient(pos, moveDir, scale, id, debriesType);
+			SFH.Debris.createNewDebrisAtClient(pos, moveDir, scale, id, debriesType);
 		}
 	}
 	public static void parseAnimationObjectCreateMessage(SM message){
@@ -148,8 +149,8 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		int objectTypeId = buffer.get();
-		if (objectTypeId == 50){  // TODO remove hard coded bullet type id
-			SAsteroid asteroid = (SAsteroid) SDebrisFactory.getObjectById(id);
+		if (objectTypeId == 50){  // TODO remove hard coded asteroid type id
+			SAsteroid asteroid = (SAsteroid) SFH.Debris.getObjectById(id);
 			if (asteroid == null){
 				return;
 			}
@@ -164,10 +165,10 @@ public class SMParser {
 		if (type == 0){
 			gameInstance.removeObjectFromList(id);
 		}else if (type == 40){
-			SPowerUpFactory.removeObjectFromList(id);
+			SFH.PowerUps.removeObjectFromList(id);
 		}
 		else if (type == 50){
-			SDebrisFactory.removeObjectFromList(id);
+			SFH.Debris.removeObjectFromList(id);
 		}
 	}
 }

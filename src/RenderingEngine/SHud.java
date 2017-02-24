@@ -14,6 +14,8 @@ import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
+import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import Main.SMain;
@@ -52,7 +54,7 @@ public class SHud {
 					drawables.add(new SRenderObject("res/hud/MiniMapLanPlayer.png",new SVector(x, Specifications.WindowHeight-y), -entity.getLookDir().getAngle(), 0.5f, 1f, new Color(255,255,255,0), 8.2f));
 			}
 		}
-		for(SObject object : SPowerUpFactory.getObjects()){
+		for(SPowerUp object : SFH.PowerUps.getObjects()){
 			String res = "";
 			if (object instanceof SPowerUpHeal){
 				res =  "res/hud/MiniMapPowerUpHeal.png";
@@ -66,9 +68,8 @@ public class SHud {
 			}
 		}
 		
-		for(SUpdatable object : SFH.Debris.getObjects()){
+		for(SDebris object : SFH.Debris.getObjects()){
 			if (object instanceof SAsteroid){
-				object = (SAsteroid) object;
 				if (object.getObjectState().equals(ObjectState.Active)){
 					float x = (object.getPos().getX()+5*1024)/5/2048 * miniMapSize;
 					float y = (object.getPos().getY()+5*1024)/5/2048 * miniMapSize;

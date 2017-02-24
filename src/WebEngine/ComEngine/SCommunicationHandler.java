@@ -10,7 +10,7 @@ import java.util.List;
 
 import GameEngine.SId;
 import GameEngine.SPlayer.PlayerType;
-import GameEngine.BaseEngine.SObject.ObjectState;
+import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
