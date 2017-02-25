@@ -13,19 +13,9 @@ public class SM {
 	protected InetAddress address;
 	protected int port;
 	
-	@Deprecated
-	public SM(byte[] input){
-		data = new byte[Specifications.DataLength];
-		for(int i=0;i<data.length;i++)
-			data[i] = input[i];
-		buffer = ByteBuffer.wrap(data);
-		commandId = buffer.get();
-	}
 	public SM(DatagramPacket receivePacket){
-		byte[] input = receivePacket.getData();
 		data = new byte[Specifications.DataLength];
-		for(int i=0;i<data.length;i++)
-			data[i] = input[i];
+		System.arraycopy(receivePacket.getData(), receivePacket.getOffset(), data, 0, receivePacket.getLength());
 		address = receivePacket.getAddress();
 		port = receivePacket.getPort();
 		buffer = ByteBuffer.wrap(data);
@@ -36,7 +26,15 @@ public class SM {
 		buffer = ByteBuffer.wrap(data);
 	}
 	public byte[] getData(){
-		return data;
+		int dataLength = 0; 
+		for(int i=data.length-1;i>0;i--)
+			if (data[i] != 0){
+				dataLength = i+1;
+				break;
+			}
+		byte[] temp = new byte[dataLength];
+		System.arraycopy(data, 0, temp, 0, dataLength);
+		return temp;
 	}
 	public ByteBuffer getBuffer(){
 		return buffer;

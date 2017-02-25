@@ -59,7 +59,6 @@ public class SUDPNode {
 					socket.receive(receivePacket);
 				} catch (IOException e) {
 					System.out.printf("%s listener is shutting down, because:\n\t"+e.getMessage()+"\n", SMain.getAppRole());
-					
 					running = false;
 					break;
 				}
