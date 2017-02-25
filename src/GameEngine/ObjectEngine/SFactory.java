@@ -19,10 +19,12 @@ public class SFactory<Type> {
 			while(iter.hasNext()){
 				SUpdatable object = (SUpdatable)iter.next();
 			    if(object.shouldBeDeleted()){
+			    	object.kill();
 			        iter.remove();
 			    }else {
 			    	object.update();
 			    	if(object.shouldBeDeleted()){
+			    		object.kill();
 				        iter.remove();
 				    }
 			    }
@@ -43,6 +45,7 @@ public class SFactory<Type> {
 		while(iter.hasNext()){
 			SUpdatable object = (SUpdatable)iter.next();
 		    if(object.equals(Id)){
+		    	object.kill();
 		        iter.remove();
 		        break;
 		    }

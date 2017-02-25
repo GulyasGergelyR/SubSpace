@@ -9,6 +9,7 @@ public class SEffectForceBoost extends SEffect{
 	public SEffectForceBoost(SMobile Owner) {
 		super(Owner);
 		duration = 360;
+		this.type = SEffectFactory.EffectForceBoost;
 	}
 
 	@Override
@@ -21,10 +22,4 @@ public class SEffectForceBoost extends SEffect{
 		((SEntity)Owner).getActiveWeapon().getBaseBullet().getBody().setMass(0.03f);
 		return false;
 	}
-	
-	@Override
-	protected void affect() {
-		applyToOwner();
-	}
-	
 }

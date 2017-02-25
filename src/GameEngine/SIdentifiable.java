@@ -6,8 +6,8 @@ public class SIdentifiable {
 	public SIdentifiable(){
 		Id = SId.getNewId(this);
 	}
-	public SIdentifiable(SIdentifiable i){
-		Id = i.Id;
+	public SIdentifiable(int i){
+		Id = new SId(i);
 	}
 	public SId getId() {
 		return this.Id;

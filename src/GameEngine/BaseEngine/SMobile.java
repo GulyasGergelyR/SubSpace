@@ -1,8 +1,6 @@
 package GameEngine.BaseEngine;
 
 import GameEngine.ControlEngine.SControl;
-import GameEngine.ControlEngine.SControlClient;
-import GameEngine.ControlEngine.SControlServer;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 

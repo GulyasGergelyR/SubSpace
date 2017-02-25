@@ -6,7 +6,6 @@ import GameEngine.SGameInstance;
 import GameEngine.SId;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerType;
-import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.ControlEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
@@ -15,8 +14,8 @@ import GameEngine.ObjectEngine.SBulletExplosion;
 import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
-import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
+import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
 import WebEngine.ComEngine.SNode;
@@ -128,6 +127,10 @@ public class SMParser {
 			SVector moveDir = parseBigVector(buffer);
 			float scale = buffer.getShort() / 1000.0f;
 			SFH.Debris.createNewDebrisAtClient(pos, moveDir, scale, id, debriesType);
+		} else if (objectTypeId == 70){  // TODO remove hard coded effect type id
+			byte effectType = buffer.get();
+			int ownerId = buffer.getShort();
+			SFH.Effects.createNewEffectAtClient(id, ownerId, effectType);
 		}
 	}
 	public static void parseAnimationObjectCreateMessage(SM message){
@@ -149,13 +152,19 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		int objectTypeId = buffer.get();
-		if (objectTypeId == 50){  // TODO remove hard coded asteroid type id
-			SAsteroid asteroid = (SAsteroid) SFH.Debris.getObjectById(id);
-			if (asteroid == null){
+		if (objectTypeId == 50){  // TODO remove hard coded debris type id
+			SDebris debris = SFH.Debris.getObjectById(id);
+			if (debris == null){
 				return;
 			}
-			asteroid.setPos(parseBigVector(buffer));
-			asteroid.setMoveDir(parseBigVector(buffer));
+			debris.setPos(parseBigVector(buffer));
+			debris.setMoveDir(parseBigVector(buffer));
+		} else if (objectTypeId == 70){  // TODO remove hard coded effect type id
+			SEffect effect = SFH.Effects.getObjectById(id);
+			if (effect == null){
+				return;
+			}
+			effect.setCurrentTime(buffer.getShort());
 		}
 	}
 	public static void parseObjectDeleteMessage(SM message, SGameInstance gameInstance){
@@ -164,11 +173,12 @@ public class SMParser {
 		int type = buffer.get();
 		if (type == 0){
 			gameInstance.removeObjectFromList(id);
-		}else if (type == 40){
+		} else if (type == 40){
 			SFH.PowerUps.removeObjectFromList(id);
-		}
-		else if (type == 50){
+		} else if (type == 50){
 			SFH.Debris.removeObjectFromList(id);
+		} else if (type == 70){
+			SFH.Effects.removeObjectFromList(id);
 		}
 	}
 }

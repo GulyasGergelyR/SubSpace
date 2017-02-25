@@ -2,21 +2,25 @@ package RenderingEngine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import org.newdawn.slick.Color;
 
 import GameEngine.SPlayer.PlayerType;
 import GameEngine.Specifications;
-import GameEngine.BaseEngine.SObject;
-import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.EffectEngine.SEffect;
+import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
+import GameEngine.ObjectEngine.EffectEngine.SEffectBull;
+import GameEngine.ObjectEngine.EffectEngine.SEffectBurst;
+import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
+import GameEngine.ObjectEngine.EffectEngine.SEffectForceBoost;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import Main.SMain;
 
@@ -76,6 +80,30 @@ public class SHud {
 					drawables.add(new SRenderObject("res/hud/MiniMapAsteroid.png",new SVector(x, Specifications.WindowHeight-y), object.getLookDir().getAngle(), 0.2f * object.getBody().getCurrentDrawScale(), 0.2f, new Color(255,255,255,0), 8.05f));
 				}
 			}
+		}
+		
+		
+		int effectLocation = 0;
+		for(SEffect effect : SMain.getGameInstance().getLocalPlayer().getEntity().getAppliedEffects()){
+			String res = "";
+			if (effect.getType() == SEffectFactory.EffectBull){
+				res =  "res/object/powerup/powerupbull.png";
+			} else if (effect.getType() == SEffectFactory.EffectBurst){
+				res =  "res/object/powerup/powerupburst.png";
+			} else if (effect.getType() == SEffectFactory.EffectForceBoost){
+				res =  "res/object/powerup/powerupforceboost.png";
+			}
+			if (effect.getEffectState().equals(EffectState.Active)){
+				float x = 20;
+				float y = 30 + effectLocation * 30;
+				drawables.add(new SRenderObject(res,new SVector(x, y), 90.0f, 0.1f, 1.0f, new Color(255,255,255,0), 8.05f));
+				SVector leftBottom = new SVector(effect.getCurrentTime()*1.0f/effect.getDuration()*0.5f,0.0f);
+				System.out.println(leftBottom.getString());
+				System.out.println(effect.getCurrentTime());
+				SVector rightUpper = new SVector(0.5f+(effect.getCurrentTime())*1.0f/effect.getDuration()*0.5f,1.0f);
+				drawables.add(new SRenderObject("res/object/powerup/poweruptimebar.png",new SVector(x + 30 + 128, y), -90.0f, 0.5f, 1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 8.05f));
+			}
+			effectLocation++;
 		}
 		
 		return drawables;

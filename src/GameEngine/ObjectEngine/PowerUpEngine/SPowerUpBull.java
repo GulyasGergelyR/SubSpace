@@ -7,10 +7,12 @@ import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
 import GameEngine.ObjectEngine.EffectEngine.SEffectBull;
 import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SPowerUpBull extends SPowerUp {
 	protected static int currentNumberOfPowerUps = 0;
-	protected static int maxNumberOfPowerUps = 10;
+	protected static int maxNumberOfPowerUps = 2;
 	
 	public SPowerUpBull(SVector pos){
 		super(pos);
@@ -25,8 +27,10 @@ public class SPowerUpBull extends SPowerUp {
 	@Override
 	public boolean applyToEntity(SEntity entity) {
 		SEffectBull effectBull = new SEffectBull(entity);
-		if (effectBull.getEffectState().equals(EffectState.Active)){
-			SFH.Effects.addObject(effectBull);
+		if (effectBull.isActive()){
+			SFH.Effects.createNewEffectAtServer(effectBull);
+			return true;
+		}  else if (effectBull.isApplied()){
 			return true;
 		} else{
 			return false;

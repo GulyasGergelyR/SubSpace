@@ -28,8 +28,6 @@ import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SFH;
-import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
-import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import Main.SMain;
 
 //TODO create SDrawObject and replace texture

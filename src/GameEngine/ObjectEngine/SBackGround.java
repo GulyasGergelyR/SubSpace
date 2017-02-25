@@ -3,8 +3,6 @@ package GameEngine.ObjectEngine;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.Size2DSyntax;
-
 import org.newdawn.slick.Color;
 
 import GameEngine.BaseEngine.SObject;

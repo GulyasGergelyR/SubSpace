@@ -17,7 +17,7 @@ public class SPowerUpFactory extends SFactory<SPowerUp>{
 	public static final byte PowerUpBull = 4;
 	
 	protected int currentNumberOfPowerUps = 0;
-	protected final int maxNumberOfPowerUps = 10;
+	protected final int maxNumberOfPowerUps = 20;
 	
 	public SPowerUpFactory(){
 		super();

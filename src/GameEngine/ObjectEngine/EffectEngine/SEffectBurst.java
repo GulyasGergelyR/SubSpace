@@ -7,6 +7,7 @@ public class SEffectBurst extends SEffect{
 	public SEffectBurst(SMobile Owner) {
 		super(Owner);
 		duration = 720;
+		this.type = SEffectFactory.EffectBurst;
 	}
 
 	@Override

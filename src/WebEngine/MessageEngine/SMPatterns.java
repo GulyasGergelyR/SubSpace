@@ -5,9 +5,12 @@ import java.nio.ByteBuffer;
 import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
+import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.WeaponEngine.SBullet;
 import WebEngine.ComEngine.SNode;
@@ -149,7 +152,7 @@ public class SMPatterns {
 		return message;
 	}
 	
-	public static SM getObjectUpdateMessage(SMobile object){
+	public static SM getObjectUpdateMessage(SUpdatable object){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectUpdate);
@@ -160,10 +163,13 @@ public class SMPatterns {
 			buffer.put((byte)50);
 			asteroid.getPos().addToBufferAsBigVector(buffer);
 			asteroid.getMoveDir().addToBufferAsBigVector(buffer);
+		} else if (object instanceof SEffect){
+			buffer.put((byte)70);
+			buffer.putShort((short)0);	//reset currentTime by default
 		}
 		return message;
 	}
-	public static SM getObjectCreateMessage(SObject object){
+	public static SM getObjectCreateMessage(SUpdatable object){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectCreate);
@@ -180,13 +186,18 @@ public class SMPatterns {
 			buffer.put((byte)40); //TODO remove hard coded power up type id
 			buffer.put(powerUp.getType());
 			powerUp.getPos().addToBufferAsBigVector(buffer);
-		} else if (object instanceof SAsteroid){
-			SAsteroid asteroid = (SAsteroid) object;
-			buffer.put((byte)50); //TODO remove hard coded power up type id
-			buffer.put(asteroid.getType());
-			asteroid.getPos().addToBufferAsBigVector(buffer);
-			asteroid.getMoveDir().addToBufferAsBigVector(buffer);
-			buffer.putShort((short)(asteroid.getBody().getScale()*1000));
+		} else if (object instanceof SDebris){
+			SDebris debris = (SDebris) object;
+			buffer.put((byte)50); //TODO remove hard coded debris type id
+			buffer.put(debris.getType());
+			debris.getPos().addToBufferAsBigVector(buffer);
+			debris.getMoveDir().addToBufferAsBigVector(buffer);
+			buffer.putShort((short)(debris.getBody().getScale()*1000));
+		} else if (object instanceof SEffect){
+			SEffect effect = (SEffect) object;
+			buffer.put((byte)70); //TODO remove hard coded effect type id
+			buffer.put(effect.getType());
+			buffer.putShort((short)(effect.getOwner().getId().get()));
 		}
 		return message;
 	}
@@ -200,7 +211,7 @@ public class SMPatterns {
 		return message;
 	}
 	
-	public static SM getObjectDeleteMessage(SObject object){
+	public static SM getObjectDeleteMessage(SUpdatable object){
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectDelete);
@@ -209,6 +220,8 @@ public class SMPatterns {
 			buffer.put((byte)50);
 		} else if (object instanceof SPowerUp){
 			buffer.put((byte)40);
+		} else if (object instanceof SEffect){
+			buffer.put((byte)70);
 		}
 		return message;
 	}

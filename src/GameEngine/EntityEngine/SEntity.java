@@ -23,8 +23,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
 	protected float shield;
-	protected float maxLife = 50;
-	protected float maxShield = 100;
+	protected float maxLife = 75;
+	protected float maxShield = 50;
 	protected float shieldRechargeRate = 0.2f;
 	protected float shieldRechargeDelay = 0;
 	protected float maxShieldRechargeDelay = 120; 

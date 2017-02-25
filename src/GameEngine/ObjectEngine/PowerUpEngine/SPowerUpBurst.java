@@ -25,8 +25,10 @@ public class SPowerUpBurst extends SPowerUp {
 	@Override
 	public boolean applyToEntity(SEntity entity) {
 		SEffectBurst effectBurst = new SEffectBurst(entity);
-		if (effectBurst.getEffectState().equals(EffectState.Active)){
-			SFH.Effects.addObject(effectBurst);
+		if (effectBurst.isActive()){
+			SFH.Effects.createNewEffectAtServer(effectBurst);
+			return true;
+		} else if (effectBurst.isApplied()){
 			return true;
 		} else{
 			return false;

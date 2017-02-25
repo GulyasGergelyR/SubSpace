@@ -9,7 +9,6 @@ import GameEngine.GeomEngine.SBody;
 import GameEngine.GeomEngine.SHitbox;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
-import Main.SMain;
 import RenderingEngine.SRenderObject;
 
 public abstract class SObject extends SUpdatable {
@@ -22,9 +21,7 @@ public abstract class SObject extends SUpdatable {
 	
 	//Initialize
 	public SObject(){
-		if (SMain.IsServer()){
-			appliedEffects = new LinkedList<SEffect>();
-		}
+		appliedEffects = new LinkedList<SEffect>();
 		this.pos = new SVector();
 		this.lookDir = new SVector(1,0);
 		this.body = new SBody(this, new SHitbox(this), "res/entity/spaceshipv1.png", 1.0f, 1.0f);
@@ -65,11 +62,11 @@ public abstract class SObject extends SUpdatable {
 	public void addEffect(SEffect effect){
 		appliedEffects.add(effect);
 	}
-	public void removeEffect(Object id){
+	public void removeEffect(Object effect){
 		ListIterator<SEffect> iter = appliedEffects.listIterator();
 		while(iter.hasNext()){
 			SEffect object = iter.next();
-		    if(object.equals(Id)){
+		    if(object.equals(effect)){
 		        iter.remove();
 		        break;
 		    }

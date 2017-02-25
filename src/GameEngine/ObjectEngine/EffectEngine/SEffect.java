@@ -4,14 +4,18 @@ import java.util.ListIterator;
 
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable;
+import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SEffect extends SUpdatable{
 	protected SMobile Owner;
 	protected int currentTime = 0;
 	protected int duration = 100;
+	byte type;
 	
 	public enum EffectState{
-		Active, Finished
+		Active, Applied, Finished
 	}
 	protected EffectState effectState = EffectState.Active;
 	
@@ -19,13 +23,18 @@ public class SEffect extends SUpdatable{
 		super();
 		this.Owner = Owner;
 		if (canBeApplied()){
-			checkPrevious();
-			applyToOwner();
-			Owner.addEffect(this);
-			setEffectState(EffectState.Active);
+			if (!foundPrevious()){
+				applyToOwner();
+				Owner.addEffect(this);
+				setEffectState(EffectState.Active);
+			}
 		} else{
 			setEffectState(EffectState.Finished);
 		}
+	}
+	
+	public byte getType(){
+		return type;
 	}
 	
 	protected boolean canBeApplied(){
@@ -33,16 +42,17 @@ public class SEffect extends SUpdatable{
 		return true;
 	}
 	
-	private void checkPrevious(){
+	protected boolean foundPrevious(){
 		ListIterator<SEffect> iter = Owner.getAppliedEffects().listIterator();
 		while(iter.hasNext()){
 			SEffect effect = iter.next();
 			if (effect.getClass().equals(this.getClass())){
-				this.receiveParameters(effect);
-		        iter.remove();
-		        break;
+				effect.receiveParameters(this);
+				setEffectState(EffectState.Applied);
+		        return true;
 		    }
 		}
+		return false;
 	}
 	
 	protected void applyToOwner(){
@@ -54,7 +64,6 @@ public class SEffect extends SUpdatable{
 		currentTime++;
 		if (currentTime >= duration){
 			if (!restore()){
-				Owner.removeEffect(this);
 				setEffectState(EffectState.Finished);
 			}
 		} else {
@@ -72,7 +81,9 @@ public class SEffect extends SUpdatable{
 	}
 	
 	protected void receiveParameters(SEffect effect){
-		
+		currentTime = 0;
+		SM message = SMPatterns.getObjectUpdateMessage(this);
+		SMain.getCommunicationHandler().SendMessage(message);
 	}
 
 	public EffectState getEffectState() {
@@ -88,6 +99,36 @@ public class SEffect extends SUpdatable{
 		return this.effectState.equals(EffectState.Finished);
 	}
 	
+	@Override
+	public boolean isActive(){
+		return this.effectState.equals(EffectState.Active);
+	}
 	
+	public boolean isApplied(){
+		return this.effectState.equals(EffectState.Applied);
+	}
+	
+	public SMobile getOwner() {
+		return Owner;
+	}
+
+	@Override
+	public void kill() {
+		this.Owner.removeEffect(this);
+		SM message = SMPatterns.getObjectDeleteMessage(this);
+		SMain.getCommunicationHandler().SendMessage(message);
+	}
+	
+	public int getCurrentTime() {
+		return currentTime;
+	}
+
+	public void setCurrentTime(int currentTime) {
+		this.currentTime = currentTime;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
 	
 }

@@ -6,6 +6,9 @@ public class SUpdatable extends SIdentifiable{
 	public SUpdatable(){
 		super();
 	}
+	public SUpdatable(int Id){
+		super(Id);
+	}
 	
 	public enum ObjectState{
 		Active, Ghost, Invisible, WaitingDelete, Initialization
@@ -47,5 +50,11 @@ public class SUpdatable extends SIdentifiable{
 	public void update(){}
 	public boolean shouldBeDeleted(){
 		return objectState.equals(ObjectState.WaitingDelete);
+	}
+	public boolean isActive(){
+		return objectState.equals(ObjectState.Active);
+	}
+	public void kill(){
+		
 	}
 }

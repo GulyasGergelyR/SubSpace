@@ -24,7 +24,13 @@ public class SPowerUpForceBoost extends SPowerUp {
 	@Override
 	public boolean applyToEntity(SEntity entity) {
 		SEffectForceBoost effectForceBoost = new SEffectForceBoost(entity);
-		SFH.Effects.addObject(effectForceBoost);
-		return true;
+		if (effectForceBoost.isActive()){
+			SFH.Effects.createNewEffectAtServer(effectForceBoost);
+			return true;
+		}  else if (effectForceBoost.isApplied()){
+			return true;
+		} else{
+			return false;
+		}
 	}
 }

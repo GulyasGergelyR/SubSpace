@@ -1,25 +1,25 @@
 package GameEngine.ObjectEngine.EffectEngine;
 
+import org.newdawn.slick.Color;
+
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 
-public class SEffectBull extends SEffect{
-	public SEffectBull(SMobile Owner){
+public class SEffectBullClient extends SEffectClient {
+	public SEffectBullClient(SMobile Owner){
 		super(Owner);
-		duration = 600;
+		duration = 900;
 		this.type = SEffectFactory.EffectBull;
 	}
 	
 	@Override
 	protected void applyToOwner() {
-		((SEntity)Owner).setUndamagable(true);
-		((SEntity)Owner).getBody().setMass(100.f);
+		((SEntity)Owner).getBody().setColor(new Color(1.0f, 0.0f, 0.0f));
 	}
 	
 	@Override
 	protected boolean restore() {
-		((SEntity)Owner).setUndamagable(false);
-		((SEntity)Owner).getBody().setMass(0.0f);
+		((SEntity)Owner).getBody().setColor(new Color(1.0f, 1.0f, 1.0f));
 		return false;
 	}
 }

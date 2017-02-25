@@ -181,21 +181,21 @@ public class SGameInstance {
 			if (random.nextFloat()>0.9f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 			}
-			if (random.nextFloat()>0.999f){
+			if (random.nextFloat()>0.9995f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
 			}
-			if (random.nextFloat()>0.999f){
+			if (random.nextFloat()>0.9995f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
 			}
-			if (random.nextFloat()>0.5){
+			if (random.nextFloat()>0.9995f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBull);
 			}
 			if (random.nextFloat()>0.9f){
 				SFH.Debris.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
 			}
 			SFH.Debris.collisionCheckInFactory();
-			SFH.Effects.UpdateObjects();
 		}
+		SFH.Effects.UpdateObjects();
 		SFH.PowerUps.UpdateObjects();
 		SFH.Debris.UpdateObjects();
 	}

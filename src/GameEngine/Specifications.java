@@ -45,6 +45,7 @@ public final class Specifications {
 		resourcePathStrings.add("res/object/powerup/powerupburst.png");
 		resourcePathStrings.add("res/object/powerup/powerupforceboost.png");
 		resourcePathStrings.add("res/object/powerup/powerupbull.png");
+		resourcePathStrings.add("res/object/powerup/poweruptimebar.png");
 		
 		resourcePathStrings.add("res/object/wormhole/wormhole.png");
 		resourcePathStrings.add("res/object/asteroid/asteroid.png");
