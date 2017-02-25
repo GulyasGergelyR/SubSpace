@@ -23,8 +23,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
 	protected float shield;
-	protected float maxLife = 75;
-	protected float maxShield = 50;
+	protected float maxLife = 100;
+	protected float maxShield = 40;
 	protected float shieldRechargeRate = 0.2f;
 	protected float shieldRechargeDelay = 0;
 	protected float maxShieldRechargeDelay = 120; 
@@ -123,6 +123,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			this.shield = 0.0f;
 			this.life -= damage;
 			if (this.life <= 0){
+				this.life = 0;
 				SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
 				SMain.getCommunicationHandler().SendMessage(explosionMessage);
 				setPlayerGameState(PlayerGameState.Dead);

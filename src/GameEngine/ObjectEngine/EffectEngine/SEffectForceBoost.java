@@ -15,11 +15,13 @@ public class SEffectForceBoost extends SEffect{
 	@Override
 	protected void applyToOwner() {
 		((SEntity)Owner).getActiveWeapon().getBaseBullet().getBody().setMass(2);
+		((SEntity)Owner).getActiveWeapon().getBaseBullet().setDamage(20);
 	}
 
 	@Override
 	protected boolean restore() {
 		((SEntity)Owner).getActiveWeapon().getBaseBullet().getBody().setMass(0.03f);
+		((SEntity)Owner).getActiveWeapon().getBaseBullet().setDamage(5);
 		return false;
 	}
 }

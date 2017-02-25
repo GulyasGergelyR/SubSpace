@@ -12,7 +12,7 @@ import WebEngine.MessageEngine.SMPatterns;
 
 public class SPowerUpBull extends SPowerUp {
 	protected static int currentNumberOfPowerUps = 0;
-	protected static int maxNumberOfPowerUps = 2;
+	protected static int maxNumberOfPowerUps = 10;
 	
 	public SPowerUpBull(SVector pos){
 		super(pos);

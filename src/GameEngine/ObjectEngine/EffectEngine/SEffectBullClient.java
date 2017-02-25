@@ -8,7 +8,7 @@ import GameEngine.EntityEngine.SEntity;
 public class SEffectBullClient extends SEffectClient {
 	public SEffectBullClient(SMobile Owner){
 		super(Owner);
-		duration = 900;
+		duration = 600;
 		this.type = SEffectFactory.EffectBull;
 	}
 	

@@ -27,16 +27,13 @@ public class SCommunicationHandler {
 	private SUDPNode udpNode;
 	private SNode localNode;
 	
-	private UDPRole1 udpRole1;
-	
-	public enum UDPRole1{
-		Server, Client 
-	}
 	
 	private LinkedList<SM> ObjectMessages;
 	private LinkedList<SM> EntityMessages;
 	private Object entitylock;
 	private Object objectlock;
+	
+	private int requestPingDataCounter = 0;
 	
 	public SCommunicationHandler(){
 		nodes = Collections.synchronizedList(new ArrayList<SNode>());
@@ -175,6 +172,13 @@ public class SCommunicationHandler {
 	
 	/////////////////////////////Ping\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void RequestPingDataFromClients(){
+		
+		if (requestPingDataCounter<60){
+			requestPingDataCounter++;
+			return;
+		} else{
+			requestPingDataCounter = 0;
+		}
 		synchronized (nodes) {
 			for(SNode node : nodes){
 				RequestPingDataFromClient(node);

@@ -26,7 +26,7 @@ public class SBullet extends SMobile{
 		//TODO add SSimpleBulletControl here
 		this.owner = SMain.getGameInstance().getEntityById(ownerId);
 		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
-		this.getBody().setScale(0.25f);
+		this.getBody().setScale(this.owner.getActiveWeapon().getBaseBullet().getBody().getScale());
 		this.getBody().setColor(this.owner.getBody().getColor());
 		this.pos = pos;
 		this.lookDir = lookdir;
@@ -60,7 +60,7 @@ public class SBullet extends SMobile{
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
 		this.maxSpeed = bullet.getMaxSpeed();
-		this.damage = 5;
+		this.damage = bullet.getDamage();
 		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
 		this.setController(new SSimpleBulletControlServer(this));
 	}
@@ -71,7 +71,7 @@ public class SBullet extends SMobile{
 		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
 		this.getBody().setHitbox(new SHitboxSpherical(this, 10));
 		this.getBody().setDrawScale(0.25f);
-		this.getBody().setScale(1.0f);
+		this.getBody().setScale(0.25f);
 		this.getBody().setMass(0.03f);
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
@@ -89,6 +89,9 @@ public class SBullet extends SMobile{
 	}
 	public float getDamage() {
 		return damage;
+	}
+	public void setDamage(float damage) {
+		this.damage = damage;
 	}
 	
 }

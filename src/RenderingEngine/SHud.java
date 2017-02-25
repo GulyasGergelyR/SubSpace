@@ -18,6 +18,7 @@ import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
 import GameEngine.ObjectEngine.EffectEngine.SEffectBull;
 import GameEngine.ObjectEngine.EffectEngine.SEffectBurst;
+import GameEngine.ObjectEngine.EffectEngine.SEffectClient;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.EffectEngine.SEffectForceBoost;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
@@ -83,7 +84,8 @@ public class SHud {
 		}
 		
 		
-		int effectLocation = 0;
+		int effectIndex = 0;
+		float effectLocation = 0;
 		for(SEffect effect : SMain.getGameInstance().getLocalPlayer().getEntity().getAppliedEffects()){
 			String res = "";
 			if (effect.getType() == SEffectFactory.EffectBull){
@@ -95,15 +97,14 @@ public class SHud {
 			}
 			if (effect.getEffectState().equals(EffectState.Active)){
 				float x = 20;
-				float y = 30 + effectLocation * 30;
-				drawables.add(new SRenderObject(res,new SVector(x, y), 90.0f, 0.1f, 1.0f, new Color(255,255,255,0), 8.05f));
+				effectLocation = 30 + effectIndex * 30;
+				((SEffectClient)effect).setAimedHudPosition(effectLocation);
+				drawables.add(new SRenderObject(res,new SVector(x, ((SEffectClient)effect).getHudPosition()), 90.0f, 0.1f, 1.0f, new Color(255,255,255,0), 8.05f));
 				SVector leftBottom = new SVector(effect.getCurrentTime()*1.0f/effect.getDuration()*0.5f,0.0f);
-				System.out.println(leftBottom.getString());
-				System.out.println(effect.getCurrentTime());
 				SVector rightUpper = new SVector(0.5f+(effect.getCurrentTime())*1.0f/effect.getDuration()*0.5f,1.0f);
-				drawables.add(new SRenderObject("res/object/powerup/poweruptimebar.png",new SVector(x + 30 + 128, y), -90.0f, 0.5f, 1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 8.05f));
+				drawables.add(new SRenderObject("res/object/powerup/poweruptimebar.png",new SVector(x + 30 + 128, ((SEffectClient)effect).getHudPosition()), -90.0f, 0.5f, 1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 8.05f));
 			}
-			effectLocation++;
+			effectIndex++;
 		}
 		
 		return drawables;

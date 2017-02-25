@@ -7,6 +7,7 @@ import java.util.ListIterator;
 import java.util.Random;
 
 import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SBackGround;
@@ -181,13 +182,13 @@ public class SGameInstance {
 			if (random.nextFloat()>0.9f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 			}
-			if (random.nextFloat()>0.9995f){
+			if (random.nextFloat()>0.9993f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
 			}
-			if (random.nextFloat()>0.9995f){
+			if (random.nextFloat()>0.9993f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
 			}
-			if (random.nextFloat()>0.9995f){
+			if (random.nextFloat()>0.9993f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBull);
 			}
 			if (random.nextFloat()>0.9f){
@@ -226,6 +227,10 @@ public class SGameInstance {
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
 				        for(SObject object : SFH.PowerUps.getObjects()){
+				        	SM message = SMPatterns.getObjectCreateMessage(object);
+				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        }
+				        for(SUpdatable object : SFH.Effects.getObjects()){
 				        	SM message = SMPatterns.getObjectCreateMessage(object);
 				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 				        }
