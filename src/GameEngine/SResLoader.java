@@ -27,10 +27,12 @@ public abstract class SResLoader {
 	}
 
 	public static void addSprite(String s) {
+		s = s.replace("\\", "/");
 		textures.put(s,initTexture(s));
 	}
 	
 	public static void addAudio(String s) {
+		s = s.replace("\\", "/");
 		audios.put(s,initAudio(s));
 	}
 

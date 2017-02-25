@@ -182,7 +182,7 @@ public class SGameInstance {
 			if (random.nextFloat()>0.9f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 			}
-			if (random.nextFloat()>0.9993f){
+			if (random.nextFloat()>0.999f){
 				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
 			}
 			if (random.nextFloat()>0.9993f){

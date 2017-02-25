@@ -13,7 +13,6 @@ import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBulletExplosion;
 import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.SFH;
-import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.WeaponEngine.SBullet;
@@ -112,8 +111,8 @@ public class SMParser {
 		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
 			int ownerId = buffer.getShort();
 			SVector pos = parseBigVector(buffer);
-			SVector lookdir = parseBigVector(buffer);
 			SVector movedir = parseBigVector(buffer);
+			SVector lookdir = new SVector(movedir);
 			object = new SBullet(ownerId, pos, lookdir, movedir);
 			object.setId(new SId(id));
 			SMain.getGameInstance().addObject(object);

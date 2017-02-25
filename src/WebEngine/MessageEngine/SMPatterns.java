@@ -179,7 +179,6 @@ public class SMPatterns {
 			buffer.put((byte)20); //TODO remove hard coded bullet type id
 			buffer.putShort((short)(bullet.getOwner().getId().get()));
 			bullet.getPos().addToBufferAsBigVector(buffer);
-			bullet.getLookDir().addToBufferAsBigVector(buffer);
 			bullet.getMoveDir().addToBufferAsBigVector(buffer);
 		} else if (object instanceof SPowerUp){
 			SPowerUp powerUp = (SPowerUp) object;
