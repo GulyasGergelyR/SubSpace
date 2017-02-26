@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import GameEngine.SId;
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.GeomEngine.SGeomFunctions;
@@ -16,11 +17,10 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SDebrisFactory extends SFactory<SDebris>{
 	public static final byte Asteroid = 1;
 	protected static int currentNumberOfAsteroids = 0;
-	protected static final int NumberOfAsteroid = 120;
+	protected static int maxNumberOfAsteroid = Specifications.maxNumberOfAsteroids;
 	
 	public SDebrisFactory(){
-		super();
-		this.FactoryName = "Debris factory";
+		super("Debris factory", (byte)50);
 	}
 	
 	
@@ -34,7 +34,7 @@ public class SDebrisFactory extends SFactory<SDebris>{
 	
 	public void tryToCreateNewDebrisAtServer(byte debrisType){
 		if (debrisType == Asteroid){
-			if (currentNumberOfAsteroids >= NumberOfAsteroid)
+			if (currentNumberOfAsteroids >= maxNumberOfAsteroid)
 				return;
 			Random random = new Random();
 			int section = random.nextInt(4);

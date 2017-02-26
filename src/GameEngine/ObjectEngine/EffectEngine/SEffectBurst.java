@@ -1,12 +1,13 @@
 package GameEngine.ObjectEngine.EffectEngine;
 
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 
 public class SEffectBurst extends SEffect{
 	public SEffectBurst(SMobile Owner) {
 		super(Owner);
-		duration = 720;
+		duration = Specifications.effectBurstDuration;
 		this.type = SEffectFactory.EffectBurst;
 	}
 

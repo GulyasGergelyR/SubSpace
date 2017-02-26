@@ -251,6 +251,9 @@ public class SCommunicationHandler {
 				}
 				else if (command == SMPatterns.CClientInput){ 	//Client input (pressed key, mouse moved, mouse click)
 					addEntityMessage(message);
+				} 
+				else if (command == SMPatterns.CObjectRequestCreate){ 	//Client does not know have an object
+					addObjectMessage(message);
 				}
 				else{
 					System.out.println("Server received unknown message: "+String.format("%02x", command & 0xff));

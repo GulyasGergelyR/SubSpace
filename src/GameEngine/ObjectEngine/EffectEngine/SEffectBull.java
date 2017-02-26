@@ -1,12 +1,13 @@
 package GameEngine.ObjectEngine.EffectEngine;
 
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 
 public class SEffectBull extends SEffect{
 	public SEffectBull(SMobile Owner){
 		super(Owner);
-		duration = 600;
+		duration = Specifications.effectBullDuration;
 		this.type = SEffectFactory.EffectBull;
 	}
 	
@@ -19,7 +20,7 @@ public class SEffectBull extends SEffect{
 	@Override
 	protected boolean restore() {
 		((SEntity)Owner).setUndamagable(false);
-		((SEntity)Owner).getBody().setMass(0.0f);
+		((SEntity)Owner).getBody().setMass(Specifications.entityMass);
 		return false;
 	}
 }

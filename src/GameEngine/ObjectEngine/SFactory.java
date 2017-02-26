@@ -3,14 +3,21 @@ package GameEngine.ObjectEngine;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
+import GameEngine.SIdentifiable;
 import GameEngine.BaseEngine.SUpdatable;
+import Main.SMain;
 
 public class SFactory<Type> {
 	protected LinkedList<Type> objects;
 	protected String FactoryName = "None";
+	protected byte factoryType;
 	
-	public SFactory(){
+	public SFactory(String name, byte id){
 		objects = new LinkedList<Type>();
+		FactoryName = name;
+		factoryType = id;
 	}
 	
 	public void UpdateObjects(){
@@ -33,7 +40,9 @@ public class SFactory<Type> {
 	}
 	
 	public void addObject(Type object){
-		objects.add(object);
+		if (getObjectById(((SIdentifiable)object).getId().get(), false) == null){
+			objects.add(object);
+		}
 	}
 	
 	public LinkedList<Type> getObjects(){
@@ -52,12 +61,20 @@ public class SFactory<Type> {
 		}
 	}
 	
-	public Type getObjectById(int Id){
+	public byte getFactoryType(){
+		return factoryType;
+	}
+	
+	public Type getObjectById(int Id, boolean askForCreate){
 		for(Type object : objects){
 			if (object.equals(Id))
 				return (Type)object;
 		}
-		System.out.printf("Object was not found in '%s' factory, with Id: "+Id+"\n", FactoryName);
+		if (askForCreate){
+			System.out.printf("Object was not found in '%s' factory, with Id: "+Id+"\n", FactoryName);
+			SM message = SMPatterns.getObjectRequestCreateMessage(Id, factoryType);
+	    	SMain.getCommunicationHandler().SendMessage(message);
+		}
 		return null;
 	}
 }

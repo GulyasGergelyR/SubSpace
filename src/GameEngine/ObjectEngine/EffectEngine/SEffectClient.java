@@ -9,8 +9,6 @@ public class SEffectClient extends SEffect{
 	
 	public SEffectClient(SMobile Owner){
 		super(Owner);
-		duration = 720;
-		this.type = SEffectFactory.EffectBurst;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.Random;
 
 import GameEngine.SPlayer;
 import GameEngine.SResLoader;
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.ControlEngine.SSimpleBulletControlClient;
 import GameEngine.ControlEngine.SSimpleBulletControlServer;
@@ -77,7 +78,7 @@ public class SBullet extends SMobile{
 		Random random = new Random();
 		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
 		this.maxSpeed = 100;
-		this.damage = 5;
+		this.damage = Specifications.bulletDamage;
 		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
 		this.setController(new SSimpleBulletControlServer(this));
 	}

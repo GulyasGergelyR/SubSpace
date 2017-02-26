@@ -17,8 +17,7 @@ public class SEffectFactory extends SFactory<SEffect> {
 	public static final byte EffectBull = 3;
 	
 	public SEffectFactory(){
-		super();
-		this.FactoryName = "Effect factory";
+		super("Effect factory", (byte) 70);
 	}
 	
 	public void createNewEffectAtClient(int id, int ownerId, byte effectType){

@@ -3,6 +3,7 @@ package GameEngine.ObjectEngine.PowerUpEngine;
 import java.util.Random;
 
 import GameEngine.SId;
+import GameEngine.Specifications;
 import GameEngine.ControlEngine.SControl;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
@@ -17,11 +18,10 @@ public class SPowerUpFactory extends SFactory<SPowerUp>{
 	public static final byte PowerUpBull = 4;
 	
 	protected int currentNumberOfPowerUps = 0;
-	protected final int maxNumberOfPowerUps = 30;
+	protected static int maxNumberOfPowerUps = Specifications.maxNumberOfPowerUps;
 	
 	public SPowerUpFactory(){
-		super();
-		this.FactoryName = "Power-up factory";
+		super("Power-up factory", (byte)40);
 	}
 	
 	public void createNewPowerUpAtClient(SVector pos, int id, byte powerUpType){

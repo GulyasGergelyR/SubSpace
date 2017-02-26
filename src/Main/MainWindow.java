@@ -16,6 +16,8 @@ import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.LayoutStyle;
 import javax.swing.SpinnerNumberModel;
+
+import GameEngine.Specifications;
 /**
  *
  * @author Akos
@@ -28,6 +30,7 @@ public class MainWindow extends JFrame {
 	JSpinner portNumber;
 	
     public static void main(String[] args) {
+    	Specifications.InitSpecifications();
     	if (args.length>0){
     		boolean server = false;
     		boolean serverWindow = false;
@@ -101,7 +104,7 @@ public class MainWindow extends JFrame {
         ipLabel.setForeground(new java.awt.Color(255, 255, 255));
         ipLabel.setText("Server IP address:");
 
-        ipAddress.setText("127.0.0.1");
+        ipAddress.setText(Specifications.serverIP);
 
         portLabel.setForeground(new java.awt.Color(255, 255, 255));
         portLabel.setText("Server port:");

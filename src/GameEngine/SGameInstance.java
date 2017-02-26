@@ -219,20 +219,28 @@ public class SGameInstance {
 				        	}
 				        }
 				        for(SObject object : objects){
-				        	SM message = SMPatterns.getObjectCreateMessage(object);
-				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	if (object.isActive()){
+				        		SM message = SMPatterns.getObjectCreateMessage(object);
+				        		SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	}
 				        }
 				        for(SObject object : SFH.Debris.getObjects()){
-				        	SM message = SMPatterns.getObjectCreateMessage(object);
-				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	if (object.isActive()){
+				        		SM message = SMPatterns.getObjectCreateMessage(object);
+				        		SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	}
 				        }
 				        for(SObject object : SFH.PowerUps.getObjects()){
-				        	SM message = SMPatterns.getObjectCreateMessage(object);
-				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	if (object.isActive()){
+					        	SM message = SMPatterns.getObjectCreateMessage(object);
+					        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	}
 				        }
 				        for(SUpdatable object : SFH.Effects.getObjects()){
-				        	SM message = SMPatterns.getObjectCreateMessage(object);
-				        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	if (object.isActive()){
+				        		SM message = SMPatterns.getObjectCreateMessage(object);
+					        	SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
+				        	}
 				        }
 				        entity.setObjectState(ObjectState.Active);
 				        SM message = SMPatterns.getEntityUpdateStateMessage(entity);
@@ -338,7 +346,7 @@ public class SGameInstance {
 						SMParser.parseEntityUpdateMessage(message, entity);
 					}
 				}
-				if (command == SMPatterns.CEntityUpdateState){ 	//Server updates Entity information
+				else if (command == SMPatterns.CEntityUpdateState){ 	//Server updates Entity information
 					int id = SMParser.parseId(message.getBuffer());
 					SEntity entity = getEntityById(id);
 					if (entity != null){
@@ -366,7 +374,9 @@ public class SGameInstance {
 			SM message = communicationHandler.popObjectMessage();
 			byte command = message.getCommandId();
 			if (SMain.IsServer()){  // Client input
-				
+				if (command == SMPatterns.CObjectRequestCreate){ 	//Client input (pressed key, mouse moved, mouse click)
+					SMParser.parseObjectRequestCreateMessage(message);
+				}
 			}else{
 				if (command == SMPatterns.CObjectCreate){ 	//Server created Object
 					SMParser.parseObjectCreateMessage(message);
@@ -377,7 +387,8 @@ public class SGameInstance {
 				else if (command == SMPatterns.CObjectDelete){ 	//Server deleted Object
 					SMParser.parseObjectDeleteMessage(message, this);
 				}
-				else if (command == SMPatterns.CAnimationObjectCreate){ 	//Server deleted Object
+				else if (command == SMPatterns.CAnimationObjectCreate){ 	//Server created Animation Object
+					//TODO add explosion generation only at client side
 					SMParser.parseAnimationObjectCreateMessage(message);
 				}
 			}

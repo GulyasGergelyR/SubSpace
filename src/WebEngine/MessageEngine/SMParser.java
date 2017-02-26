@@ -7,6 +7,7 @@ import GameEngine.SId;
 import GameEngine.SPlayer;
 import GameEngine.SPlayer.PlayerType;
 import GameEngine.BaseEngine.SObject;
+import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.ControlEngine.SControl;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
@@ -147,19 +148,38 @@ public class SMParser {
 			SMain.getGameInstance().addAnimationObject(object);
 		}
 	}
+	public static void parseObjectRequestCreateMessage(SM message){
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMParser.parseId(buffer);
+		byte factoryId = buffer.get();
+		SUpdatable updatable = null;
+		if (factoryId == 20){  // TODO remove hard coded bullet type id
+			updatable = SMain.getGameInstance().getObjectById(id);
+		} else if (factoryId == 40){  // TODO remove hard coded power up type id
+			updatable = SFH.PowerUps.getObjectById(id, false);
+		} else if (factoryId == 50){  // TODO remove hard coded debris type id
+			updatable = SFH.Debris.getObjectById(id, false);
+		} else if (factoryId == 70){  // TODO remove hard coded effect type id
+			updatable = SFH.Effects.getObjectById(id, false);
+		}
+		if (updatable != null && updatable.isActive()){
+			SM messageCreate = SMPatterns.getObjectCreateMessage(updatable);
+        	SMain.getCommunicationHandler().SendMessageToNode(messageCreate, SMain.getCommunicationHandler().getNodeByAddress(message.getAddress()));
+		}
+	}
 	public static void parseObjectUpdateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		int objectTypeId = buffer.get();
 		if (objectTypeId == 50){  // TODO remove hard coded debris type id
-			SDebris debris = SFH.Debris.getObjectById(id);
+			SDebris debris = SFH.Debris.getObjectById(id, true);
 			if (debris == null){
 				return;
 			}
 			debris.setPos(parseBigVector(buffer));
 			debris.setMoveDir(parseBigVector(buffer));
 		} else if (objectTypeId == 70){  // TODO remove hard coded effect type id
-			SEffect effect = SFH.Effects.getObjectById(id);
+			SEffect effect = SFH.Effects.getObjectById(id, true);
 			if (effect == null){
 				return;
 			}

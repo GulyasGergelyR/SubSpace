@@ -7,6 +7,7 @@ import java.util.Random;
 import org.newdawn.slick.Color;
 
 import GameEngine.SPlayer;
+import GameEngine.Specifications;
 import GameEngine.SPlayer.PlayerType;
 import GameEngine.ControlEngine.SControlClient;
 import GameEngine.ControlEngine.SHumanControlClient;
@@ -23,8 +24,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 	protected SPlayer player;
 	protected float life;
 	protected float shield;
-	protected float maxLife = 100;
-	protected float maxShield = 40;
+	protected float maxLife = Specifications.entityLife;
+	protected float maxShield = Specifications.entityShield;
 	protected float shieldRechargeRate = 0.2f;
 	protected float shieldRechargeDelay = 0;
 	protected float maxShieldRechargeDelay = 120; 
@@ -46,6 +47,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.getBody().setScale(0.8f);
 		this.getBody().setDrawScale(0.1f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 768/2*getBody().getDrawScale()));
+		this.getBody().setMass(Specifications.entityMass);
 		Random random = new Random();
 		this.getBody().setColor(new Color(128+random.nextInt(127), 128+random.nextInt(127), 128+random.nextInt(127), 0));
 		this.player = player;

@@ -2,6 +2,7 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
+import GameEngine.SIdentifiable;
 import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable;
@@ -50,10 +51,11 @@ public class SMPatterns {
 	public static byte MObject = 0x10;
 	public static byte CObjectCreate = 0x11;
 	public static byte CObjectUpdate = 0x12;
+	public static byte CObjectRequestCreate = 0x13;
 	public static byte CObjectDelete = 0x17;
 	
 	//TODO sort this out
-	public static byte CAnimationObjectCreate = 0x13;
+	public static byte CAnimationObjectCreate = 0x14;
 	
 	public static SM getConnectToServerMessage(String nameString){
 		SM message = new SM();
@@ -206,6 +208,15 @@ public class SMPatterns {
 		buffer.put(CAnimationObjectCreate);
 		buffer.put(animationId);
 		pos.addToBufferAsBigVector(buffer);
+		return message;
+	}
+	
+	public static SM getObjectRequestCreateMessage(int id,byte factoryId){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CObjectRequestCreate);
+		buffer.putShort((short)id);
+		buffer.put(factoryId);
 		return message;
 	}
 	

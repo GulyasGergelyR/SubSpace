@@ -23,8 +23,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import javax.swing.JOptionPane;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -50,50 +48,7 @@ public class SMain {
 	}
 	private static AppRole appRole;
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Object[] options = {"Start Server",
-                "Start Client"};
-		int n = JOptionPane.showOptionDialog(null,
-				"Start As",
-				"SubSpace",
-				JOptionPane.YES_NO_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]);
-		
-		if (n == 0){
-			// Start server
-			try {
-				InitServer(true);
-				StartServer(true);
-			} catch (Exception e) {
-				if (communicationHandler != null)
-					communicationHandler.CloseUDPNode();
-				e.printStackTrace();
-			} finally {
-				if (communicationHandler != null)
-					communicationHandler.CloseUDPNode();
-			}
-		}
-		else{
-			try {
-				InitClient(new byte[]{(byte)192, (byte)168, 1, 104});
-				StartClient();
-			} catch (Exception e) {
-				if (communicationHandler != null)
-					communicationHandler.CloseUDPNode();
-				e.printStackTrace();
-			} finally {
-				if (communicationHandler != null)
-					communicationHandler.CloseUDPNode();
-			}
-		}
-	}
-	
 	private static void Init(){
-		Specifications.InitSpecifications();
 		gameInstance = new SGameInstance();
 		communicationHandler = new SCommunicationHandler();
 	}
@@ -133,11 +88,13 @@ public class SMain {
 		SNode server;
 		try {
 			InetAddress address = InetAddress.getLocalHost();
-			node = new SNode(address, 0, address.getHostName(), PlayerType.local);
+			node = new SNode(address, 0, Specifications.name, PlayerType.local);
 			gameInstance.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNode(9089, 9090);
 			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server gets special id 1
+			Specifications.serverIP = InetAddress.getByAddress(ipAddr).getHostAddress();
+			Specifications.saveConfig();
 			communicationHandler.ConnectToServer(server);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -146,20 +103,22 @@ public class SMain {
 			 DisplayMode[] modes = Display.getAvailableDisplayModes();
              int max = 0;
              DisplayMode biggest = new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight);
-             for (int i=0;i<modes.length;i++) {
-                 DisplayMode current = modes[i];
-                 if (current.getWidth()*current.getHeight() > max){
-                	 max = current.getWidth()*current.getHeight();
-                	 biggest = current;
+             if (Specifications.biggestAvailable){
+            	 for (int i=0;i<modes.length;i++) {
+                     DisplayMode current = modes[i];
+                     if (current.getWidth()*current.getHeight() > max){
+                    	 max = current.getWidth()*current.getHeight();
+                    	 biggest = current;
+                     }
+                     
                  }
-                 
              }
              System.out.println("Resolution: "+biggest.getWidth()+"x"+biggest.getHeight()+" "+biggest.getFrequency()+" Hz");
             //Display.setDisplayMode(new DisplayMode(Specifications.WindowWidth, Specifications.WindowHeight));
             Display.setDisplayMode(biggest);
             Specifications.WindowWidth = biggest.getWidth();
             Specifications.WindowHeight = biggest.getHeight();
-            //Display.setFullscreen(true);
+            Display.setFullscreen(Specifications.fullScreen);
             Display.setVSyncEnabled(true);
             Display.create();
         } catch (LWJGLException e) {

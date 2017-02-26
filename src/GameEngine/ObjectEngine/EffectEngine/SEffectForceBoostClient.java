@@ -1,5 +1,6 @@
 package GameEngine.ObjectEngine.EffectEngine;
 
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 
@@ -8,7 +9,7 @@ public class SEffectForceBoostClient extends SEffectClient{
 	
 	public SEffectForceBoostClient(SMobile Owner) {
 		super(Owner);
-		duration = 360;
+		duration = Specifications.effectForceBoostDuration;
 		this.type = SEffectFactory.EffectForceBoost;
 	}
 	

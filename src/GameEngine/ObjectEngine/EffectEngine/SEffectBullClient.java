@@ -2,13 +2,14 @@ package GameEngine.ObjectEngine.EffectEngine;
 
 import org.newdawn.slick.Color;
 
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 
 public class SEffectBullClient extends SEffectClient {
 	public SEffectBullClient(SMobile Owner){
 		super(Owner);
-		duration = 600;
+		duration = Specifications.effectBullDuration;
 		this.type = SEffectFactory.EffectBull;
 	}
 	
