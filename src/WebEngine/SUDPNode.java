@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+import GameEngine.SId;
 import GameEngine.Specifications;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -59,6 +60,7 @@ public class SUDPNode {
 					socket.receive(receivePacket);
 				} catch (IOException e) {
 					System.out.printf("%s listener is shutting down, because:\n\t"+e.getMessage()+"\n", SMain.getAppRole());
+					System.out.println("Number of generated elements:"+SId.getNewId());
 					running = false;
 					break;
 				}

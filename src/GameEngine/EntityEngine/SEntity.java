@@ -210,6 +210,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		if (SMain.IsServer()){
 			SM message = SMPatterns.getEntityUpdateStateMessage(this);
 	    	SMain.getCommunicationHandler().SendMessage(message);
+	    	this.getController().setSendCounter(0);
 		}
 	}
 	public byte getPlayerGameStateId(){

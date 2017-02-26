@@ -4,6 +4,9 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SVector;
+import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 
 public class SHumanControlServer extends SControlServer{
@@ -35,6 +38,7 @@ public class SHumanControlServer extends SControlServer{
 			mouseStates[i] = false;
 			prevMouseStates[i] = false;
 		}
+		maxSendCounter = 5;
 	}
 	public boolean setKeyTo(int key, boolean state)
 	{
@@ -99,6 +103,14 @@ public class SHumanControlServer extends SControlServer{
 				((SEntity) Owner).respawn();
 			}
 		}
+		
+		if (sendCounter > maxSendCounter){
+			sendCounter = 0;
+			SM message = SMPatterns.getEntityUpdateStateMessage((SEntity)this.Owner);
+	    	SMain.getCommunicationHandler().SendMessage(message);
+		}else{
+			sendCounter++;
+		}
 	}
 	@Override
 	protected void Act() {
@@ -115,5 +127,4 @@ public class SHumanControlServer extends SControlServer{
 		}
 		
 	}
-	
 }

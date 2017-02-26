@@ -32,6 +32,7 @@ public final class Specifications {
 	public static int maxNumberOfAsteroids = 120;
 	
 	//Power ups
+	public static boolean allowPowerUps = true;
 	public static int maxNumberOfPowerUps = 15;
 	public static int maxNumberOfPowerUpBull = 3;
 	public static float chanceForBull = 0.9994f;
@@ -129,6 +130,7 @@ public final class Specifications {
 		print(fw, "[Debris]");
 		print(fw, "maxNumberOfAsteroids="+maxNumberOfAsteroids);
 		print(fw, "[PowerUps]");
+		print(fw, "allowPowerUps="+allowPowerUps);
 		print(fw, "maxNumberOfPowerUps="+maxNumberOfPowerUps);
 		print(fw, "maxNumberOfPowerUpBull="+maxNumberOfPowerUpBull);
 		print(fw, "chanceForBull="+chanceForBull);
@@ -162,6 +164,7 @@ public final class Specifications {
 			
 			maxNumberOfAsteroids = (new SMatcher<Integer>()).match(line, "maxNumberOfAsteroids=(.*)", maxNumberOfAsteroids);
 			
+			allowPowerUps = (new SMatcher<Boolean>()).match(line, "allowPowerUps=(.*)", allowPowerUps);
 			maxNumberOfPowerUps = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUps=(.*)", maxNumberOfPowerUps);
 			maxNumberOfPowerUpBull = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUpBull=(.*)", maxNumberOfPowerUpBull);
 			chanceForBull = (new SMatcher<Float>()).match(line, "chanceForBull=(.*)", chanceForBull);

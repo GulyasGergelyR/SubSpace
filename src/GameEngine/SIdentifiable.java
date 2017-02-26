@@ -4,7 +4,7 @@ public class SIdentifiable {
 	protected SId Id;
 	
 	public SIdentifiable(){
-		Id = SId.getNewId(this);
+		Id = SId.getNewId();
 	}
 	public SIdentifiable(int i){
 		Id = new SId(i);

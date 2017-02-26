@@ -99,17 +99,19 @@ public class SGameInstance {
 	protected void UpdateFactories(){
 		if (SMain.IsServer()){
 			Random random = new Random();
-			if (random.nextFloat()>0.9f){
-				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
-			}
-			if (random.nextFloat()>0.999f){
-				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
-			}
-			if (random.nextFloat()>0.9993f){
-				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
-			}
-			if (random.nextFloat()>0.9993f){
-				SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBull);
+			if (Specifications.allowPowerUps){
+				if (random.nextFloat()>0.9f){
+					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
+				}
+				if (random.nextFloat()>0.999f){
+					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
+				}
+				if (random.nextFloat()>0.9993f){
+					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
+				}
+				if (random.nextFloat()>0.9993f){
+					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBull);
+				}
 			}
 			if (random.nextFloat()>0.9f){
 				SFH.Debris.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);

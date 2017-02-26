@@ -12,7 +12,6 @@ import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.PlayerEngine.SPlayer;
-import Main.SMain;
 
 public class SBullet extends SMobile{
 	protected SEntity owner;

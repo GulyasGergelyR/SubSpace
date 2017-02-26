@@ -111,10 +111,6 @@ public class SMPatterns {
 		//entity.getLookDir().addToBufferAsBigVector(buffer);
 		//entity.getMoveDir().addToBufferAsBigVector(buffer);
 		//entity.getAcclDir().addToBufferAsNormedVector(buffer);
-		buffer.putShort((short)entity.getLife());
-		buffer.putShort((short)entity.getShield());
-		buffer.put((byte)entity.getPlayer().getKills());
-		buffer.put((byte)entity.getPlayer().getDeaths());
 		return message;
 	}
 	public static SM getEntityUpdateStateMessage(SEntity entity){
@@ -124,7 +120,10 @@ public class SMPatterns {
 		buffer.putShort((short)entity.getId().get());
 		buffer.put(entity.getObjectStateId());
 		buffer.put(entity.getPlayerGameStateId());
-		
+		buffer.putShort((short)entity.getLife());
+		buffer.putShort((short)entity.getShield());
+		buffer.put((byte)entity.getPlayer().getKills());
+		buffer.put((byte)entity.getPlayer().getDeaths());
 		return message;
 	}
 	public static SM getEntityCreateMessage(SPlayer player){

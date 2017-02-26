@@ -44,10 +44,7 @@ public class SMParser {
 		entity.setLookDir(new SVector(1,0).rotate(-angle));
 		//entity.setMoveDir(parseBigVector(buffer));
 		//entity.setAcclDir(parseBigVector(buffer));
-		entity.setLife(buffer.getShort());
-		entity.setShield(buffer.getShort());
-		entity.getPlayer().setKills(buffer.get());
-		entity.getPlayer().setDeaths(buffer.get());
+		
 		//TODO check if this is needed - posUpdated
 		entity.setPosUpdated();
 	}
@@ -55,6 +52,10 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		entity.setObjectState(buffer.get());
 		entity.setPlayerGameState(buffer.get());
+		entity.setLife(buffer.getShort());
+		entity.setShield(buffer.getShort());
+		entity.getPlayer().setKills(buffer.get());
+		entity.getPlayer().setDeaths(buffer.get());
 	}
 	public static void parseEntityCreateMessageAtServer(SM message){
 		// Copy of the ConnectAllowed message
@@ -63,7 +64,6 @@ public class SMParser {
 		// the server will pass it to the server side gameInstance as well
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
-		System.out.println("id "+id);
 		SFH.Entities.createEntityAtServer(id);
 	}
 	public static void parseEntityCreateMessageAtClient(SM message){

@@ -38,7 +38,7 @@ public class SDebrisFactory extends SFactory<SDebris>{
 				return;
 			Random random = new Random();
 			int section = random.nextInt(4);
-			float rate = random.nextFloat()*100.0f;
+			float rate = random.nextFloat()*100f;
 			float speed = 50 * rate*rate / 10000.0f + 5;
 			float scale = 4 * (1 - rate*rate / 10000.0f) + 0.8f;
 			

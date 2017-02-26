@@ -5,7 +5,7 @@ public class SId {
 	static int currentMaxDefaultObjectId = 2;
 //	static int currentMaxEntityId = 2;
 //	static int currentMaxNodeId = 2;
-	public static SId getNewId(Object o){
+	public static SId getNewId(){
 		return new SId(currentMaxDefaultObjectId++);
 //		if (o instanceof SEntity || o instanceof SNode){
 //			return new SId(currentMaxEntityId++);

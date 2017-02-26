@@ -326,16 +326,12 @@ public class SCommunicationHandler {
 					nodes.add(client);
 					System.out.println("Client added: "+client.getName());
 				}
-				//TODO add normal entity creation
-				//SEntity entity = new SEntity(client.getPlayer());
-				//SMain.getGameInstance().addEntity(entity);
-				//SMain.getGameInstance().addPlayer(client.getPlayer());
+				//TODO add a bit better entity creation
 				SM innerMessage = new SM();
 				innerMessage.getBuffer().position(1);
 				innerMessage.setCommandId(SMPatterns.CEntityCreateAtServer);
 				innerMessage.getBuffer().putShort((short)client.getId().get());
 				innerMessage.getBuffer().position(1);
-				System.out.println("id "+client.getId().get());
 				
 				addEntityMessage(innerMessage);
 				

@@ -78,7 +78,7 @@ public class SFactory<Type> {
 			if (object.equals(Id))
 				return (Type)object;
 		}
-		System.out.printf("Object was not found in '%s' factory, with Id: "+Id+"\n", FactoryName);
+		System.out.printf("Object was not found in '%s', with Id: "+Id+"\n", FactoryName);
 		SM message = SMPatterns.getObjectRequestCreateMessage(Id, factoryType);
 	    SMain.getCommunicationHandler().SendMessage(message);
 		return null;
