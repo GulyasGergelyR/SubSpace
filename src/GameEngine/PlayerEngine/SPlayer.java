@@ -1,11 +1,11 @@
 package GameEngine.PlayerEngine;
 
 import GameEngine.SId;
-import GameEngine.SIdentifiable;
+import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.EntityEngine.SEntity;
 import WebEngine.ComEngine.SNode;
 
-public class SPlayer extends SIdentifiable{
+public class SPlayer extends SUpdatable{
 	private SNode clientNode;
 	private SEntity entity = null;
 	private String name;

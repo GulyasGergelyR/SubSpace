@@ -18,7 +18,7 @@ public class SAsteroidControlServer extends SControlServer{
 	}
 	@Override
 	protected void Think() {
-		for(SEntity entity : SMain.getGameInstance().getEntities()){
+		for(SEntity entity : SFH.Entities.getObjects()){
 			if (entity.getObjectState().equals(ObjectState.Active) &&
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				if (SGeomFunctions.intersects(entity, Owner)){

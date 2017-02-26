@@ -79,7 +79,7 @@ public class SRenderer {
 		}
 	}
 	private void DrawEntities(){
-		List<SEntity> Entities = gameInstance.getEntities();
+		List<SEntity> Entities = SFH.Entities.getObjects();
 		for (SEntity entity : Entities){
 			if (entity.getObjectState() == ObjectState.Active){
 				Draw(entity.getDrawables());
@@ -128,7 +128,7 @@ public class SRenderer {
 			DrawTextOfPlayer(playerToFollow, 0);
 		}else{
 			if (playerToFollow == null){
-				ListIterator<SPlayer> iter = gameInstance.getPlayers().listIterator();
+				ListIterator<SPlayer> iter = SFH.Players.getObjects().listIterator();
 				int i=0;
 				while(iter.hasNext()){
 					SPlayer player = iter.next();
@@ -170,13 +170,13 @@ public class SRenderer {
 	//Only serverside
 	private void deceideWhichPlayerToFollow(){
 		if(!SMain.IsServer()){
-			playerToFollow = gameInstance.getLocalPlayer();
+			playerToFollow = SFH.Players.getLocalPlayer();
 		}
 		else {
 			while(Keyboard.next()){
 				if (Keyboard.getEventKey() == Keyboard.KEY_SPACE) {
 				    if (Keyboard.getEventKeyState()) {
-				    	ListIterator<SPlayer> iter = gameInstance.getPlayers().listIterator();
+				    	ListIterator<SPlayer> iter = SFH.Players.getObjects().listIterator();
 						while(iter.hasNext()){
 							SPlayer player = iter.next();
 							if(playerToFollow == null){

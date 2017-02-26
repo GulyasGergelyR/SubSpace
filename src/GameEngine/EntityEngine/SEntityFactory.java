@@ -8,6 +8,7 @@ import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.SFactory;
 import GameEngine.PlayerEngine.SPlayer;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import Main.SMain;
 import WebEngine.ComEngine.SNode;
 import WebEngine.MessageEngine.SM;
@@ -16,6 +17,21 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SEntityFactory extends SFactory<SEntity> {
 	public SEntityFactory(){
 		super("Entity factory", (byte)10);
+	}
+	
+	public void createEntityAtClient(int id, String name){
+		SNode localNode = SMain.getCommunicationHandler().getLocalNode();
+		
+		if (localNode.equals(id)){
+			SEntity entity = new SEntity(localNode.getPlayer());
+			addObject(entity);
+		}
+		else{
+			 SPlayer player = new SPlayer(id, name, PlayerType.lan);
+			 SEntity entity = new SEntity(player);
+			 SFH.Players.addObject(player);
+			 addObject(entity);
+		}
 	}
 	
 	public void createEntityAtServer(int id){
@@ -76,6 +92,23 @@ public class SEntityFactory extends SFactory<SEntity> {
 				        SFH.Players.removeObjectFromList(entity.getId().get());
 			    }
 		    }
+		}
+	}
+	
+	public void removeEntity(int Id){
+		this.removeObjectFromList(Id);
+		SFH.Players.removeObjectFromList(Id);
+	}
+	
+	public void SendGameDataToClients(){
+		SendEntityData();
+	}
+	private void SendEntityData(){
+		for(SEntity entity: objects){
+			if (entity.isActive()){
+				SM message = SMPatterns.getEntityUpdateMessage(entity);
+				SMain.getCommunicationHandler().SendMessage(message);
+			}
 		}
 	}
 }

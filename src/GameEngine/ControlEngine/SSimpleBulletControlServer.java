@@ -24,7 +24,7 @@ public class SSimpleBulletControlServer extends SControlServer {
 	}
 	@Override
 	protected void Think() {
-		for(SEntity entity : SMain.getGameInstance().getEntities()){
+		for(SEntity entity : SFH.Entities.getObjects()){
 			SEntity bulletOwner = ((SBullet)Owner).getOwner();
 			if (!entity.equals(bulletOwner) && entity.getObjectState().equals(ObjectState.Active) &&
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){

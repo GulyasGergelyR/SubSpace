@@ -10,6 +10,7 @@ import GameEngine.ControlEngine.SSimpleBulletControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.PlayerEngine.SPlayer;
 import Main.SMain;
 
@@ -25,7 +26,7 @@ public class SBullet extends SMobile{
 		//used at client side
 		super();
 		//TODO add SSimpleBulletControl here
-		this.owner = SMain.getGameInstance().getEntityById(ownerId);
+		this.owner = SFH.Entities.getObjectById(ownerId);
 		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
 		this.getBody().setScale(this.owner.getActiveWeapon().getBaseBullet().getBody().getScale());
 		this.getBody().setColor(this.owner.getBody().getColor());
@@ -35,7 +36,7 @@ public class SBullet extends SMobile{
 		this.maxSpeed = 100;
 		this.setController(new SSimpleBulletControlClient(this));
 		
-		SPlayer localPlayer = SMain.getGameInstance().getLocalPlayer();
+		SPlayer localPlayer = SFH.Players.getLocalPlayer();
 		if (localPlayer.getEntity().getObjectState().equals(ObjectState.Active))
 		{
 			SVector playerPos = localPlayer.getEntity().getPos();

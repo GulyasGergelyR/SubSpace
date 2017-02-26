@@ -14,11 +14,8 @@ import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
-import GameEngine.PlayerEngine.SPlayer;
-import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
-import WebEngine.ComEngine.SNode;
 
 public class SMParser {
 	public static int parseId(ByteBuffer buffer){ // 2 byte long
@@ -66,34 +63,23 @@ public class SMParser {
 		// the server will pass it to the server side gameInstance as well
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
+		System.out.println("id "+id);
 		SFH.Entities.createEntityAtServer(id);
 	}
 	public static void parseEntityCreateMessageAtClient(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
-		
-		SNode localNode = SMain.getCommunicationHandler().getLocalNode();
-		
-		if (localNode.equals(id)){
-			SEntity entity = new SEntity(localNode.getPlayer());
-			SMain.getGameInstance().addEntity(entity);
+		byte nameLength = buffer.get();
+		if (nameLength<0){
+			System.out.println("CLIENT NAME ERROR");
+			return;
 		}
-		else{
-			 byte nameLength = buffer.get();
-			 if (nameLength<0){
-			 	System.out.println("CLIENT NAME ERROR");
-				return;
-			 }
-			 byte[] nameBytes = new byte[nameLength];
-			 for (int i=0; i<nameLength;i++){
-				nameBytes[i] = buffer.get();
-			 }
-			 String name = new String(nameBytes);
-			 SPlayer player = new SPlayer(id, name, PlayerType.lan);
-			 SEntity entity = new SEntity(player);
-			 SMain.getGameInstance().addPlayer(player);
-			 SMain.getGameInstance().addEntity(entity);
+		byte[] nameBytes = new byte[nameLength];
+		for (int i=0; i<nameLength;i++){
+			nameBytes[i] = buffer.get();
 		}
+		String name = new String(nameBytes);
+		SFH.Entities.createEntityAtClient(id, name);
 	}
 	public static void parseClientInputMessage(SM message, SEntity entity){
 		SControl control = entity.getController();
@@ -170,11 +156,11 @@ public class SMParser {
 		if (factoryId == 20){  // TODO remove hard coded bullet type id
 			updatable = SMain.getGameInstance().getObjectById(id);
 		} else if (factoryId == SFH.PowerUps.getFactoryType()){
-			updatable = SFH.PowerUps.getObjectById(id, false);
+			updatable = SFH.PowerUps.getObjectById(id);
 		} else if (factoryId == SFH.Debris.getFactoryType()){
-			updatable = SFH.Debris.getObjectById(id, false);
+			updatable = SFH.Debris.getObjectById(id);
 		} else if (factoryId == SFH.Effects.getFactoryType()){
-			updatable = SFH.Effects.getObjectById(id, false);
+			updatable = SFH.Effects.getObjectById(id);
 		}
 		if (updatable != null && updatable.isActive()){
 			SM messageCreate = SMPatterns.getObjectCreateMessage(updatable);
@@ -186,14 +172,14 @@ public class SMParser {
 		int id = SMParser.parseId(buffer);
 		int objectTypeId = buffer.get();
 		if (objectTypeId == SFH.Debris.getFactoryType()){
-			SDebris debris = SFH.Debris.getObjectById(id, true);
+			SDebris debris = SFH.Debris.getObjectByIdWithCheck(id);
 			if (debris == null){
 				return;
 			}
 			debris.setPos(parseBigVector(buffer));
 			debris.setMoveDir(parseBigVector(buffer));
 		} else if (objectTypeId == SFH.Effects.getFactoryType()){
-			SEffect effect = SFH.Effects.getObjectById(id, true);
+			SEffect effect = SFH.Effects.getObjectByIdWithCheck(id);
 			if (effect == null){
 				return;
 			}

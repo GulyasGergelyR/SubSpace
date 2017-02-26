@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import GameEngine.SId;
 import GameEngine.BaseEngine.SMobile;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
@@ -22,7 +23,7 @@ public class SEffectFactory extends SFactory<SEffect> {
 	
 	public void createNewEffectAtClient(int id, int ownerId, byte effectType){
 		SEffect effect = null;
-		SMobile mobile = SMain.getGameInstance().getEntityById(ownerId);
+		SMobile mobile = SFH.Entities.getObjectById(ownerId);
 		if (effectType == EffectBurst){
 			effect = new SEffectBurstClient(mobile);
 		} else if (effectType == EffectForceBoost){

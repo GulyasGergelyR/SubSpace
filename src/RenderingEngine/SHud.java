@@ -19,7 +19,6 @@ import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
-import Main.SMain;
 
 public class SHud {
 	public static List<SRenderObject> DrawHud(){
@@ -27,7 +26,7 @@ public class SHud {
 		int miniMapSize = 250;
 		
 		drawables.add(new SRenderObject("res/hud/MiniMap.png",new SVector(miniMapSize/2.0f, Specifications.WindowHeight-miniMapSize/2.0f), 0.0f, ((float)miniMapSize)/512.0f, 0.7f, new Color(255,255,255,0), 8f));
-		for(SEntity entity : SMain.getGameInstance().getEntities()){
+		for(SEntity entity : SFH.Entities.getObjects()){
 			if (entity.getObjectState().equals(ObjectState.Active)){
 				// Life Bar
 				SVector leftBottomLife = new SVector((entity.getMaxLife()-entity.getLife())/entity.getMaxLife()*0.5f,0.0f);
@@ -82,7 +81,7 @@ public class SHud {
 		
 		int effectIndex = 0;
 		float effectLocation = 0;
-		for(SEffect effect : SMain.getGameInstance().getLocalPlayer().getEntity().getAppliedEffects()){
+		for(SEffect effect : SFH.Players.getLocalPlayer().getEntity().getAppliedEffects()){
 			String res = "";
 			if (effect.getType() == SEffectFactory.EffectBull){
 				res =  "res/object/powerup/powerupbull.png";

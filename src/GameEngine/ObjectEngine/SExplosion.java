@@ -35,7 +35,7 @@ public class SExplosion extends SObject{
 	@Override
 	public void update() {
 		if (firstTime && !SMain.IsServer()){
-			SPlayer localPlayer = SMain.getGameInstance().getLocalPlayer();
+			SPlayer localPlayer = SFH.Players.getLocalPlayer();
 			if (localPlayer.getEntity().getObjectState().equals(ObjectState.Active))
 			{
 				SVector playerPos = localPlayer.getEntity().getPos();

@@ -34,7 +34,7 @@ public class SPowerUpControlServer extends SControlServer{
 			}
 		}
 		
-		for(SEntity entity : SMain.getGameInstance().getEntities()){
+		for(SEntity entity : SFH.Entities.getObjects()){
 			if(	entity.getPlayerGameState().equals(PlayerGameState.Alive) &&
 					entity.getObjectState().equals(ObjectState.Active)){
 				if (SGeomFunctions.intersects(entity, Owner)){

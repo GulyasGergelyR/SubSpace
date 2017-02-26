@@ -40,7 +40,7 @@ public class SFactory<Type> {
 	}
 	
 	public void addObject(Type object){
-		if (getObjectById(((SIdentifiable)object).getId().get(), false) == null){
+		if (getObjectById(((SIdentifiable)object).getId().get()) == null){
 			objects.add(object);
 		}
 	}
@@ -65,16 +65,22 @@ public class SFactory<Type> {
 		return factoryType;
 	}
 	
-	public Type getObjectById(int Id, boolean askForCreate){
+	public Type getObjectById(int Id){
 		for(Type object : objects){
 			if (object.equals(Id))
 				return (Type)object;
 		}
-		if (askForCreate){
-			System.out.printf("Object was not found in '%s' factory, with Id: "+Id+"\n", FactoryName);
-			SM message = SMPatterns.getObjectRequestCreateMessage(Id, factoryType);
-	    	SMain.getCommunicationHandler().SendMessage(message);
+		return null;
+	}
+	
+	public Type getObjectByIdWithCheck(int Id){
+		for(Type object : objects){
+			if (object.equals(Id))
+				return (Type)object;
 		}
+		System.out.printf("Object was not found in '%s' factory, with Id: "+Id+"\n", FactoryName);
+		SM message = SMPatterns.getObjectRequestCreateMessage(Id, factoryType);
+	    SMain.getCommunicationHandler().SendMessage(message);
 		return null;
 	}
 }

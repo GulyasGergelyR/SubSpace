@@ -42,6 +42,7 @@ public class SMPatterns {
 	
 	//0001 1xxx Entity commands
 	public static byte MEntity = 0x14;
+	public static byte CEntityCreateAtServer = 0x18;
 	public static byte CEntityCreate = 0x19;
 	public static byte CEntityUpdate = 0x1A;
 	public static byte CEntityUpdateState = 0x1B;

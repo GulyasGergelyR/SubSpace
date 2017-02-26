@@ -42,6 +42,12 @@ public class SM {
 	public byte getCommandId(){
 		return commandId;
 	}
+	public void setCommandId(byte commandId){
+		this.commandId = commandId;
+		int pos = this.buffer.position();
+		this.buffer.put(0, this.commandId);
+		this.buffer.position(pos);
+	}
 	public boolean isValid(){
 		return true;
 		//TODO implement CRC

@@ -29,6 +29,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.openal.SoundStore;
 
 import GameEngine.SGameInstance;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
@@ -89,7 +90,7 @@ public class SMain {
 		try {
 			InetAddress address = InetAddress.getLocalHost();
 			node = new SNode(address, 0, Specifications.name, PlayerType.local);
-			gameInstance.setLocalPlayer(node.getPlayer());
+			SFH.Players.setLocalPlayer(node.getPlayer());
 			communicationHandler.setLocalNode(node);
 			communicationHandler.createUDPNode(9089, 9090);
 			server = new SNode(InetAddress.getByAddress(ipAddr), 0, 1);  // server gets special id 1
@@ -144,7 +145,7 @@ public class SMain {
 			communicationHandler.RequestPingDataFromClients();
 			gameInstance.UpdateGame();
 			gameInstance.CheckMessages();
-			gameInstance.SendGameDataToClients();
+			SFH.Entities.SendGameDataToClients();
 			if (serverWindow){
 				renderGL();
 				Display.update();

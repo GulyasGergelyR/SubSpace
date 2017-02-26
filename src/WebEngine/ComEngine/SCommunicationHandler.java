@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.SId;
-import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
 import WebEngine.SUDPNode;
@@ -57,6 +57,7 @@ public class SCommunicationHandler {
 					return node;
 				}
 			}
+			System.out.println("Could not find node!");
 		}
 		return null;
 	}
@@ -329,9 +330,17 @@ public class SCommunicationHandler {
 				//SEntity entity = new SEntity(client.getPlayer());
 				//SMain.getGameInstance().addEntity(entity);
 				//SMain.getGameInstance().addPlayer(client.getPlayer());
+				SM innerMessage = new SM();
+				innerMessage.getBuffer().position(1);
+				innerMessage.setCommandId(SMPatterns.CEntityCreateAtServer);
+				innerMessage.getBuffer().putShort((short)client.getId().get());
+				innerMessage.getBuffer().position(1);
+				System.out.println("id "+client.getId().get());
+				
+				addEntityMessage(innerMessage);
+				
 				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);
 				udpNode.SendMessage(connectallowed, client);
-				addEntityMessage(connectallowed);
 				
 				SM createEntity = SMPatterns.getEntityCreateMessage(client.getPlayer());
 				SendMessage(createEntity);
