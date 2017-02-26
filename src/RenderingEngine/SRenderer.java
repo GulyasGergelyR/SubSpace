@@ -22,12 +22,12 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.opengl.Texture;
 
 import GameEngine.SGameInstance;
-import GameEngine.SPlayer;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.ObjectEngine.SFH;
+import GameEngine.PlayerEngine.SPlayer;
 import Main.SMain;
 
 //TODO create SDrawObject and replace texture

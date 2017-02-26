@@ -2,7 +2,6 @@ package GameEngine.WeaponEngine;
 
 import java.util.Random;
 
-import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SMobile;
@@ -11,6 +10,7 @@ import GameEngine.ControlEngine.SSimpleBulletControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.PlayerEngine.SPlayer;
 import Main.SMain;
 
 public class SBullet extends SMobile{

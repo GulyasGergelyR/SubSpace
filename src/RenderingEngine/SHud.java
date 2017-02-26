@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.newdawn.slick.Color;
 
-import GameEngine.SPlayer.PlayerType;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
@@ -19,6 +18,7 @@ import GameEngine.ObjectEngine.EffectEngine.SEffectClient;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import Main.SMain;
 
 public class SHud {

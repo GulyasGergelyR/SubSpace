@@ -1,5 +1,7 @@
-package GameEngine;
+package GameEngine.PlayerEngine;
 
+import GameEngine.SId;
+import GameEngine.SIdentifiable;
 import GameEngine.EntityEngine.SEntity;
 import WebEngine.ComEngine.SNode;
 

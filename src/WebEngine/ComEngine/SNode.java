@@ -3,8 +3,8 @@ import java.net.InetAddress;
 
 import GameEngine.SId;
 import GameEngine.SIdentifiable;
-import GameEngine.SPlayer;
-import GameEngine.SPlayer.PlayerType;
+import GameEngine.PlayerEngine.SPlayer;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 
 public class SNode extends SIdentifiable{
 	private InetAddress address;

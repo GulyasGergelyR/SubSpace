@@ -4,8 +4,6 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SGameInstance;
 import GameEngine.SId;
-import GameEngine.SPlayer;
-import GameEngine.SPlayer.PlayerType;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.ControlEngine.SControl;
@@ -16,6 +14,8 @@ import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
+import GameEngine.PlayerEngine.SPlayer;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
 import WebEngine.ComEngine.SNode;
@@ -59,7 +59,16 @@ public class SMParser {
 		entity.setObjectState(buffer.get());
 		entity.setPlayerGameState(buffer.get());
 	}
-	public static void parseEntityCreateMessage(SM message){
+	public static void parseEntityCreateMessageAtServer(SM message){
+		// Copy of the ConnectAllowed message
+		// Server side communication handler sent this. not a client!
+		// The server cannot receive a message like this, however when the message sent to the client
+		// the server will pass it to the server side gameInstance as well
+		ByteBuffer buffer = message.getBuffer();
+		int id = SMParser.parseId(buffer);
+		SFH.Entities.createEntityAtServer(id);
+	}
+	public static void parseEntityCreateMessageAtClient(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		
@@ -122,17 +131,17 @@ public class SMParser {
 			object = new SBullet(ownerId, pos, lookdir, movedir);
 			object.setId(new SId(id));
 			SMain.getGameInstance().addObject(object);
-		} else if (objectTypeId == 40){  // TODO remove hard coded power up type id
+		} else if (objectTypeId == SFH.PowerUps.getFactoryType()){
 			byte powerUpType = buffer.get();
 			SVector pos = parseBigVector(buffer);
 			SFH.PowerUps.createNewPowerUpAtClient(pos, id, powerUpType);
-		} else if (objectTypeId == 50){  // TODO remove hard coded debris type id
+		} else if (objectTypeId == SFH.Debris.getFactoryType()){
 			byte debriesType = buffer.get();
 			SVector pos = parseBigVector(buffer);
 			SVector moveDir = parseBigVector(buffer);
 			float scale = buffer.getShort() / 1000.0f;
 			SFH.Debris.createNewDebrisAtClient(pos, moveDir, scale, id, debriesType);
-		} else if (objectTypeId == 70){  // TODO remove hard coded effect type id
+		} else if (objectTypeId == SFH.Effects.getFactoryType()){
 			byte effectType = buffer.get();
 			int ownerId = buffer.getShort();
 			SFH.Effects.createNewEffectAtClient(id, ownerId, effectType);
@@ -160,11 +169,11 @@ public class SMParser {
 		SUpdatable updatable = null;
 		if (factoryId == 20){  // TODO remove hard coded bullet type id
 			updatable = SMain.getGameInstance().getObjectById(id);
-		} else if (factoryId == 40){  // TODO remove hard coded power up type id
+		} else if (factoryId == SFH.PowerUps.getFactoryType()){
 			updatable = SFH.PowerUps.getObjectById(id, false);
-		} else if (factoryId == 50){  // TODO remove hard coded debris type id
+		} else if (factoryId == SFH.Debris.getFactoryType()){
 			updatable = SFH.Debris.getObjectById(id, false);
-		} else if (factoryId == 70){  // TODO remove hard coded effect type id
+		} else if (factoryId == SFH.Effects.getFactoryType()){
 			updatable = SFH.Effects.getObjectById(id, false);
 		}
 		if (updatable != null && updatable.isActive()){
@@ -176,14 +185,14 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		int objectTypeId = buffer.get();
-		if (objectTypeId == 50){  // TODO remove hard coded debris type id
+		if (objectTypeId == SFH.Debris.getFactoryType()){
 			SDebris debris = SFH.Debris.getObjectById(id, true);
 			if (debris == null){
 				return;
 			}
 			debris.setPos(parseBigVector(buffer));
 			debris.setMoveDir(parseBigVector(buffer));
-		} else if (objectTypeId == 70){  // TODO remove hard coded effect type id
+		} else if (objectTypeId == SFH.Effects.getFactoryType()){
 			SEffect effect = SFH.Effects.getObjectById(id, true);
 			if (effect == null){
 				return;
@@ -194,15 +203,12 @@ public class SMParser {
 	public static void parseObjectDeleteMessage(SM message, SGameInstance gameInstance){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
-		int type = buffer.get();
+		byte type = buffer.get();
+		//TODO remove gameInstance
 		if (type == 0){
 			gameInstance.removeObjectFromList(id);
-		} else if (type == 40){
-			SFH.PowerUps.removeObjectFromList(id);
-		} else if (type == 50){
-			SFH.Debris.removeObjectFromList(id);
-		} else if (type == 70){
-			SFH.Effects.removeObjectFromList(id);
+		} else {
+			SFH.removeObjectFromList(type, id);
 		}
 	}
 }

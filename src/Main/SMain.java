@@ -29,7 +29,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.newdawn.slick.openal.SoundStore;
 
 import GameEngine.SGameInstance;
-import GameEngine.SPlayer.PlayerType;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SResLoader;
 import GameEngine.Specifications;
 import GameEngine.SyncEngine.SServerTimer;

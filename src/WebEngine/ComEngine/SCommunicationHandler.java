@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.SId;
-import GameEngine.SPlayer.PlayerType;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.SyncEngine.SServerTimer;
@@ -326,15 +326,13 @@ public class SCommunicationHandler {
 					System.out.println("Client added: "+client.getName());
 				}
 				//TODO add normal entity creation
-				SEntity entity = new SEntity(client.getPlayer());
-				SMain.getGameInstance().addEntity(entity);
-				SMain.getGameInstance().addPlayer(client.getPlayer());
+				//SEntity entity = new SEntity(client.getPlayer());
+				//SMain.getGameInstance().addEntity(entity);
+				//SMain.getGameInstance().addPlayer(client.getPlayer());
 				SM connectallowed = SMPatterns.getConnectAllowedMessage(client);
 				udpNode.SendMessage(connectallowed, client);
-				//RequestPingDataFromClient(client); TODO decide if ping request needed here
+				addEntityMessage(connectallowed);
 				
-				//TODO add position initialization
-				//Send to other clients
 				SM createEntity = SMPatterns.getEntityCreateMessage(client.getPlayer());
 				SendMessage(createEntity);
 			}

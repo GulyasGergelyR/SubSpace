@@ -14,6 +14,7 @@ import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
+import GameEngine.PlayerEngine.SPlayer;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
@@ -211,7 +212,7 @@ public class SGameInstance {
 			        removePlayerFromList(entity.getId().get());
 				}else if(entity.getObjectState().equals(ObjectState.Initialization)){
 				        for(SPlayer player : players){
-				        	if (!player.equals(entity)){
+				        	if (!player.equals(entity)&&!player.getEntity().shouldBeDeleted()){
 				        		SM message = SMPatterns.getEntityCreateMessage(player);
 				        		SMain.getCommunicationHandler().SendMessageToNode(message, entity.getId().get());
 						        SM messageEntityState = SMPatterns.getEntityUpdateStateMessage(player.getEntity());
@@ -245,11 +246,11 @@ public class SGameInstance {
 				        entity.setObjectState(ObjectState.Active);
 				        SM message = SMPatterns.getEntityUpdateStateMessage(entity);
 			        	SMain.getCommunicationHandler().SendMessage(message);
-			    }else {
-			    	entity.update();
-			    	if(entity.shouldBeDeleted()){
-				        iter.remove();
-				        removePlayerFromList(entity.getId().get());
+			    }else if (entity.isActive()){
+			    		entity.update();
+			    		if(entity.shouldBeDeleted()){
+					        iter.remove();
+					        removePlayerFromList(entity.getId().get());
 				    }
 			    }
 			}
@@ -338,6 +339,9 @@ public class SGameInstance {
 						SMParser.parseClientInputMessage(message, entity);
 					}
 				}
+				else if (command == SMPatterns.CConnectAllowed){ 	//Server side communication handler sent this, NOT A CLIENT!
+					SMParser.parseEntityCreateMessageAtServer(message);
+				}
 			}else{
 				if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
 					int id = SMParser.parseId(message.getBuffer());
@@ -354,7 +358,7 @@ public class SGameInstance {
 					}
 				}
 				else if (command == SMPatterns.CEntityCreate){ 	//Server creates Entity
-					SMParser.parseEntityCreateMessage(message);
+					SMParser.parseEntityCreateMessageAtClient(message);
 				}
 				else if (command == SMPatterns.CEntityDelete){ 	//Server deletes an Entity
 					int id = SMParser.parseId(message.getBuffer());

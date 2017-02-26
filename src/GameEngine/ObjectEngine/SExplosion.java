@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import GameEngine.SPlayer;
 import GameEngine.SResLoader;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.PlayerEngine.SPlayer;
 import Main.SMain;
 import RenderingEngine.SRenderObject;
 

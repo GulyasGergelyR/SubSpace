@@ -2,15 +2,16 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
-import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
+import GameEngine.PlayerEngine.SPlayer;
 import GameEngine.WeaponEngine.SBullet;
 import WebEngine.ComEngine.SNode;
 
@@ -161,12 +162,12 @@ public class SMPatterns {
 		// Add vectors
 		if (object instanceof SAsteroid){
 			SAsteroid asteroid = (SAsteroid) object;
-			buffer.put((byte)50);
+			buffer.put((byte)SFH.Debris.getFactoryType());
 			asteroid.getPos().addToBufferAsBigVector(buffer);
 			asteroid.getMoveDir().addToBufferAsBigVector(buffer);
 		} else if (object instanceof SEffect){
-			buffer.put((byte)70);
-			buffer.putShort((short)0);	//reset currentTime by default
+			buffer.put(SFH.Effects.getFactoryType());
+			buffer.putShort((short)((SEffect)object).getCurrentTime());
 		}
 		return message;
 	}
@@ -183,19 +184,19 @@ public class SMPatterns {
 			bullet.getMoveDir().addToBufferAsBigVector(buffer);
 		} else if (object instanceof SPowerUp){
 			SPowerUp powerUp = (SPowerUp) object;
-			buffer.put((byte)40); //TODO remove hard coded power up type id
+			buffer.put(SFH.PowerUps.getFactoryType());
 			buffer.put(powerUp.getType());
 			powerUp.getPos().addToBufferAsBigVector(buffer);
 		} else if (object instanceof SDebris){
 			SDebris debris = (SDebris) object;
-			buffer.put((byte)50); //TODO remove hard coded debris type id
+			buffer.put(SFH.Debris.getFactoryType());
 			buffer.put(debris.getType());
 			debris.getPos().addToBufferAsBigVector(buffer);
 			debris.getMoveDir().addToBufferAsBigVector(buffer);
 			buffer.putShort((short)(debris.getBody().getScale()*1000));
 		} else if (object instanceof SEffect){
 			SEffect effect = (SEffect) object;
-			buffer.put((byte)70); //TODO remove hard coded effect type id
+			buffer.put(SFH.Effects.getFactoryType());
 			buffer.put(effect.getType());
 			buffer.putShort((short)(effect.getOwner().getId().get()));
 		}
@@ -226,11 +227,11 @@ public class SMPatterns {
 		buffer.put(CObjectDelete);
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SAsteroid){
-			buffer.put((byte)50);
+			buffer.put(SFH.Debris.getFactoryType());
 		} else if (object instanceof SPowerUp){
-			buffer.put((byte)40);
+			buffer.put(SFH.PowerUps.getFactoryType());
 		} else if (object instanceof SEffect){
-			buffer.put((byte)70);
+			buffer.put(SFH.Effects.getFactoryType());
 		}
 		return message;
 	}

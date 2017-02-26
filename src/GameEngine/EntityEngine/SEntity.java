@@ -6,9 +6,9 @@ import java.util.Random;
 
 import org.newdawn.slick.Color;
 
-import GameEngine.SPlayer;
 import GameEngine.Specifications;
-import GameEngine.SPlayer.PlayerType;
+import GameEngine.PlayerEngine.SPlayer;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.ControlEngine.SControlClient;
 import GameEngine.ControlEngine.SHumanControlClient;
 import GameEngine.ControlEngine.SHumanControlServer;
@@ -59,6 +59,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		SWeapon weapon = new SWeapon(this);
 		weapons.add(weapon);
 		activeWeapon = weapon;
+		
 		if (SMain.IsServer()){
 			setObjectState(ObjectState.Initialization);
 		}
