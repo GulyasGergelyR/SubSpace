@@ -22,6 +22,8 @@ import javax.swing.SpinnerNumberModel;
  */
 public class MainWindow extends JFrame {
     
+	private static final long serialVersionUID = 1L;
+	
 	JFormattedTextField ipAddress;
 	JSpinner portNumber;
 	
@@ -75,6 +77,7 @@ public class MainWindow extends JFrame {
     private JPanel CreateClient()
     {
         JPanel p = new JPanel(){
+        	private static final long serialVersionUID = 1L;
             @Override
             protected void paintComponent(Graphics g) {
 
@@ -159,6 +162,7 @@ public class MainWindow extends JFrame {
     private JPanel CreateServer()
     {
         JPanel p = new JPanel() {
+        	private static final long serialVersionUID = 1L;
             @Override
             protected void paintComponent(Graphics g) {
 

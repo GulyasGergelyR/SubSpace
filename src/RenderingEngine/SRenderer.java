@@ -35,7 +35,6 @@ import Main.SMain;
 public class SRenderer {
 	private SGameInstance gameInstance;
 	// TODO recalculate Mouse positions based on viewport
-	private boolean followLocalPlayer = true;
 	private SPlayer playerToFollow;
 	TrueTypeFont font;
 	
@@ -93,10 +92,6 @@ public class SRenderer {
 				Draw(object.getDrawables());
 			}
 		}
-	}
-	
-	public void setFollowLocalPlayer(boolean follow){
-		this.followLocalPlayer = follow;
 	}
 	
 	private void SetTextViewPort(){

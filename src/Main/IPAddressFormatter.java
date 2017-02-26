@@ -16,6 +16,8 @@ import javax.swing.text.DefaultFormatter;
  */
 class IPAddressFormatter extends DefaultFormatter
 {
+   private static final long serialVersionUID = 1L;
+	
    public String valueToString(Object value) throws ParseException
    {
       if (!(value instanceof byte[])) throw new ParseException("Not a byte[]", 0);

@@ -4,7 +4,7 @@ import GameEngine.BaseEngine.SObject;
 
 public class SHitboxTriangular extends SHitbox {
 
-	private SVector p1, p2, p3;
+	protected SVector p1, p2, p3;
 	
 	public SHitboxTriangular(SObject owner, float m) {
 		super(owner);

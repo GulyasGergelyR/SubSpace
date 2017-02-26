@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 
 import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
-import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;

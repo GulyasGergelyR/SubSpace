@@ -298,7 +298,6 @@ public class SGameInstance {
 	
 	public void SendGameDataToClients(){
 		SendEntityData();
-		//SendObjectData();
 	}
 	private void SendEntityData(){
 		synchronized (entities) {
@@ -308,14 +307,7 @@ public class SGameInstance {
 			}
 		}
 	}
-	private void SendObjectData(){
-		synchronized (objects) {
-			for(SObject object: objects){
-				//SM message = SMPatterns.getObjectUpdateMessage(object);
-				//SMain.getCommunicationHandler().SendMessage(message);
-			}
-		}
-	}
+	
 	public void CheckMessages(){
 		CheckEntityMessages();
 		CheckObjectMessages();

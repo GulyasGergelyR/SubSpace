@@ -1,4 +1,4 @@
-package Main;
+package testScripts;
 
 import java.io.IOException;
 
@@ -15,13 +15,13 @@ import org.newdawn.slick.util.ResourceLoader;
  
 public class AncestorSound {
     /** The ogg sound effect */
-    private Audio oggEffect;
+    protected Audio oggEffect;
     /** The wav sound effect */
     private Audio wavEffect;
     /** The aif source effect */
     private Audio aifEffect;
     /** The ogg stream thats been loaded */
-    private Audio oggStream;
+    protected Audio oggStream;
     /** The mod stream thats been loaded */
     private Audio ambient;
      

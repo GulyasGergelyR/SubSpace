@@ -1,15 +1,10 @@
 package testScripts;
 
-import java.util.LinkedList;
-
-import GameEngine.ControlEngine.SControl;
-import GameEngine.EntityEngine.SEntity;
-import GameEngine.GeomEngine.SVector;
-import WebEngine.ComEngine.SCommunicationHandler;
 
 @Deprecated
 public class SMessageParser {
-	private SCommunicationHandler cHandler;
+	/*
+	protected SCommunicationHandler cHandler;
 	
 	public SMessageParser(SCommunicationHandler communicationHandler){
 		this.cHandler = communicationHandler;
@@ -25,7 +20,7 @@ public class SMessageParser {
 		return true;
 	}
 	public static boolean ParseEntityCreateMessage(SMessage message){
-		/*SEntity entity = new SEntity(new SPlayer());
+		SEntity entity = new SEntity(new SPlayer());
 		entity.setController(new SHumanControlServer(entity));
 		//entity.setId(UUID.fromString(SMessagePatterns.getId(message)));
 		entity.setPos(SMessagePatterns.getPos(message));
@@ -34,7 +29,7 @@ public class SMessageParser {
 		entity.setAcclDir(SMessagePatterns.getAcclDir(message));
 		entity.setPosUpdated();
 		
-		SMain.getGameInstance().addEntity(entity);*/
+		SMain.getGameInstance().addEntity(entity);
 		return true;
 	}
 	public static boolean ParseClientInputMessage(SMessage message, SEntity entity){
@@ -53,5 +48,5 @@ public class SMessageParser {
 			//control.setKeyTo(command.substring(1, 2), pressed);
 		}
 		return true;
-	}
+	}*/
 }

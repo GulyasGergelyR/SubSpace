@@ -2,7 +2,6 @@ package RenderingEngine;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.newdawn.slick.Color;
 
@@ -16,11 +15,8 @@ import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
-import GameEngine.ObjectEngine.EffectEngine.SEffectBull;
-import GameEngine.ObjectEngine.EffectEngine.SEffectBurst;
 import GameEngine.ObjectEngine.EffectEngine.SEffectClient;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
-import GameEngine.ObjectEngine.EffectEngine.SEffectForceBoost;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import Main.SMain;

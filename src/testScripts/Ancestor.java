@@ -1,4 +1,4 @@
-package Main;
+package testScripts;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
