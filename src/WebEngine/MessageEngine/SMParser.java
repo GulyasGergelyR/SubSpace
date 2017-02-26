@@ -25,16 +25,20 @@ public class SMParser {
 		return buffer.getShort();
 	}
 	public static SVector parseBigVector(ByteBuffer buffer){ //[+-32768],[9999] - 4 byte long
-		float x =  buffer.getShort()+ buffer.getShort()/10000f;
-		float y =  buffer.getShort()+ buffer.getShort()/10000f;
+		float x =  buffer.getShort()+ buffer.getShort()/30000f;
+		float y =  buffer.getShort()+ buffer.getShort()/30000f;
 		return new SVector(x,y);
 	}
 	public static SVector parseSmallVector(ByteBuffer buffer){ //[+-127],[9999] - 3 byte long
-		float x =  buffer.get()+ buffer.getShort()/10000f;
-		float y =  buffer.get()+ buffer.getShort()/10000f;
+		float x =  buffer.get()+ buffer.getShort()/30000f;
+		float y =  buffer.get()+ buffer.getShort()/30000f;
 		return new SVector(x,y);
 	}
-	
+	public static SVector parseNormedVector(ByteBuffer buffer){ //[+-127],[9999] - 3 byte long
+		float x =  buffer.getShort()/30000f;
+		float y =  buffer.getShort()/30000f;
+		return new SVector(x,y).norm();
+	}
 	
 	public static void parseEntityUpdateMessage(SM message, SEntity entity){
 		ByteBuffer buffer = message.getBuffer();

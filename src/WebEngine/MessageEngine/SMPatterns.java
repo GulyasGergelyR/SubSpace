@@ -2,7 +2,6 @@ package WebEngine.MessageEngine;
 
 import java.nio.ByteBuffer;
 
-import GameEngine.SIdentifiable;
 import GameEngine.SPlayer;
 import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable;

@@ -81,9 +81,9 @@ public class SVector {
 		short f_x = (short)x;
 		short f_y = (short)y;
 		buffer.putShort(f_x);
-		buffer.putShort((short)((x-f_x)*10000));
+		buffer.putShort((short)((x-f_x)*30000));
 		buffer.putShort(f_y);
-		buffer.putShort((short)((y-f_y)*10000));
+		buffer.putShort((short)((y-f_y)*30000));
 	}
 	public void addToBufferAsSmallVector(ByteBuffer buffer){
 		if ((Math.abs(x) > 100)||(Math.abs(y)>100)){
@@ -93,10 +93,16 @@ public class SVector {
 		short f_x = (byte)x;
 		short f_y = (byte)y;
 		buffer.putShort(f_x);
-		buffer.putShort((short)((x-f_x)*10000));
+		buffer.putShort((short)((x-f_x)*30000));
 		buffer.putShort(f_y);
-		buffer.putShort((short)((y-f_y)*10000));
+		buffer.putShort((short)((y-f_y)*30000));
 	}
+	public void addToBufferAsNormedVector(ByteBuffer buffer){
+		SVector norm = this.norm();
+		buffer.putShort((short)(norm.x*30000));
+		buffer.putShort((short)(norm.y*30000));
+	}
+	
 	
 	public String getString(){
 		return String.format(Locale.ROOT,"%.2f;%.2f", x,y);
