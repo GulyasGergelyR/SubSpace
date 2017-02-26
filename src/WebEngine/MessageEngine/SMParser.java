@@ -43,9 +43,10 @@ public class SMParser {
 	public static void parseEntityUpdateMessage(SM message, SEntity entity){
 		ByteBuffer buffer = message.getBuffer();
 		entity.setPos(parseBigVector(buffer));
-		entity.setLookDir(parseBigVector(buffer));
-		entity.setMoveDir(parseBigVector(buffer));
-		entity.setAcclDir(parseBigVector(buffer));
+		float angle = buffer.getShort()/100f;
+		entity.setLookDir(new SVector(1,0).rotate(-angle));
+		//entity.setMoveDir(parseBigVector(buffer));
+		//entity.setAcclDir(parseBigVector(buffer));
 		entity.setLife(buffer.getShort());
 		entity.setShield(buffer.getShort());
 		entity.getPlayer().setKills(buffer.get());

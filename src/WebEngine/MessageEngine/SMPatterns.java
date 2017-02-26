@@ -105,9 +105,10 @@ public class SMPatterns {
 		buffer.putShort((short)entity.getId().get());
 		// Add vectors
 		entity.getPos().addToBufferAsBigVector(buffer);
-		entity.getLookDir().addToBufferAsBigVector(buffer);
-		entity.getMoveDir().addToBufferAsBigVector(buffer);
-		entity.getAcclDir().addToBufferAsBigVector(buffer);
+		buffer.putShort((short)(entity.getLookDir().getAngle()*100));
+		//entity.getLookDir().addToBufferAsBigVector(buffer);
+		//entity.getMoveDir().addToBufferAsBigVector(buffer);
+		//entity.getAcclDir().addToBufferAsNormedVector(buffer);
 		buffer.putShort((short)entity.getLife());
 		buffer.putShort((short)entity.getShield());
 		buffer.put((byte)entity.getPlayer().getKills());
