@@ -23,7 +23,7 @@ public class SAsteroidControlServer extends SControlServer{
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				if (SGeomFunctions.intersects(entity, Owner)){
 					if (SGeomFunctions.collide((SAsteroid)Owner, entity)){
-						if (!entity.gotHit(20)){
+						if (!entity.gotHit(20, Owner)){
 							SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(entity.getPos(), (byte)61);
 							SMain.getCommunicationHandler().SendMessage(explosionMessage);
 						}

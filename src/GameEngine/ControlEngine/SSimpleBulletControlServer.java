@@ -29,7 +29,7 @@ public class SSimpleBulletControlServer extends SControlServer {
 			if (!entity.equals(bulletOwner) && entity.getObjectState().equals(ObjectState.Active) &&
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				if (SGeomFunctions.intersects(entity, Owner)){
-					if (entity.gotHit(((SBullet)Owner).getDamage()))
+					if (entity.gotHit(((SBullet)Owner).getDamage(), Owner))
 						bulletOwner.getPlayer().addKill(1);
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);

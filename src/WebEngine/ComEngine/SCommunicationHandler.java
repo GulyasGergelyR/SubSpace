@@ -10,7 +10,6 @@ import java.util.List;
 
 import GameEngine.SId;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
-import GameEngine.EntityEngine.SEntity;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SyncEngine.SServerTimer;
 import Main.SMain;
@@ -105,34 +104,6 @@ public class SCommunicationHandler {
 		synchronized (objectlock) {
 			return ObjectMessages.pop();
 		}
-	}
-	
-	@Deprecated
-	public List<SM> getEntityMessagesForEntity(SEntity entity, int maxLength){
-		synchronized (entitylock) {
-			List<SM> messages = new ArrayList<SM>(5);
-			int i = 0;
-			for(SM message: EntityMessages){
-				
-				if(i<maxLength){
-					if(true){
-						messages.add(message);
-					}
-					i++;
-				}else break;
-				
-			}
-			EntityMessages.removeAll(messages);
-			return messages;
-		}
-	}
-	
-	@Deprecated
-	public List<SM> getEntityMessages(){
-		synchronized (entitylock) {
-			return EntityMessages;
-		}
-		
 	}
 	
 	////////////////////////UDPNode\\\\\\\\\\\\\\\\\\\\\\

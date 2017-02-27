@@ -1,10 +1,14 @@
 package GameEngine.EntityEngine;
 
+import java.util.ArrayList;
 import java.util.ListIterator;
 
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
+import GameEngine.EntityEngine.SEntity.PlayerGameState;
+import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.SFactory;
 import GameEngine.PlayerEngine.SPlayer;
@@ -25,8 +29,12 @@ public class SEntityFactory extends SFactory<SEntity> {
 		if (localNode.equals(id)){
 			SEntity entity = new SEntity(localNode.getPlayer());
 			addObject(entity);
+
+			System.out.println("local: "+name);
 		}
 		else{
+
+			 System.out.println("not local: "+name);
 			 SPlayer player = new SPlayer(id, name, PlayerType.lan);
 			 SEntity entity = new SEntity(player);
 			 SFH.Players.addObject(player);
@@ -110,5 +118,50 @@ public class SEntityFactory extends SFactory<SEntity> {
 				SMain.getCommunicationHandler().SendMessage(message);
 			}
 		}
+	}
+	
+	public void collisionCheckInFactory(){
+		// Asteroid checks
+		// Hack around types:
+		// we build an array list which has a better performance for this
+//		boolean[] update = new boolean[objects.size()];
+		
+		ArrayList<SEntity> temps = new ArrayList<SEntity>(objects);
+		
+		for (int i=0; i<temps.size()-1; i++){
+			SEntity currentObject = temps.get(i);
+			if (currentObject.getObjectState().equals(ObjectState.Active) &&
+					currentObject.getPlayerGameState().equals(PlayerGameState.Alive)){
+				for (int j=i+1;j<temps.size(); j++){
+					SEntity contra = temps.get(j);
+					if (contra.getObjectState().equals(ObjectState.Active) &&
+						!contra.equals(currentObject) && 
+						currentObject.getPlayerGameState().equals(PlayerGameState.Alive)){
+						if (SGeomFunctions.intersects(contra, currentObject)){
+							//get speed of entities
+							if (SGeomFunctions.collide(currentObject, contra)){
+								currentObject.gotHit(10, contra);
+								contra.gotHit(10, currentObject);
+								
+								SVector tempVector = currentObject.getPos().sub(contra.getPos());
+								SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(
+										currentObject.getPos().add(tempVector.getX()/2, tempVector.getY()/2), (byte)61);
+								SMain.getCommunicationHandler().SendMessage(explosionMessage);
+//								update[i] = true;
+//								update[j] = true;
+							}
+						}
+					}
+				}
+			}
+		}
+//		for (int i=0; i< update.length; i++){
+//			if (update[i]){
+//				SEntity entity = temps.get(i);
+//				//entity.getController().setSendCounter(0);
+//				SM message = SMPatterns.getObjectUpdateMessage(entity);
+//				SMain.getCommunicationHandler().SendMessage(message);
+//			}
+//		}
 	}
 }

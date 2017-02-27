@@ -15,7 +15,7 @@ public class SEffectBullClient extends SEffectClient {
 	
 	@Override
 	protected void applyToOwner() {
-		((SEntity)Owner).getBody().setColor(new Color(1.0f, 0.0f, 0.0f));
+		((SEntity)Owner).getBody().setColor(new Color(1.0f, 0.1f, 0.1f));
 	}
 	
 	@Override

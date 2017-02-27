@@ -72,7 +72,16 @@ public abstract class SObject extends SUpdatable {
 		    }
 		}
 	}
-	public SEffect getObjectById(int Id){
+	public boolean underEffect(byte effectType){
+		for(SEffect object : appliedEffects){
+			if (object.getType() == effectType)
+				return true;
+		}
+		return false;
+	}
+	
+	
+	public SEffect getEffectById(int Id){
 		for(SEffect object : appliedEffects){
 			if (object.equals(Id))
 				return object;

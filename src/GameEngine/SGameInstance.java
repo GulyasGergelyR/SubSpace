@@ -1,5 +1,7 @@
 package GameEngine;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
@@ -11,9 +13,11 @@ import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
+import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
+import WebEngine.ComEngine.SNode;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;
@@ -27,6 +31,8 @@ public class SGameInstance {
 	
 	private SFPS FPS;
 	private static int delta;
+	
+	public boolean firstTime = true;
 	
 	public SGameInstance(){
 		FPS = new SFPS();
@@ -90,7 +96,26 @@ public class SGameInstance {
 	}
 	
 	public void UpdateGame(){
+		if (firstTime && SMain.IsServer()){
+			try {
+				byte[] address = new byte[]{(byte)192,(byte)168,1,2};
+				SNode client = new SNode(InetAddress.getByAddress(address), 5000, "Dummy", PlayerType.lan);
+				synchronized (SMain.getCommunicationHandler().getNodes()) {
+					SMain.getCommunicationHandler().getNodes().add(client);
+				SFH.Entities.createEntityAtServer(client.getId().get());
+				}
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			firstTime = false;
+		}
+		
 		SFH.Entities.UpdateObjects();
+		if (SMain.IsServer()){
+			
+			SFH.Entities.collisionCheckInFactory();
+		}
 		UpdateObjects();
 		UpdateAnimationObjects();
 		UpdateFactories();
@@ -103,13 +128,13 @@ public class SGameInstance {
 				if (random.nextFloat()>0.9f){
 					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 				}
-				if (random.nextFloat()>0.999f){
+				if (random.nextFloat()>Specifications.chanceForBurst){
 					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBurst);
 				}
-				if (random.nextFloat()>0.9993f){
+				if (random.nextFloat()>Specifications.chanceForForceBoost){
 					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpForceBoost);
 				}
-				if (random.nextFloat()>0.9993f){
+				if (random.nextFloat()>Specifications.chanceForBull){
 					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpBull);
 				}
 			}

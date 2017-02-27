@@ -38,7 +38,7 @@ public class SHumanControlServer extends SControlServer{
 			mouseStates[i] = false;
 			prevMouseStates[i] = false;
 		}
-		maxSendCounter = 5;
+		maxSendCounter = 60;
 	}
 	public boolean setKeyTo(int key, boolean state)
 	{
