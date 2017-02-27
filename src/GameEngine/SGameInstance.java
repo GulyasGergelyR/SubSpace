@@ -96,24 +96,23 @@ public class SGameInstance {
 	}
 	
 	public void UpdateGame(){
-		if (firstTime && SMain.IsServer()){
-			try {
-				byte[] address = new byte[]{(byte)192,(byte)168,1,2};
-				SNode client = new SNode(InetAddress.getByAddress(address), 5000, "Dummy", PlayerType.lan);
-				synchronized (SMain.getCommunicationHandler().getNodes()) {
-					SMain.getCommunicationHandler().getNodes().add(client);
-				SFH.Entities.createEntityAtServer(client.getId().get());
-				}
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			firstTime = false;
-		}
+//		if (firstTime && SMain.IsServer()){
+//			try {
+//				byte[] address = new byte[]{(byte)192,(byte)168,1,2};
+//				SNode client = new SNode(InetAddress.getByAddress(address), 5000, "Dummy", PlayerType.lan);
+//				synchronized (SMain.getCommunicationHandler().getNodes()) {
+//					SMain.getCommunicationHandler().getNodes().add(client);
+//				SFH.Entities.createEntityAtServer(client.getId().get());
+//				}
+//			} catch (UnknownHostException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			firstTime = false;
+//		}
 		
 		SFH.Entities.UpdateObjects();
 		if (SMain.IsServer()){
-			
 			SFH.Entities.collisionCheckInFactory();
 		}
 		UpdateObjects();
@@ -125,7 +124,7 @@ public class SGameInstance {
 		if (SMain.IsServer()){
 			Random random = new Random();
 			if (Specifications.allowPowerUps){
-				if (random.nextFloat()>0.9f){
+				if (random.nextFloat()>Specifications.chanceForHeal){
 					SFH.PowerUps.tryToCreateNewPowerUpAtServer(SPowerUpFactory.PowerUpHeal);
 				}
 				if (random.nextFloat()>Specifications.chanceForBurst){

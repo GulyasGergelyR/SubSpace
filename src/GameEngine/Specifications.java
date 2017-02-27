@@ -36,10 +36,17 @@ public final class Specifications {
 	public static int maxNumberOfPowerUps = 15;
 	public static int maxNumberOfPowerUpBull = 3;
 	public static float chanceForBull = 0.9994f;
+	public static int powerupBullDuration = 1000;
 	public static int maxNumberOfPowerUpForceBoost = 3;
 	public static float chanceForForceBoost = 0.9994f;
+	public static int powerupForceBoostDuration = 1000;
 	public static int maxNumberOfPowerUpBurst = 3;
 	public static float chanceForBurst = 0.9994f;
+	public static int powerupBurstDuration = 1000;
+	public static int maxNumberOfPowerUpHeal = 2;
+	public static float chanceForHeal = 0.999f;
+	public static int powerupHealDuration = 1500;
+	public static int powerupHealAmount = 100;
 	
 	//Effects
 	public static int effectBurstDuration = 550;
@@ -134,10 +141,17 @@ public final class Specifications {
 		print(fw, "maxNumberOfPowerUps="+maxNumberOfPowerUps);
 		print(fw, "maxNumberOfPowerUpBull="+maxNumberOfPowerUpBull);
 		print(fw, "chanceForBull="+chanceForBull);
+		print(fw, "powerupBullDuration="+powerupBullDuration);
 		print(fw, "maxNumberOfPowerUpForceBoost="+maxNumberOfPowerUpForceBoost);
 		print(fw, "chanceForForceBoost="+chanceForForceBoost);
+		print(fw, "powerupForceBoostDuration="+powerupForceBoostDuration);
 		print(fw, "maxNumberOfPowerUpBurst="+maxNumberOfPowerUpBurst);
 		print(fw, "chanceForBurst="+chanceForBurst);
+		print(fw, "powerupBurstDuration="+powerupBurstDuration);
+		print(fw, "maxNumberOfPowerUpHeal="+maxNumberOfPowerUpHeal);
+		print(fw, "chanceForHeal="+chanceForHeal);
+		print(fw, "powerupHealDuration="+powerupHealDuration);
+		print(fw, "powerupHealAmount="+powerupHealAmount);
 		print(fw, "[Effects]");
 		print(fw, "effectBullDuration="+effectBullDuration);
 		print(fw, "effectBurstDuration="+effectBurstDuration);
@@ -168,10 +182,17 @@ public final class Specifications {
 			maxNumberOfPowerUps = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUps=(.*)", maxNumberOfPowerUps);
 			maxNumberOfPowerUpBull = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUpBull=(.*)", maxNumberOfPowerUpBull);
 			chanceForBull = (new SMatcher<Float>()).match(line, "chanceForBull=(.*)", chanceForBull);
+			powerupBullDuration = (new SMatcher<Integer>()).match(line, "powerupBullDuration=(.*)", powerupBullDuration);
 			maxNumberOfPowerUpForceBoost = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUpForceBoost=(.*)", maxNumberOfPowerUpForceBoost);
 			chanceForForceBoost = (new SMatcher<Float>()).match(line, "chanceForForceBoost=(.*)", chanceForForceBoost);
+			powerupForceBoostDuration = (new SMatcher<Integer>()).match(line, "powerupForceBoostDuration=(.*)", powerupForceBoostDuration);
 			maxNumberOfPowerUpBurst = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUpBurst=(.*)", maxNumberOfPowerUpBurst);
 			chanceForBurst = (new SMatcher<Float>()).match(line, "chanceForBurst=(.*)", chanceForBurst);
+			powerupBurstDuration = (new SMatcher<Integer>()).match(line, "powerupBurstDuration=(.*)", powerupBurstDuration);
+			maxNumberOfPowerUpHeal = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUpHeal=(.*)", maxNumberOfPowerUpHeal);
+			chanceForHeal = (new SMatcher<Float>()).match(line, "chanceForHeal=(.*)", chanceForHeal);
+			powerupHealDuration = (new SMatcher<Integer>()).match(line, "powerupHealDuration=(.*)", powerupHealDuration);
+			powerupHealAmount = (new SMatcher<Integer>()).match(line, "powerupHealAmount=(.*)", powerupHealAmount);
 			
 			effectBullDuration = (new SMatcher<Integer>()).match(line, "effectBullDuration=(.*)", effectBullDuration);
 			effectBurstDuration = (new SMatcher<Integer>()).match(line, "effectBurstDuration=(.*)", effectBurstDuration);

@@ -80,6 +80,11 @@ public class SEffect extends SUpdatable{
 		return false;
 	}
 	
+	public void remove(){
+		restore();
+		setEffectState(EffectState.Finished);
+	}
+	
 	protected void receiveParameters(SEffect effect){
 		currentTime = 0;
 		SM message = SMPatterns.getObjectUpdateMessage(this);

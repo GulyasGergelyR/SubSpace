@@ -2,6 +2,7 @@ package GameEngine.EntityEngine;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 import org.newdawn.slick.Color;
@@ -14,6 +15,8 @@ import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.EffectEngine.SEffect;
+import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.PlayerEngine.SPlayer;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
@@ -139,6 +142,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 			this.life -= damage;
 			if (this.life <= 0){
 				this.life = 0;
+				removeEffects();
 				SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(getPos(), (byte)60);
 				SMain.getCommunicationHandler().SendMessage(explosionMessage);
 				setPlayerGameState(PlayerGameState.Dead);
@@ -154,6 +158,15 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		}
 		return false;
 	}
+	public void removeEffects(){
+		ListIterator<SEffect> iter = appliedEffects.listIterator();
+		while(iter.hasNext()){
+			SEffect object = iter.next();
+			object.remove();
+		    iter.remove();
+		}
+	}
+	
 	public float getLife(){
 		return life;
 	}

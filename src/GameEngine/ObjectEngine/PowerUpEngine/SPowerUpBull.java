@@ -18,7 +18,7 @@ public class SPowerUpBull extends SPowerUp {
 		this.getBody().setTexture("res/object/powerup/powerupbull.png");
 		this.setLookDir(new SVector(0, -1));
 		if (SMain.IsServer()){
-			((SPowerUpControlServer)this.getController()).setDuration(900);
+			((SPowerUpControlServer)this.getController()).setDuration(Specifications.powerupBullDuration);
 		}
 	}
 	
