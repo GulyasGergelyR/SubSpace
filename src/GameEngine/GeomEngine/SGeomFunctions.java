@@ -40,6 +40,7 @@ public class SGeomFunctions {
 		return false;
 	}
 	
+	@Deprecated
 	public static boolean collide(SMobile mobile1, SMobile mobile2){
 		SVector n = mobile2.getPos().sub(mobile1.getPos());
 		float cv1 = n.getProjection(mobile1.getMoveDir());

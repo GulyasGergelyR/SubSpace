@@ -16,7 +16,6 @@ import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
-import GameEngine.ObjectEngine.EffectEngine.SEffect.EffectState;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.PlayerEngine.SPlayer;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
@@ -26,7 +25,7 @@ import RenderingEngine.SRenderObject;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SEntity extends GameEngine.BaseEngine.SMobile{
+public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 	protected SPlayer player;
 	protected float life;
 	protected float shield;
@@ -122,16 +121,13 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		this.lookDir = new SVector(1,0);
 	}
 	
-	public boolean gotHit(float damage, SUpdatable source){
+	
+	@Override
+	public boolean gotHit(float damage, SUpdatable source) {
 		if (undamagable)
 			return false;
 		if ((source instanceof SDebris ||  source instanceof SEntity)&& undamagableByCollision){
 			return false;
-		}
-		if (source instanceof SEntity){
-			if (((SEntity)source).underEffect(SEffectFactory.EffectBull)){
-				damage *= 3;
-			}
 		}
 		//if we got hit then do not allow shield recharge
 		this.shieldRechargeDelay = this.maxShieldRechargeDelay;
@@ -158,6 +154,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile{
 		}
 		return false;
 	}
+
 	public void removeEffects(){
 		ListIterator<SEffect> iter = appliedEffects.listIterator();
 		while(iter.hasNext()){

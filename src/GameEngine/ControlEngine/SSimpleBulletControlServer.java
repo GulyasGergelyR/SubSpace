@@ -4,6 +4,7 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
+import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
@@ -35,8 +36,10 @@ public class SSimpleBulletControlServer extends SControlServer {
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
 					// add explosion to client
-					SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(Owner.getPos(), (byte)61);
-					SMain.getCommunicationHandler().SendMessage(explosionMessage);
+					if (entity.getPlayerGameState().equals(PlayerGameState.Alive)){
+						SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(Owner.getPos(), (byte)61);
+						SMain.getCommunicationHandler().SendMessage(explosionMessage);
+					}
 					break;
 				}
 			}
@@ -45,17 +48,21 @@ public class SSimpleBulletControlServer extends SControlServer {
 			if (object.getObjectState().equals(ObjectState.Active)){
 				if (SGeomFunctions.intersects((SDebris)object, Owner) ){
 					SVector pos = new SVector(Owner.getPos());
-					if (SGeomFunctions.collide((SAsteroid)object, Owner)){
+					SCollision collision = new SCollision(object, Owner);
+					if (collision.IsHappened()){
 						((SDebris)object).getController().setSendCounter(0);
-						SM message = SMPatterns.getObjectUpdateMessage((SDebris)object);
+						SM message = SMPatterns.getObjectUpdateMessage(object);
 						SMain.getCommunicationHandler().SendMessage(message);
+						
+						Owner.setObjectState(ObjectState.WaitingDelete);
+						SM messageObjectDelete = SMPatterns.getObjectDeleteMessage(Owner);
+						SMain.getCommunicationHandler().SendMessage(messageObjectDelete);
+						// add explosion to client
+
+						SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(pos, (byte)61);
+						SMain.getCommunicationHandler().SendMessage(explosionMessage);
 					}
-					Owner.setObjectState(ObjectState.WaitingDelete);
-					SM message = SMPatterns.getObjectDeleteMessage(Owner);
-					SMain.getCommunicationHandler().SendMessage(message);
-					// add explosion to client
-					SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(pos, (byte)61);
-					SMain.getCommunicationHandler().SendMessage(explosionMessage);
+					
 					break;
 				}
 			}

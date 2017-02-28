@@ -7,6 +7,7 @@ import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
+import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
@@ -138,14 +139,11 @@ public class SEntityFactory extends SFactory<SEntity> {
 						!contra.equals(currentObject) && 
 						currentObject.getPlayerGameState().equals(PlayerGameState.Alive)){
 						if (SGeomFunctions.intersects(contra, currentObject)){
-							//get speed of entities
-							if (SGeomFunctions.collide(currentObject, contra)){
-								currentObject.gotHit(10, contra);
-								contra.gotHit(10, currentObject);
-								
+							SCollision collision = new SCollision(currentObject, contra);
+							if (collision.IsHappened() && collision.getRelativeSpeed() > 5){
 								SVector tempVector = currentObject.getPos().sub(contra.getPos());
 								SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(
-										currentObject.getPos().add(tempVector.getX()/2, tempVector.getY()/2), (byte)61);
+										contra.getPos().add(tempVector.getX()/2, tempVector.getY()/2), (byte)61);
 								SMain.getCommunicationHandler().SendMessage(explosionMessage);
 //								update[i] = true;
 //								update[j] = true;

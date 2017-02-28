@@ -139,6 +139,25 @@ public class SRenderer {
 				DrawTextOfPlayer(playerToFollow, 0);
 			}
 		}
+		// Draw name above player
+		for (SEntity entity : SFH.Entities.getObjects()){
+			if (entity.isActive()){
+				float x;
+				float y;
+				if (playerToFollow == null){
+					x = Specifications.WindowWidth / 2f + 0.1f*(entity.getPos().getX());
+					y = Specifications.WindowHeight / 2f - 0.1f*(entity.getPos().getY());
+					x -= font.getWidth(entity.getPlayer().getName())/2f;
+					y -= 5;
+				} else {
+					x = Specifications.WindowWidth / 2f + 0.5f*(entity.getPos().getX() - SFH.Players.getLocalPlayer().getEntity().getPos().getX());
+					y = Specifications.WindowHeight / 2f - 0.5f*(entity.getPos().getY() - SFH.Players.getLocalPlayer().getEntity().getPos().getY());
+					x -= font.getWidth(entity.getPlayer().getName())/2f;
+					y -= 52;
+				}
+				font.drawString(x, y, entity.getPlayer().getName(), Color.green); //x, y, string to draw, color
+			}
+		}
 	}
 	
 	private void DrawTextOfPlayer(SPlayer player, int i){

@@ -111,10 +111,10 @@ public class SGameInstance {
 //			firstTime = false;
 //		}
 		
-		SFH.Entities.UpdateObjects();
 		if (SMain.IsServer()){
 			SFH.Entities.collisionCheckInFactory();
 		}
+		SFH.Entities.UpdateObjects();
 		UpdateObjects();
 		UpdateAnimationObjects();
 		UpdateFactories();

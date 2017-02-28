@@ -19,6 +19,7 @@ import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpHeal;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
+import Main.SMain;
 
 public class SHud {
 	public static List<SRenderObject> DrawHud(){
@@ -81,26 +82,30 @@ public class SHud {
 		
 		int effectIndex = 0;
 		float effectLocation = 0;
-		for(SEffect effect : SFH.Players.getLocalPlayer().getEntity().getAppliedEffects()){
-			String res = "";
-			if (effect.getType() == SEffectFactory.EffectBull){
-				res =  "res/object/powerup/powerupbull.png";
-			} else if (effect.getType() == SEffectFactory.EffectBurst){
-				res =  "res/object/powerup/powerupburst.png";
-			} else if (effect.getType() == SEffectFactory.EffectForceBoost){
-				res =  "res/object/powerup/powerupforceboost.png";
+		if (!SMain.IsServer()){
+			for(SEffect effect : SFH.Players.getLocalPlayer().getEntity().getAppliedEffects()){
+				String res = "";
+				if (effect.getType() == SEffectFactory.EffectBull){
+					res =  "res/object/powerup/powerupbull.png";
+				} else if (effect.getType() == SEffectFactory.EffectBurst){
+					res =  "res/object/powerup/powerupburst.png";
+				} else if (effect.getType() == SEffectFactory.EffectForceBoost){
+					res =  "res/object/powerup/powerupforceboost.png";
+				}
+				if (effect.getEffectState().equals(EffectState.Active)){
+					float x = 20;
+					effectLocation = 30 + effectIndex * 30;
+					((SEffectClient)effect).setAimedHudPosition(effectLocation);
+					drawables.add(new SRenderObject(res,new SVector(x, ((SEffectClient)effect).getHudPosition()), 90.0f, 0.1f, 1.0f, new Color(255,255,255,0), 8.05f));
+					SVector leftBottom = new SVector(effect.getCurrentTime()*1.0f/effect.getDuration()*0.5f,0.0f);
+					SVector rightUpper = new SVector(0.5f+(effect.getCurrentTime())*1.0f/effect.getDuration()*0.5f,1.0f);
+					drawables.add(new SRenderObject("res/object/powerup/poweruptimebar.png",new SVector(x + 30 + 128, ((SEffectClient)effect).getHudPosition()), -90.0f, 0.5f, 1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 8.05f));
+				}
+				effectIndex++;
 			}
-			if (effect.getEffectState().equals(EffectState.Active)){
-				float x = 20;
-				effectLocation = 30 + effectIndex * 30;
-				((SEffectClient)effect).setAimedHudPosition(effectLocation);
-				drawables.add(new SRenderObject(res,new SVector(x, ((SEffectClient)effect).getHudPosition()), 90.0f, 0.1f, 1.0f, new Color(255,255,255,0), 8.05f));
-				SVector leftBottom = new SVector(effect.getCurrentTime()*1.0f/effect.getDuration()*0.5f,0.0f);
-				SVector rightUpper = new SVector(0.5f+(effect.getCurrentTime())*1.0f/effect.getDuration()*0.5f,1.0f);
-				drawables.add(new SRenderObject("res/object/powerup/poweruptimebar.png",new SVector(x + 30 + 128, ((SEffectClient)effect).getHudPosition()), -90.0f, 0.5f, 1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 8.05f));
-			}
-			effectIndex++;
 		}
+		
+		
 		
 		return drawables;
 	}

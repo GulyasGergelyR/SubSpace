@@ -4,6 +4,7 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
+import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
@@ -22,12 +23,12 @@ public class SAsteroidControlServer extends SControlServer{
 			if (entity.getObjectState().equals(ObjectState.Active) &&
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				if (SGeomFunctions.intersects(entity, Owner)){
-					if (SGeomFunctions.collide((SAsteroid)Owner, entity)){
-						if (!entity.gotHit(20, Owner)){
+					SCollision collision = new SCollision(Owner, entity);
+					if (collision.IsHappened()){
+						if (collision.getRelativeSpeed() > 5){
 							SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(entity.getPos(), (byte)61);
 							SMain.getCommunicationHandler().SendMessage(explosionMessage);
 						}
-						
 						Owner.getController().setSendCounter(0);
 						SM message = SMPatterns.getObjectUpdateMessage((SAsteroid)Owner);
 						SMain.getCommunicationHandler().SendMessage(message);

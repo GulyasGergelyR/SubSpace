@@ -7,6 +7,7 @@ import GameEngine.SId;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
+import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
@@ -95,7 +96,8 @@ public class SDebrisFactory extends SFactory<SDebris>{
 						contra.getObjectState().equals(ObjectState.Active) &&
 						!contra.equals(currentObject)){
 						if (SGeomFunctions.intersects(contra, currentObject)){
-							if (SGeomFunctions.collide(currentObject, contra)){
+							SCollision collision = new SCollision(currentObject, contra);
+							if (collision.IsHappened()){
 								update[i] = true;
 								update[j] = true;
 							}

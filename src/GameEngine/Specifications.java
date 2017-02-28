@@ -44,7 +44,7 @@ public final class Specifications {
 	public static float chanceForBurst = 0.9994f;
 	public static int powerupBurstDuration = 1000;
 	public static int maxNumberOfPowerUpHeal = 2;
-	public static float chanceForHeal = 0.999f;
+	public static float chanceForHeal = 0.995f;
 	public static int powerupHealDuration = 1500;
 	public static int powerupHealAmount = 100;
 	
