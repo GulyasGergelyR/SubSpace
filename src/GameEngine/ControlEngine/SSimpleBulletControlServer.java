@@ -8,7 +8,6 @@ import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
-import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;

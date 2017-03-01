@@ -42,6 +42,10 @@ public class SCommunicationHandler {
 		objectlock = new Object();
 	}
 	
+	public SUDPNode getUDPNode(){
+		return udpNode;
+	}
+	
 	public SNode getLocalNode(){
 		return localNode;
 	}
@@ -109,7 +113,7 @@ public class SCommunicationHandler {
 	////////////////////////UDPNode\\\\\\\\\\\\\\\\\\\\\\
 	
 	public void CloseUDPNode(){
-		if(localNode.getState().equals(ConnectionState.Connected)){
+		if(!SMain.IsServer() && localNode.getState().equals(ConnectionState.Connected)){
 			DisconnectFromServer();
 		}
 		if (udpNode != null)
@@ -242,6 +246,9 @@ public class SCommunicationHandler {
 				else if (command == SMPatterns.CPingRequest){ 	//ping request from server
 					ParsePingRequest(message);
 				}
+				else if (localNode.getState().equals(ConnectionState.NotConnected)){
+					return;
+				}
 				else if (command == SMPatterns.CEntityUpdate){ 	//Server updates Entity information
 					addEntityMessage(message);
 				}
@@ -288,7 +295,10 @@ public class SCommunicationHandler {
 			String name = new String(nameBytes);
 			if(name.length() == 0){
 				//TODO add proper name check
+				SNode temp = new SNode(message.getAddress(), message.getPort(), "Temporary node", null);
 				System.out.println("Client tried to join with invalid name "+message.getAddress().toString());
+				SM connectNotAllowed = SMPatterns.getConnectNotAllowedMessage(SMPatterns.ErrorName);
+				udpNode.SendMessage(connectNotAllowed, temp);
 				return;
 			}
 			else{
@@ -314,10 +324,14 @@ public class SCommunicationHandler {
 			}
 		}else{
 			System.out.println("Client already joined: "+client.getName());
+			SM connectNotAllowed = SMPatterns.getConnectNotAllowedMessage(SMPatterns.ErrorAlreadyConnected);
+			udpNode.SendMessage(connectNotAllowed, client);
+			disconnectClient(client);
 		}
 	}
 	
 	private void ParseDisconnectCommand(SM message){
+		System.out.println("parsing disconnect command");
 		SNode client = getNodeByAddress(message.getAddress());
 		if(client==null){
 			System.out.println("Client who wants to disconnect was not found "+message.getAddress().toString());
@@ -337,6 +351,23 @@ public class SCommunicationHandler {
 			deleteNodeThread.start();
 		}
 	}
+	
+	private void disconnectClient(SNode client){
+		Thread deleteNodeThread = new Thread(){
+			@Override
+			public void run(){
+				client.getPlayer().getEntity().setObjectState(ObjectState.WaitingDelete);
+				SM message = SMPatterns.getEntityDeleteMessage(client.getPlayer().getEntity());
+				SendMessageExceptToNode(message, client);
+				synchronized (nodes) {
+					nodes.remove(client);
+				}
+				System.out.println("Client removed: "+client.getName());
+			}
+		};
+		deleteNodeThread.start();
+	}
+	
 	private void ParseConnectAllowedCommand(SM message){
 		localNode.setState(ConnectionState.Connected);
 		ByteBuffer buffer = message.getBuffer();
@@ -346,6 +377,13 @@ public class SCommunicationHandler {
 	private void ParseConnectNotAllowedCommand(SM message){
 		// TODO handle not allowed connection
 		System.out.println("Connection is not allowed");
+		byte reason = message.getBuffer().get();
+		if (reason == SMPatterns.ErrorName){
+			System.out.println("[ERROR]Invalid name, try to connect again after changing it.");
+		} else if (reason == SMPatterns.ErrorAlreadyConnected){
+			System.out.println("[ERROR]Already connected (deleting previous instance, try to connect again)");
+		}
+		SMain.StopClient();
 	}
 	
 	private void ParsePingRequest(SM message){

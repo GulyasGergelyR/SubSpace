@@ -27,6 +27,8 @@ public class SMPatterns {
 	public static byte CDisconnect = 0x7F;
 	public static byte CConnectAllowed = 0x73;
 	public static byte CConnectNotAllowed = 0x74;
+	public static byte ErrorName = 1;
+	public static byte ErrorAlreadyConnected = 2;
 	
 	//0100 xxxx Ping commands
 	public static byte MPing = 0x40;
@@ -98,6 +100,13 @@ public class SMPatterns {
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CConnectAllowed);
 		buffer.putShort((short)client.getId().get());
+		return message;
+	}
+	public static SM getConnectNotAllowedMessage(byte reason){
+		SM message = new SM();
+		ByteBuffer buffer = message.getBuffer();
+		buffer.put(CConnectNotAllowed);
+		buffer.put(reason);
 		return message;
 	}
 	public static SM getEntityUpdateMessage(SEntity entity){

@@ -31,7 +31,7 @@ public class SCollision {
 	private void applyDamage(SMobile source, SMobile target){
 		if (target instanceof SHitable){
 			if (source instanceof SAsteroid){
-				((SHitable)target).gotHit(getRelativeSpeed(), source);
+				((SHitable)target).gotHit(getRelativeSpeed()/3, source);
 			}
 			if (source instanceof SEntity){
 				float damage = getRelativeSpeed()/3;

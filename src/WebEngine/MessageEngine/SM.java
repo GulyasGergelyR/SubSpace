@@ -27,7 +27,7 @@ public class SM {
 	}
 	public byte[] getData(){
 		int dataLength = 0; 
-		for(int i=data.length-1;i>0;i--)
+		for(int i=data.length-1;i>=0;i--)
 			if (data[i] != 0){
 				dataLength = i+1;
 				break;

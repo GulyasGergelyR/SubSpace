@@ -37,12 +37,15 @@ import GameEngine.SyncEngine.SServerTimer;
 import RenderingEngine.SRenderer;
 import WebEngine.ComEngine.SCommunicationHandler;
 import WebEngine.ComEngine.SNode;
+import WebEngine.ComEngine.SNode.ConnectionState;
 
 public class SMain {
 	
 	private static SGameInstance gameInstance;
 	private static SCommunicationHandler communicationHandler;
 	private static SRenderer renderer;
+	
+	private static boolean clientRunning = true;
 	
 	private enum AppRole{
 		Server, Client
@@ -159,7 +162,7 @@ public class SMain {
 	}
 	public static void StartClient(){
 		SResLoader.getAudio("res/audio/ambient.wav").playAsMusic(1.0f, 0.05f, true);
-		while (!Display.isCloseRequested()) {
+		while (!Display.isCloseRequested()&&clientRunning) {
 			gameInstance.UpdateGame();
 			gameInstance.CheckMessages();
 			renderGL();
@@ -184,6 +187,12 @@ public class SMain {
 	
 	public static SCommunicationHandler getCommunicationHandler(){
 		return communicationHandler;
+	}
+
+	public static void StopClient(){
+		clientRunning = false;
+		communicationHandler.getLocalNode().setState(ConnectionState.NotConnected);
+		communicationHandler.CloseUDPNode();
 	}
 	
 	private static void updateDelta(){

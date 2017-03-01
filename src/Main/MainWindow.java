@@ -152,12 +152,14 @@ public class MainWindow extends JFrame {
 			SMain.InitClient((byte[])ipAddressFormatter.stringToValue(ipAddress.getText()));
 			SMain.StartClient();
 		} catch (Exception e) {
-			if (SMain.getCommunicationHandler() != null)
+			if (SMain.getCommunicationHandler() != null){
 				SMain.getCommunicationHandler().CloseUDPNode();
+			}
 			e.printStackTrace();
 		} finally {
-			if (SMain.getCommunicationHandler() != null)
+			if (SMain.getCommunicationHandler() != null){
 				SMain.getCommunicationHandler().CloseUDPNode();
+			}
 			this.dispose();
 		}
     } 
@@ -221,12 +223,14 @@ public class MainWindow extends JFrame {
 			SMain.InitServer(false);
 			SMain.StartServer(false);
 		} catch (Exception e) {
-			if (SMain.getCommunicationHandler() != null)
+			if (SMain.getCommunicationHandler() != null){
 				SMain.getCommunicationHandler().CloseUDPNode();
+			}
 			e.printStackTrace();
 		} finally {
-			if (SMain.getCommunicationHandler() != null)
+			if (SMain.getCommunicationHandler() != null){
 				SMain.getCommunicationHandler().CloseUDPNode();
+			}
 			this.dispose();
 		}
     } 

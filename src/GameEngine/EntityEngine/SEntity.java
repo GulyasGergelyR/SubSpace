@@ -16,7 +16,6 @@ import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
-import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.PlayerEngine.SPlayer;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.WeaponEngine.SWeapon;
