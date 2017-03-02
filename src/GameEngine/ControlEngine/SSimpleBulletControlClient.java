@@ -1,10 +1,10 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
+import GameEngine.WeaponEngine.SBullet;
 
-public class SSimpleBulletControlClient extends SControlServer {
+public class SSimpleBulletControlClient extends SControlServer<SBullet> {
 	
-	public SSimpleBulletControlClient(SMobile mobile){
+	public SSimpleBulletControlClient(SBullet mobile){
 		super(mobile);
 	}
 }

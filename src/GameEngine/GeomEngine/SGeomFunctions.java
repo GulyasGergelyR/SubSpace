@@ -6,8 +6,32 @@ import GameEngine.BaseEngine.SObject;
 public class SGeomFunctions {
 
 	public static boolean intersects(SObject object1, SObject object2){
-		SHitbox hitbox1 = object1.getBody().getHitbox();
-		SHitbox hitbox2 = object2.getBody().getHitbox();
+		SHitboxSpherical hitbox1 = (SHitboxSpherical)object1.getBody().getHitbox();
+		SHitboxSpherical hitbox2 = (SHitboxSpherical)object2.getBody().getHitbox();
+		
+		SVector v1 = object1.getPos().sub(object1.getPrevPos());
+		SVector v2 = object2.getPos().sub(object2.getPrevPos());
+		float ax = object1.getPos().getX()-object2.getPos().getX();
+		float ay = object1.getPos().getY()-object2.getPos().getY();
+		float bx = v1.getX() - v2.getX();
+		float by = v1.getY() - v2.getY();
+		float den = bx*bx+by*by;
+		float t = 0;
+		if (den > 0.001f){
+			t = (-ax*bx-ay*by)/den;
+		}
+		if (t > 1){
+			t = 1;
+		} else if (t < 0){
+			t = 0;
+		}
+		float d = (ax+t*bx)*(ax+t*bx)+(ay+t*by)*(ay+t*by);
+		if (d<(hitbox1.getRadius()+hitbox2.getRadius())*(hitbox1.getRadius()+hitbox2.getRadius())){
+			return true;
+		} else {
+			return false;
+		}
+		/*
 		if (hitbox1 instanceof SHitboxSpherical || hitbox2 instanceof SHitboxSpherical){
 			if (hitbox1 instanceof SHitboxSpherical && hitbox2 instanceof SHitboxSpherical){
 				//float d = object1.getPos().d(object2.getPos());
@@ -23,7 +47,7 @@ public class SGeomFunctions {
 		else if (hitbox1 instanceof SHitboxTriangular || hitbox2 instanceof SHitboxTriangular){
 			if (hitbox1 instanceof SHitboxTriangular && hitbox2 instanceof SHitboxTriangular){
 				
-				/*
+				
 				function ptInTriangle(p, p0, p1, p2) {
 				    var dX = p.x-p2.x;
 				    var dY = p.y-p2.y;
@@ -34,10 +58,10 @@ public class SGeomFunctions {
 				    var t = (p2.y-p0.y)*dX + (p0.x-p2.x)*dY;
 				    if (D<0) return s<=0 && t<=0 && s+t>=D;
 				    return s>=0 && t>=0 && s+t<=D;
-				}*/
+				}
 			}
 		}
-		return false;
+		return false;*/
 	}
 	
 	@Deprecated

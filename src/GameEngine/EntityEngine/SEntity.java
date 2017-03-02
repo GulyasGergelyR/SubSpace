@@ -47,7 +47,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 	
 	public SEntity(SPlayer player){
 		super();
-		this.pos = new SVector(250.0f,250.0f);
+		this.setPos(new SVector(250.0f,250.0f));
 		this.getBody().setTexture("res/entity/spaceshipv3.png");
 		this.getBody().setScale(0.8f);
 		this.getBody().setDrawScale(0.1f);
@@ -58,6 +58,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 		this.player = player;
 		this.life = maxLife;
 		this.shield = maxShield;
+		this.maxSpeed = Specifications.entityMaxSpeed;
+		this.maxAcceleration = Specifications.entityMaxAccl;
 		player.setEntity(this);
 		// Add weapons
 		weapons = new ArrayList<SWeapon>();
@@ -80,7 +82,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 			this.setController(new SHumanControlServer(this));
 		} else {
 			System.out.println("Created lan player at client");
-			this.setController(new SControlClient(this));
+			this.setController(new SControlClient<SEntity>(this));
 		}
 	}
 		
@@ -89,18 +91,18 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 		//TODO Add movement and life specific drawings
 		List<SRenderObject> list = new ArrayList<SRenderObject>();
 		if (playerGameState.equals(PlayerGameState.Alive)){
-			list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), 2.0f));
+			list.add(new SRenderObject(body.getTexture(), getPos(), lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), 2.0f));
 			//Add health bar
 			SVector leftBottom = new SVector((maxShield-shield)/maxShield*0.5f,0.0f);
 			SVector rightUpper = new SVector(0.5f+(maxShield-shield)/maxShield*0.5f,1.0f);
 			// Shield
-			list.add(new SRenderObject("res/entity/ShieldBar.png", pos.add(0,62*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 2.1f));
+			list.add(new SRenderObject("res/entity/ShieldBar.png", getPos().add(0,62*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottom, rightUpper, 2.1f));
 			//Life
 			SVector leftBottomLife = new SVector((maxLife-life)/maxLife*0.5f,0.0f);
 			SVector rightUpperLife = new SVector(0.5f+(maxLife-life)/maxLife*0.5f,1.0f);
-			list.add(new SRenderObject("res/entity/HealthBar.png", pos.add(0,55*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottomLife, rightUpperLife, 2.1f));
+			list.add(new SRenderObject("res/entity/HealthBar.png", getPos().add(0,55*getBody().getScale()), -90.0f,1.0f,1.0f, new Color(255,255,255,0), leftBottomLife, rightUpperLife, 2.1f));
 		} else if (playerGameState.equals(PlayerGameState.Respawning)){
-			list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), body.getTransparency(), body.getColor(), 2.0f));
+			list.add(new SRenderObject(body.getTexture(), getPos(), lookDir.getAngle(), body.getCurrentDrawScale(), body.getTransparency(), body.getColor(), 2.0f));
 		}
 		
 		return list;
@@ -114,7 +116,7 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 		this.life = maxLife;
 		this.shield = maxShield;
 		Random random = new Random();
-		this.pos = new SVector(random.nextFloat()*7000-3500,random.nextFloat()*7000-3500);
+		this.setPos(new SVector(random.nextFloat()*7000-3500,random.nextFloat()*7000-3500));
 		this.moveDir = new SVector();
 		this.acclDir = new SVector();
 		this.lookDir = new SVector(1,0);

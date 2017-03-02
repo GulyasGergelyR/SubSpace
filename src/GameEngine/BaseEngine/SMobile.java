@@ -14,7 +14,7 @@ public abstract class SMobile extends SObject{
 	protected float maxRotSpeed = 40.0f;
 	protected float rotAcceleration = 0.0f;  
 	protected float maxRotAcceleration = 6.0f;
-	private SControl controller;
+	private SControl<SMobile> controller;
 	
 	//Initialize
 	public SMobile(){
@@ -23,7 +23,6 @@ public abstract class SMobile extends SObject{
 		acclDir = new SVector();
 		aimLookDir = new SVector(lookDir);
 	}
-	
 	public float getSpeed() {
 		return moveDir.l();
 	}
@@ -108,12 +107,11 @@ public abstract class SMobile extends SObject{
 	}
 	// functions
 	public void Move(){
-		
+			prevPos = new SVector(pos);
 			moveDir = moveDir.add(acclDir.m(SMain.getDeltaRatio()));
 			if (moveDir.l()>maxSpeed){
 				moveDir = moveDir.setLength(maxSpeed);
 			}
-		
 			pos = pos.add(moveDir.m(SMain.getDeltaRatio()));
 	}
 	public void Rotate(){

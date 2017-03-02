@@ -2,6 +2,7 @@ package GameEngine.ObjectEngine.DebrisEngine;
 
 import java.util.Random;
 
+import GameEngine.Specifications;
 import GameEngine.ControlEngine.SAsteroidControlClient;
 import GameEngine.ControlEngine.SAsteroidControlServer;
 import GameEngine.GeomEngine.SHitboxSpherical;
@@ -13,7 +14,7 @@ public class SAsteroid extends SDebris {
 		super();
 		this.type = SDebrisFactory.Asteroid;
 		
-		this.pos = new SVector(pos);
+		this.setPos(new SVector(pos));
 		this.moveDir = new SVector(moveDir);
 		Random random = new Random();
 		this.lookDir = new SVector(1, 0).rotate(random.nextInt(360));
@@ -21,7 +22,7 @@ public class SAsteroid extends SDebris {
 		this.getBody().setScale(scale);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 48));
 		this.getBody().setMass(scale*scale);
-		this.setMaxSpeed(80.0f);
+		this.setMaxSpeed(Specifications.asteroidMaxSpeed);
 		if (SMain.IsServer()){
 			this.setController(new SAsteroidControlServer(this));
 		}else{

@@ -1,13 +1,12 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
 
-public class SControl {
+public class SControl<T> {
 	protected int sendCounter = 0;
 	protected int maxSendCounter = 60;
-	protected SMobile Owner;
+	protected T Owner;
 	
-	public SControl(SMobile mobile){
+	public SControl(T mobile){
 		Owner = mobile;
 	}
 	public  boolean setKeyTo(int key, boolean state){return false;}

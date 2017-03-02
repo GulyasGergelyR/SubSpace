@@ -16,12 +16,14 @@ public abstract class SObject extends SUpdatable {
 	protected SVector lookDir;
 	protected SBody body;
 	protected boolean posUpdated;
+	protected SVector prevPos;
 	
 	protected LinkedList<SEffect> appliedEffects;
 	
 	//Initialize
 	public SObject(){
 		appliedEffects = new LinkedList<SEffect>();
+		this.prevPos = new SVector();
 		this.pos = new SVector();
 		this.lookDir = new SVector(1,0);
 		this.body = new SBody(this, new SHitbox(this), "res/entity/spaceshipv1.png", 1.0f, 1.0f);
@@ -33,6 +35,11 @@ public abstract class SObject extends SUpdatable {
 	public void setPos(SVector pos) {
 		if(pos!=null)
 			this.pos = pos;
+			//probably the element teleported
+			prevPos = new SVector(pos);
+	}
+	public SVector getPrevPos(){
+		return prevPos;
 	}
 	public boolean equals(SObject o){
 		return this.Id.equals(o.Id);

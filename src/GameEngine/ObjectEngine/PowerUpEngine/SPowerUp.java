@@ -18,7 +18,7 @@ public class SPowerUp extends SMobile{
 	
 	public SPowerUp(SVector pos){
 		super();
-		this.pos = new SVector(pos);
+		this.setPos(new SVector(pos));
 		this.getBody().setTexture("res/object/powerup/powerupring.png");
 		this.getBody().setScale(0.15f);
 		this.getBody().setHitbox(new SHitboxSpherical(this, 120));

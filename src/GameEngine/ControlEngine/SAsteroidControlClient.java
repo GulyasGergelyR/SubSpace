@@ -2,14 +2,14 @@ package GameEngine.ControlEngine;
 
 import java.util.Random;
 
-import GameEngine.BaseEngine.SMobile;
+import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import Main.SMain;
 
-public class SAsteroidControlClient extends SControlServer{
+public class SAsteroidControlClient extends SControlServer<SDebris>{
 	float rotateDir;
 	float rotSpeed;
 	
-	public SAsteroidControlClient(SMobile mobile){
+	public SAsteroidControlClient(SDebris mobile){
 		super(mobile);
 		Random random = new Random();
 		this.rotateDir = random.nextInt(2) * 2 - 1;

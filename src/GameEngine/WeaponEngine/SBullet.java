@@ -29,10 +29,10 @@ public class SBullet extends SMobile{
 		this.getBody().setTexture("res/object/bullet/yellowbullet.png");
 		this.getBody().setScale(this.owner.getActiveWeapon().getBaseBullet().getBody().getScale());
 		this.getBody().setColor(this.owner.getBody().getColor());
-		this.pos = pos;
+		this.setPos(pos);
 		this.lookDir = lookdir;
 		this.moveDir = movedir;
-		this.maxSpeed = 100;
+		this.maxSpeed = 500;
 		this.setController(new SSimpleBulletControlClient(this));
 		
 		SPlayer localPlayer = SFH.Players.getLocalPlayer();
@@ -59,7 +59,7 @@ public class SBullet extends SMobile{
 		this.getBody().setMass(bullet.getBody().getMass());
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
-		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
+		this.setPos(new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6))));
 		this.maxSpeed = bullet.getMaxSpeed();
 		this.damage = bullet.getDamage();
 		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
@@ -76,8 +76,8 @@ public class SBullet extends SMobile{
 		this.getBody().setMass(0.03f);
 		this.lookDir = new SVector(owner.getLookDir());
 		Random random = new Random();
-		this.pos = new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6)));
-		this.maxSpeed = 100;
+		this.setPos(new SVector(owner.getPos().add(lookDir.setLength(30+random.nextFloat()*6))));
+		this.maxSpeed = 500;
 		this.damage = Specifications.bulletDamage;
 		this.moveDir = this.lookDir.setLength(this.maxSpeed);//.add(owner.getMoveDir());
 		this.setController(new SSimpleBulletControlServer(this));

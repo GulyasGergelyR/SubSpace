@@ -23,7 +23,7 @@ public class SExplosion extends SObject{
 	
 	public SExplosion(SVector pos){
 		super();
-		this.pos = new SVector(pos);
+		this.setPos(new SVector(pos));
 		this.getBody().setTexture("res/object/explosion/explosionv2.png");
 		this.getBody().setScale(1.0f);
 		this.getBody().setDrawScale(size);
@@ -39,7 +39,7 @@ public class SExplosion extends SObject{
 			if (localPlayer.getEntity().getObjectState().equals(ObjectState.Active))
 			{
 				SVector playerPos = localPlayer.getEntity().getPos();
-				float dist = playerPos.d(pos);
+				float dist = playerPos.d(getPos());
 				float maxDistance = 4000;
 				if (dist < maxDistance){
 					float maxVolume = 0.2f;
@@ -64,7 +64,7 @@ public class SExplosion extends SObject{
 		SVector leftBottom = new SVector(((Life-1)%8)*0.125f+0.0058f, ((Life-1)/8)*0.125f+0.028f+0.097f);
 		SVector rightUpper = new SVector(((Life-1)%8)*0.125f+0.0058f+0.097f, ((Life-1)/8)*0.125f+0.028f);
 		
-		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), leftBottom, rightUpper, 0.0101f));
+		list.add(new SRenderObject(body.getTexture(), getPos(), lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), leftBottom, rightUpper, 0.0101f));
 		return list;
 	}
 	

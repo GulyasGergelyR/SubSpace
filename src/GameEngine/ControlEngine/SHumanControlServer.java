@@ -1,6 +1,5 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SVector;
@@ -9,7 +8,7 @@ import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
 
-public class SHumanControlServer extends SControlServer{
+public class SHumanControlServer extends SControlServer<SEntity>{
 	//keyChars = {"W","A","S","D","1","2","3","4","5"};
 	private static final int numberofkeys = 9;
 	private static final int numberofbuttons = 2;
@@ -28,7 +27,7 @@ public class SHumanControlServer extends SControlServer{
 	private int spawnCounter = 0;
 	private int maxSpawnCounter = 180;
 	
-	public SHumanControlServer(SMobile mobile){
+	public SHumanControlServer(SEntity mobile){
 		super(mobile);
 		for(int i=0;i<numberofkeys;i++){
 			keyStates[i] = false;
@@ -54,8 +53,8 @@ public class SHumanControlServer extends SControlServer{
 	}
 	@Override
 	protected void Think(){
-		if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Alive) ||
-				((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Respawning)){
+		if (Owner.getPlayerGameState().equals(PlayerGameState.Alive) ||
+				Owner.getPlayerGameState().equals(PlayerGameState.Respawning)){
 			// moving around
 			SVector acclDir = new SVector();
 			if(keyStates[0]) acclDir = acclDir.add(0,1);
@@ -82,14 +81,14 @@ public class SHumanControlServer extends SControlServer{
 			else			{if (Math.abs(angle)<180.0f) rotdir = -1; else rotdir = 1;}
 			Owner.setRotAcceleration(Owner.getMaxRotAcceleration()*rotdir);
 			
-			if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Respawning)){
+			if (Owner.getPlayerGameState().equals(PlayerGameState.Respawning)){
 				spawnCounter++;
 				if (spawnCounter >= maxSpawnCounter){
-					((SEntity) Owner).setPlayerGameState(PlayerGameState.Alive);
+					Owner.setPlayerGameState(PlayerGameState.Alive);
 				} 
 			}
 			
-		} else if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Dead)){
+		} else if (Owner.getPlayerGameState().equals(PlayerGameState.Dead)){
 			respawnCounter++;
 			if (firstTime){
 				maxRespawnCounter = maxRespawnCounterFirstTime;
@@ -99,14 +98,14 @@ public class SHumanControlServer extends SControlServer{
 				maxRespawnCounter = 120;
 				respawnCounter = 0;
 				spawnCounter = 0;
-				((SEntity) Owner).setPlayerGameState(PlayerGameState.Respawning);
-				((SEntity) Owner).respawn();
+				Owner.setPlayerGameState(PlayerGameState.Respawning);
+				Owner.respawn();
 			}
 		}
 		
 		if (sendCounter > maxSendCounter){
 			sendCounter = 0;
-			SM message = SMPatterns.getEntityUpdateStateMessage((SEntity)this.Owner);
+			SM message = SMPatterns.getEntityUpdateStateMessage(this.Owner);
 	    	SMain.getCommunicationHandler().SendMessage(message);
 		}else{
 			sendCounter++;
@@ -114,15 +113,15 @@ public class SHumanControlServer extends SControlServer{
 	}
 	@Override
 	protected void Act() {
-		if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Alive) ||
-				((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Respawning)){
+		if (Owner.getPlayerGameState().equals(PlayerGameState.Alive) ||
+				Owner.getPlayerGameState().equals(PlayerGameState.Respawning)){
 		super.Act();
 		}
-		if (((SEntity)Owner).getPlayerGameState().equals(PlayerGameState.Alive)){
-			((SEntity)Owner).rechargeShield();
+		if (Owner.getPlayerGameState().equals(PlayerGameState.Alive)){
+			Owner.rechargeShield();
 			// Firing weapon
 			if (mouseStates[0]){
-				((SEntity)Owner).tryToFire();
+				Owner.tryToFire();
 			}
 		}
 		

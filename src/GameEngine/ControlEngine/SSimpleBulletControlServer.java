@@ -1,6 +1,5 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
@@ -14,22 +13,22 @@ import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SSimpleBulletControlServer extends SControlServer {
+public class SSimpleBulletControlServer extends SControlServer<SBullet> {
 	protected int maxLifeTime = 200;
 	protected int currentLifeTime = 0;
 	protected int maxLifeDistance = 100;
 	
-	public SSimpleBulletControlServer(SMobile mobile){
+	public SSimpleBulletControlServer(SBullet mobile){
 		super(mobile);
 	}
 	@Override
 	protected void Think() {
 		for(SEntity entity : SFH.Entities.getObjects()){
-			SEntity bulletOwner = ((SBullet)Owner).getOwner();
+			SEntity bulletOwner = Owner.getOwner();
 			if (!entity.equals(bulletOwner) && entity.getObjectState().equals(ObjectState.Active) &&
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				if (SGeomFunctions.intersects(entity, Owner)){
-					if (entity.gotHit(((SBullet)Owner).getDamage(), Owner))
+					if (entity.gotHit(Owner.getDamage(), Owner))
 						bulletOwner.getPlayer().addKill(1);
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);

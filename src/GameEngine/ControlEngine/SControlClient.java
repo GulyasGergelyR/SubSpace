@@ -1,9 +1,8 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
 
-public class SControlClient extends SControl{
-	public SControlClient(SMobile mobile){
+public class SControlClient<T> extends SControl<T>{
+	public SControlClient(T mobile){
 		super(mobile);
 	}
 

@@ -1,6 +1,5 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
@@ -11,13 +10,13 @@ import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SPowerUpControlServer extends SControlServer{
+public class SPowerUpControlServer extends SControlServer<SPowerUp>{
 	
 	// For being activeS
 	protected int duration = 0;  // it means its there forever
 	protected int currentTime = 0;
 		
-	public SPowerUpControlServer(SMobile mobile){
+	public SPowerUpControlServer(SPowerUp mobile){
 		super(mobile);
 	}
 	
@@ -29,7 +28,7 @@ public class SPowerUpControlServer extends SControlServer{
 				Owner.setObjectState(ObjectState.WaitingDelete);
 				SM message = SMPatterns.getObjectDeleteMessage(Owner);
 				SMain.getCommunicationHandler().SendMessage(message);
-				SFH.PowerUps.powerUpApplied(((SPowerUp)Owner).getType());
+				SFH.PowerUps.powerUpApplied(Owner.getType());
 				return;
 			}
 		}
@@ -38,12 +37,12 @@ public class SPowerUpControlServer extends SControlServer{
 			if(	entity.getPlayerGameState().equals(PlayerGameState.Alive) &&
 					entity.getObjectState().equals(ObjectState.Active)){
 				if (SGeomFunctions.intersects(entity, Owner)){
-					if (!((SPowerUp)Owner).applyToEntity(entity))
+					if (!Owner.applyToEntity(entity))
 						continue;
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
-					SFH.PowerUps.powerUpApplied(((SPowerUp)Owner).getType());
+					SFH.PowerUps.powerUpApplied(Owner.getType());
 					break;
 				}
 			}

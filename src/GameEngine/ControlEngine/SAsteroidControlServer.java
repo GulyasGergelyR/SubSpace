@@ -1,6 +1,5 @@
 package GameEngine.ControlEngine;
 
-import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
@@ -8,13 +7,14 @@ import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
+import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SAsteroidControlServer extends SControlServer{
-	public SAsteroidControlServer(SMobile mobile){
+public class SAsteroidControlServer extends SControlServer<SDebris>{
+	public SAsteroidControlServer(SDebris mobile){
 		super(mobile);
 	}
 	@Override

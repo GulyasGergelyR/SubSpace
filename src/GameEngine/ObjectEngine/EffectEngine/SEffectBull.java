@@ -14,13 +14,17 @@ public class SEffectBull extends SEffect{
 	@Override
 	protected void applyToOwner() {
 		((SEntity)Owner).setUndamagableByCollision(true);
-		((SEntity)Owner).getBody().setMass(100.f);
+		Owner.getBody().setMass(100.f);
+		Owner.setMaxSpeed(70);
+		Owner.setMaxAcceleration(16);
 	}
 	
 	@Override
 	protected boolean restore() {
 		((SEntity)Owner).setUndamagableByCollision(false);
-		((SEntity)Owner).getBody().setMass(Specifications.entityMass);
+		Owner.getBody().setMass(Specifications.entityMass);
+		Owner.setMaxSpeed(Specifications.entityMaxSpeed);
+		Owner.setMaxAcceleration(Specifications.entityMaxAccl);
 		return false;
 	}
 }

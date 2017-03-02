@@ -30,6 +30,8 @@ public final class Specifications {
 	
 	//Debris
 	public static int maxNumberOfAsteroids = 120;
+	public static float chanceForAsteroid = 0.8f;
+	public static float asteroidMaxSpeed = 130;
 	
 	//Power ups
 	public static boolean allowPowerUps = true;
@@ -57,9 +59,13 @@ public final class Specifications {
 	public static int entityLife = 100;
 	public static int entityShield = 40;
 	public static float entityMass = 0.5f;
+	public static float entityMaxSpeed = 55f;
+	public static float entityMaxAccl = 12f;
+	
 	
 	//Bullet
-	public static int bulletDamage = 5;
+	public static int bulletDamage = 8;
+	public static float bulletSpeed = 200;
 	
 	
 	public static List<String> resourcePathStrings = new ArrayList<String>();
