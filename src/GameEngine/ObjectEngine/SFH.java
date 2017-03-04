@@ -5,6 +5,7 @@ import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
 import GameEngine.PlayerEngine.SPlayerFactory;
+import GameEngine.WeaponEngine.SBulletFactory;
 
 public class SFH {
 	// Factory Handler
@@ -13,6 +14,7 @@ public class SFH {
 	public static SDebrisFactory Debris;
 	public static SEntityFactory Entities;
 	public static SPlayerFactory Players;
+	public static SBulletFactory Bullets;
 	
 	public static void initFactories(){
 		PowerUps = new SPowerUpFactory();
@@ -20,10 +22,13 @@ public class SFH {
 		Debris = new SDebrisFactory();
 		Entities = new SEntityFactory();
 		Players = new SPlayerFactory();
+		Bullets = new SBulletFactory();
 	}
 	
 	public static void removeObjectFromList(byte FactoryType, int id){
-		if (FactoryType == SFH.PowerUps.getFactoryType()){
+		if (FactoryType == SFH.Bullets.getFactoryType()){
+			SFH.Bullets.removeObjectFromList(id);
+		}else if (FactoryType == SFH.PowerUps.getFactoryType()){
 			SFH.PowerUps.removeObjectFromList(id);
 		} else if (FactoryType == SFH.Debris.getFactoryType()){
 			SFH.Debris.removeObjectFromList(id);

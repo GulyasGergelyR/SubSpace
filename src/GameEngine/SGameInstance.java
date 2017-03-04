@@ -23,8 +23,6 @@ import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;
 
 public class SGameInstance {
-	
-	private LinkedList<SObject> objects;
 	private LinkedList<SObject> animationObjects;
 	private SBackGround backGround;
 	
@@ -38,16 +36,12 @@ public class SGameInstance {
 		FPS = new SFPS();
 		backGround = new SBackGround();
 		backGround.getBody().setTexture("res/object/background/bg1.png");
-		objects = new LinkedList<SObject>();
 		animationObjects = new LinkedList<SObject>();
 		
 		// Factories
 		SFH.initFactories();
 	}
 	
-	public LinkedList<SObject> getObjects(){
-		return objects;
-	}
 	public LinkedList<SObject> getAnimationObjects(){
 		return animationObjects;
 	}
@@ -69,30 +63,8 @@ public class SGameInstance {
 	public SBackGround getBackGround(){
 		return backGround;
 	}
-	public void addObject(SObject object){
-		objects.add(object);
-	}
 	public void addAnimationObject(SObject object){
 		animationObjects.add(object);
-	}
-	public void removeObjectFromList(int Id){
-		ListIterator<SObject> iter = objects.listIterator();
-		while(iter.hasNext()){
-			SObject object = iter.next();
-		    if(object.equals(Id)){
-		        iter.remove();
-		        break;
-		    }
-		}
-	}
-	
-	public SObject getObjectById(int Id){
-		for(SObject object : objects){
-			if (object.equals(Id))
-				return object;
-		}
-		System.out.println("Object was not found, with Id: "+Id);
-		return null;
 	}
 	
 	public void UpdateGame(){
@@ -115,7 +87,6 @@ public class SGameInstance {
 			SFH.Entities.collisionCheckInFactory();
 		}
 		SFH.Entities.UpdateObjects();
-		UpdateObjects();
 		UpdateAnimationObjects();
 		UpdateFactories();
 	}
@@ -142,43 +113,10 @@ public class SGameInstance {
 			}
 			SFH.Debris.collisionCheckInFactory();
 		}
+		SFH.Bullets.UpdateObjects();
 		SFH.Effects.UpdateObjects();
 		SFH.PowerUps.UpdateObjects();
 		SFH.Debris.UpdateObjects();
-	}
-	
-	protected void UpdateObjects(){
-		if(!objects.isEmpty()){
-			ListIterator<SObject> iter = objects.listIterator();
-			while(iter.hasNext()){
-				SObject object = iter.next();
-			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
-			        iter.remove();
-			    }else {
-			    	object.update();
-			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
-				        iter.remove();
-				    }
-			    }
-			}
-		}
-	}
-	@Deprecated
-	protected void UpdateObjects(LinkedList<SObject> list){
-		if(!list.isEmpty()){
-			ListIterator<SObject> iter = list.listIterator();
-			while(iter.hasNext()){
-				SObject object = iter.next();
-			    if(object.getObjectState().equals(ObjectState.WaitingDelete)){
-			        iter.remove();
-			    }else {
-			    	object.update();
-			    	if(object.getObjectState().equals(ObjectState.WaitingDelete)){
-				        iter.remove();
-				    }
-			    }
-			}
-		}
 	}
 	protected void UpdateAnimationObjects(){
 		if(!animationObjects.isEmpty()){

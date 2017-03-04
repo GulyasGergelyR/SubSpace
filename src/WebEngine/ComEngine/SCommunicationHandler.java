@@ -331,7 +331,7 @@ public class SCommunicationHandler {
 	}
 	
 	private void ParseDisconnectCommand(SM message){
-		System.out.println("parsing disconnect command");
+		System.out.println("Parsing disconnect command");
 		SNode client = getNodeByAddress(message.getAddress());
 		if(client==null){
 			System.out.println("Client who wants to disconnect was not found "+message.getAddress().toString());

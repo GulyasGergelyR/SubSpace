@@ -4,6 +4,7 @@ import java.util.Random;
 
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
+import GameEngine.ObjectEngine.SFH;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
@@ -64,15 +65,11 @@ public class SWeapon{
 				SBullet bullet = baseBullet.createBullet();
 				bullet.setMoveDir(bullet.getMoveDir().rotate(random.nextFloat()*45.0f-22.5f));
 				bullet.setLookDir(new SVector(bullet.getMoveDir()));
-				SMain.getGameInstance().addObject(bullet);
-				SM message = SMPatterns.getObjectCreateMessage(bullet);
-				SMain.getCommunicationHandler().SendMessage(message);
+				SFH.Bullets.createNewBulletAtServer(bullet);
 			}
 		} else{
 			SBullet bullet = baseBullet.createBullet();
-			SMain.getGameInstance().addObject(bullet);
-			SM message = SMPatterns.getObjectCreateMessage(bullet);
-			SMain.getCommunicationHandler().SendMessage(message);
+			SFH.Bullets.createNewBulletAtServer(bullet);
 		}
 		lastTime = 0;
 	}

@@ -62,7 +62,7 @@ public class SRenderer {
 		Draw(gameInstance.getBackGround().getDrawables());
 	}
 	private void DrawObjects(){
-		for (SObject object : gameInstance.getObjects()){
+		for (SObject object : SFH.Bullets.getObjects()){
 			if (object.getObjectState() == ObjectState.Active){
 				Draw(object.getDrawables());
 			}

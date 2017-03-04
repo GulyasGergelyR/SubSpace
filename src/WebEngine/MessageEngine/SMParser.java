@@ -107,16 +107,13 @@ public class SMParser {
 	public static void parseObjectCreateMessage(SM message){
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
-		SObject object = null;
 		int objectTypeId = buffer.get();
-		if (objectTypeId == 20){  // TODO remove hard coded bullet type id
+		if (objectTypeId == SFH.Bullets.getFactoryType()){  // TODO remove hard coded bullet type id
 			int ownerId = buffer.getShort();
 			SVector pos = parseBigVector(buffer);
 			SVector movedir = parseBigVector(buffer);
 			SVector lookdir = new SVector(movedir);
-			object = new SBullet(ownerId, pos, lookdir, movedir);
-			object.setId(new SId(id));
-			SMain.getGameInstance().addObject(object);
+			SFH.Bullets.createNewBulletAtClient(ownerId, id, pos, lookdir, movedir, (byte)21);
 		} else if (objectTypeId == SFH.PowerUps.getFactoryType()){
 			byte powerUpType = buffer.get();
 			SVector pos = parseBigVector(buffer);
@@ -153,8 +150,8 @@ public class SMParser {
 		int id = SMParser.parseId(buffer);
 		byte factoryId = buffer.get();
 		SUpdatable updatable = null;
-		if (factoryId == 20){  // TODO remove hard coded bullet type id
-			updatable = SMain.getGameInstance().getObjectById(id);
+		if (factoryId == SFH.Bullets.getFactoryType()){  // TODO remove hard coded bullet type id
+			updatable = SFH.Bullets.getObjectById(id);
 		} else if (factoryId == SFH.PowerUps.getFactoryType()){
 			updatable = SFH.PowerUps.getObjectById(id);
 		} else if (factoryId == SFH.Debris.getFactoryType()){
@@ -191,10 +188,6 @@ public class SMParser {
 		int id = SMParser.parseId(buffer);
 		byte type = buffer.get();
 		//TODO remove gameInstance
-		if (type == 0){
-			gameInstance.removeObjectFromList(id);
-		} else {
-			SFH.removeObjectFromList(type, id);
-		}
+		SFH.removeObjectFromList(type, id);
 	}
 }

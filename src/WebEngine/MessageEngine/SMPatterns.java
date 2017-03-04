@@ -187,7 +187,7 @@ public class SMPatterns {
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SBullet){
 			SBullet bullet = (SBullet) object;
-			buffer.put((byte)20); //TODO remove hard coded bullet type id
+			buffer.put(SFH.Bullets.getFactoryType()); //TODO remove hard coded bullet type id
 			buffer.putShort((short)(bullet.getOwner().getId().get()));
 			bullet.getPos().addToBufferAsBigVector(buffer);
 			bullet.getMoveDir().addToBufferAsBigVector(buffer);
@@ -235,7 +235,9 @@ public class SMPatterns {
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectDelete);
 		buffer.putShort((short)object.getId().get());
-		if (object instanceof SAsteroid){
+		if (object instanceof SBullet){
+			buffer.put(SFH.Bullets.getFactoryType());
+		} else if (object instanceof SAsteroid){
 			buffer.put(SFH.Debris.getFactoryType());
 		} else if (object instanceof SPowerUp){
 			buffer.put(SFH.PowerUps.getFactoryType());
