@@ -12,6 +12,9 @@ import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.PlayerEngine.SPlayer;
+import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SBullet extends SMobile{
 	protected SEntity owner;
@@ -94,5 +97,4 @@ public class SBullet extends SMobile{
 	public void setDamage(float damage) {
 		this.damage = damage;
 	}
-	
 }

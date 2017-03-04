@@ -11,7 +11,7 @@ import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import RenderingEngine.SRenderObject;
 
-public abstract class SObject extends SUpdatable {
+public abstract class SObject extends SUpdatable{
 	protected SVector pos;
 	protected SVector lookDir;
 	protected SBody body;
@@ -37,6 +37,10 @@ public abstract class SObject extends SUpdatable {
 			this.pos = pos;
 			//probably the element teleported
 			prevPos = new SVector(pos);
+	}
+	public void modifyCurrentPos(SVector pos) {
+		if(pos!=null)
+			this.pos = pos;
 	}
 	public SVector getPrevPos(){
 		return prevPos;
@@ -102,5 +106,4 @@ public abstract class SObject extends SUpdatable {
 		list.add(new SRenderObject(body.getTexture(), pos, lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), body.get_Z()));
 		return list;
 	}
-	
 }

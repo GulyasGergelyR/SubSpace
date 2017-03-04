@@ -29,8 +29,8 @@ public final class Specifications {
 	public static int WindowHeight = 768;
 	
 	//Debris
-	public static int maxNumberOfAsteroids = 120;
-	public static float chanceForAsteroid = 0.8f;
+	public static int maxNumberOfAsteroids = 100;
+	public static float chanceForAsteroid = 0.6f;
 	public static float asteroidMaxSpeed = 130;
 	
 	//Power ups
@@ -65,7 +65,7 @@ public final class Specifications {
 	
 	//Bullet
 	public static int bulletDamage = 8;
-	public static float bulletSpeed = 200;
+	public static float bulletSpeed = 150;
 	
 	
 	public static List<String> resourcePathStrings = new ArrayList<String>();
@@ -142,6 +142,7 @@ public final class Specifications {
 		print(fw, "[[Server]]");
 		print(fw, "[Debris]");
 		print(fw, "maxNumberOfAsteroids="+maxNumberOfAsteroids);
+		print(fw, "chanceForAsteroid="+chanceForAsteroid);
 		print(fw, "[PowerUps]");
 		print(fw, "allowPowerUps="+allowPowerUps);
 		print(fw, "maxNumberOfPowerUps="+maxNumberOfPowerUps);
@@ -183,6 +184,7 @@ public final class Specifications {
 			WindowHeight = (new SMatcher<Integer>()).match(line, "WindowHeight=(.*)", WindowHeight);
 			
 			maxNumberOfAsteroids = (new SMatcher<Integer>()).match(line, "maxNumberOfAsteroids=(.*)", maxNumberOfAsteroids);
+			chanceForAsteroid = (new SMatcher<Float>()).match(line, "chanceForAsteroid=(.*)", chanceForAsteroid);
 			
 			allowPowerUps = (new SMatcher<Boolean>()).match(line, "allowPowerUps=(.*)", allowPowerUps);
 			maxNumberOfPowerUps = (new SMatcher<Integer>()).match(line, "maxNumberOfPowerUps=(.*)", maxNumberOfPowerUps);

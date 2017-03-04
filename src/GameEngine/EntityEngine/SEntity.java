@@ -276,4 +276,8 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 	public void setUndamagableByCollision(boolean undamagableByCollision) {
 		this.undamagableByCollision = undamagableByCollision;
 	}
+	
+	public boolean isAlive(){
+		return playerGameState.equals(PlayerGameState.Alive);
+	}
 }

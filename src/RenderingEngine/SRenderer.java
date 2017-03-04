@@ -150,8 +150,8 @@ public class SRenderer {
 					x -= font.getWidth(entity.getPlayer().getName())/2f;
 					y -= 5;
 				} else {
-					x = Specifications.WindowWidth / 2f + 0.5f*(entity.getPos().getX() - SFH.Players.getLocalPlayer().getEntity().getPos().getX());
-					y = Specifications.WindowHeight / 2f - 0.5f*(entity.getPos().getY() - SFH.Players.getLocalPlayer().getEntity().getPos().getY());
+					x = Specifications.WindowWidth / 2f + 0.5f*(entity.getPos().getX() - playerToFollow.getEntity().getPos().getX());
+					y = Specifications.WindowHeight / 2f - 0.5f*(entity.getPos().getY() - playerToFollow.getEntity().getPos().getY());
 					x -= font.getWidth(entity.getPlayer().getName())/2f;
 					y -= 52;
 				}

@@ -4,7 +4,8 @@ import GameEngine.BaseEngine.SMobile;
 import GameEngine.BaseEngine.SObject;
 
 public class SGeomFunctions {
-
+	
+	@Deprecated
 	public static boolean intersects(SObject object1, SObject object2){
 		SHitboxSpherical hitbox1 = (SHitboxSpherical)object1.getBody().getHitbox();
 		SHitboxSpherical hitbox2 = (SHitboxSpherical)object2.getBody().getHitbox();

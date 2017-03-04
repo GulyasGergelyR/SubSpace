@@ -8,6 +8,8 @@ import GameEngine.ControlEngine.SAsteroidControlServer;
 import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SAsteroid extends SDebris {
 	public SAsteroid(SVector pos, SVector moveDir, float scale){

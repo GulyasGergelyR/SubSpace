@@ -99,9 +99,12 @@ public abstract class SMobile extends SObject{
 		}
 		this.rotAcceleration = rotAcceleration;
 	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setController(SControl controller){
 		this.controller = controller;
 	}
+	@SuppressWarnings("rawtypes")
 	public SControl getController(){
 		return this.controller;
 	}
