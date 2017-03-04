@@ -1,12 +1,11 @@
 package GameEngine.WeaponEngine;
 
-import WebEngine.MessageEngine.SM;
-import WebEngine.MessageEngine.SMPatterns;
 import GameEngine.SId;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
-import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
 public class SBulletFactory extends SFactory<SBullet> {
 	public static byte simpleBullet = 21;

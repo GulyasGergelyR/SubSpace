@@ -5,9 +5,6 @@ import java.util.Random;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
-import Main.SMain;
-import WebEngine.MessageEngine.SM;
-import WebEngine.MessageEngine.SMPatterns;
 
 public class SWeapon{
 	protected SEntity Owner;

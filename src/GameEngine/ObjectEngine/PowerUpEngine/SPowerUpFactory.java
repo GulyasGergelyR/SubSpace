@@ -4,7 +4,7 @@ import java.util.Random;
 
 import GameEngine.SId;
 import GameEngine.Specifications;
-import GameEngine.ControlEngine.SControl;
+import GameEngine.ControlEngine.SControlClient;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;
@@ -35,7 +35,7 @@ public class SPowerUpFactory extends SFactory<SPowerUp>{
 		} else if (powerUpType == PowerUpBull){
 			powerUp = new SPowerUpBull(pos);
 		}
-		powerUp.setController(new SControl(powerUp));
+		powerUp.setController(new SControlClient<SPowerUp>(powerUp));
 		powerUp.setId(new SId(id));
 		addObject(powerUp);
 	}

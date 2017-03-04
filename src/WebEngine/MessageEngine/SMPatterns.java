@@ -208,6 +208,7 @@ public class SMPatterns {
 			buffer.put(SFH.Effects.getFactoryType());
 			buffer.put(effect.getType());
 			buffer.putShort((short)(effect.getOwner().getId().get()));
+			buffer.putShort((short)(effect.getDuration()));
 		}
 		return message;
 	}

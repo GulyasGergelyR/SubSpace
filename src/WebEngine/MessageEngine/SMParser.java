@@ -3,10 +3,9 @@ package WebEngine.MessageEngine;
 import java.nio.ByteBuffer;
 
 import GameEngine.SGameInstance;
-import GameEngine.SId;
 import GameEngine.BaseEngine.SObject;
 import GameEngine.BaseEngine.SUpdatable;
-import GameEngine.ControlEngine.SControl;
+import GameEngine.ControlEngine.SHumanControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SBulletExplosion;
@@ -14,7 +13,6 @@ import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
-import GameEngine.WeaponEngine.SBullet;
 import Main.SMain;
 
 public class SMParser {
@@ -82,7 +80,7 @@ public class SMParser {
 		SFH.Entities.createEntityAtClient(id, name);
 	}
 	public static void parseClientInputMessage(SM message, SEntity entity){
-		SControl control = entity.getController();
+		SHumanControlServer control = (SHumanControlServer)entity.getController();
 		ByteBuffer buffer = message.getBuffer();
 		byte command = buffer.get();
 		SVector aimLookDir = parseBigVector(buffer);
@@ -127,7 +125,8 @@ public class SMParser {
 		} else if (objectTypeId == SFH.Effects.getFactoryType()){
 			byte effectType = buffer.get();
 			int ownerId = buffer.getShort();
-			SFH.Effects.createNewEffectAtClient(id, ownerId, effectType);
+			int duration = buffer.getShort();
+			SFH.Effects.createNewEffectAtClient(id, ownerId, duration, effectType);
 		}
 	}
 	public static void parseAnimationObjectCreateMessage(SM message){

@@ -32,7 +32,7 @@ public class SBullet extends SMobile{
 		this.setPos(pos);
 		this.lookDir = lookdir;
 		this.moveDir = movedir;
-		this.maxSpeed = 500;
+		this.maxSpeed = Specifications.bulletSpeed;
 		this.setController(new SSimpleBulletControlClient(this));
 		
 		SPlayer localPlayer = SFH.Players.getLocalPlayer();

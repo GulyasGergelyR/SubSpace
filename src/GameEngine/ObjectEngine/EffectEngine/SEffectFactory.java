@@ -21,7 +21,7 @@ public class SEffectFactory extends SFactory<SEffect> {
 		super("Effect factory", (byte) 70);
 	}
 	
-	public void createNewEffectAtClient(int id, int ownerId, byte effectType){
+	public void createNewEffectAtClient(int id, int ownerId,int duration, byte effectType){
 		SEffect effect = null;
 		SMobile mobile = SFH.Entities.getObjectById(ownerId);
 		if (effectType == EffectBurst){
@@ -32,6 +32,7 @@ public class SEffectFactory extends SFactory<SEffect> {
 			effect = new SEffectBullClient(mobile);
 		} 
 		effect.setId(new SId(id));
+		effect.setDuration(duration);
 		addObject(effect);
 	}
 	
