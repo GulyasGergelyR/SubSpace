@@ -9,6 +9,7 @@ import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.GeomEngine.SInteraction;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.SFactory;
@@ -136,30 +137,12 @@ public class SEntityFactory extends SFactory<SEntity> {
 				for (int j=i+1;j<temps.size(); j++){
 					SEntity contra = temps.get(j);
 					if (contra.getObjectState().equals(ObjectState.Active) &&
-						!contra.equals(currentObject) && 
-						currentObject.getPlayerGameState().equals(PlayerGameState.Alive)){
-						if (SGeomFunctions.intersects(contra, currentObject)){
-							SCollision collision = new SCollision(currentObject, contra);
-							if (collision.IsHappened() && collision.getRelativeSpeed() > 5){
-								SVector tempVector = currentObject.getPos().sub(contra.getPos());
-								SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(
-										contra.getPos().add(tempVector.getX()/2, tempVector.getY()/2), (byte)61);
-								SMain.getCommunicationHandler().SendMessage(explosionMessage);
-//								update[i] = true;
-//								update[j] = true;
-							}
-						}
+							!contra.equals(currentObject) && 
+							currentObject.getPlayerGameState().equals(PlayerGameState.Alive)){
+						new SInteraction(currentObject, contra);
 					}
 				}
 			}
 		}
-//		for (int i=0; i< update.length; i++){
-//			if (update[i]){
-//				SEntity entity = temps.get(i);
-//				//entity.getController().setSendCounter(0);
-//				SM message = SMPatterns.getObjectUpdateMessage(entity);
-//				SMain.getCommunicationHandler().SendMessage(message);
-//			}
-//		}
 	}
 }

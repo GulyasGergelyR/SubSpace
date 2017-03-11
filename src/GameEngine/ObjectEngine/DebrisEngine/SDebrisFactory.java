@@ -9,6 +9,7 @@ import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.GeomEngine.SCollision;
 import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.GeomEngine.SInteraction;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;
@@ -95,12 +96,10 @@ public class SDebrisFactory extends SFactory<SDebris>{
 					if (contra instanceof SAsteroid &&
 						contra.getObjectState().equals(ObjectState.Active) &&
 						!contra.equals(currentObject)){
-						if (SGeomFunctions.intersects(contra, currentObject)){
-							SCollision collision = new SCollision(currentObject, contra);
-							if (collision.IsHappened()){
-								update[i] = true;
-								update[j] = true;
-							}
+						SInteraction interaction = new SInteraction(currentObject, contra);
+						if (interaction.IsHappened()){
+							update[i] = true;
+							update[j] = true;
 						}
 					}
 				}

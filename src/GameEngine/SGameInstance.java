@@ -68,20 +68,20 @@ public class SGameInstance {
 	}
 	
 	public void UpdateGame(){
-		if (firstTime && SMain.IsServer()){
-			try {
-				byte[] address = new byte[]{(byte)192,(byte)168,1,2};
-				SNode client = new SNode(InetAddress.getByAddress(address), 5000, "Dummy", PlayerType.lan);
-				synchronized (SMain.getCommunicationHandler().getNodes()) {
-					SMain.getCommunicationHandler().getNodes().add(client);
-				SFH.Entities.createEntityAtServer(client.getId().get());
-				}
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			firstTime = false;
-		}
+//		if (firstTime && SMain.IsServer()){
+//			try {
+//				byte[] address = new byte[]{(byte)192,(byte)168,1,2};
+//				SNode client = new SNode(InetAddress.getByAddress(address), 5000, "Dummy", PlayerType.lan);
+//				synchronized (SMain.getCommunicationHandler().getNodes()) {
+//					SMain.getCommunicationHandler().getNodes().add(client);
+//				SFH.Entities.createEntityAtServer(client.getId().get());
+//				}
+//			} catch (UnknownHostException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			firstTime = false;
+//		}
 		
 		if (SMain.IsServer()){
 			SFH.Entities.collisionCheckInFactory();

@@ -238,6 +238,10 @@ public class SMPatterns {
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SBullet){
 			buffer.put(SFH.Bullets.getFactoryType());
+			if (((SBullet)object).isExploded()){
+				buffer.put((byte)61);
+				((SBullet)object).getExplosionPos().addToBufferAsBigVector(buffer);
+			}
 		} else if (object instanceof SAsteroid){
 			buffer.put(SFH.Debris.getFactoryType());
 		} else if (object instanceof SPowerUp){

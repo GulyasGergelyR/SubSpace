@@ -186,7 +186,16 @@ public class SMParser {
 		ByteBuffer buffer = message.getBuffer();
 		int id = SMParser.parseId(buffer);
 		byte type = buffer.get();
-		//TODO remove gameInstance
 		SFH.removeObjectFromList(type, id);
+		//parse additional info
+		if (type == SFH.Bullets.getFactoryType()){
+			byte explosion = buffer.get();
+			if (explosion == 61){
+				SVector pos = parseBigVector(buffer);
+				SObject object = new SBulletExplosion(pos);
+				SMain.getGameInstance().addAnimationObject(object);
+			}
+		}
+		
 	}
 }

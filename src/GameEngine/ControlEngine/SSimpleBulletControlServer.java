@@ -3,10 +3,7 @@ package GameEngine.ControlEngine;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
-import GameEngine.GeomEngine.SCollision;
-import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SInteraction;
-import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.WeaponEngine.SBullet;
@@ -30,6 +27,8 @@ public class SSimpleBulletControlServer extends SControlServer<SBullet> {
 					entity.getPlayerGameState().equals(PlayerGameState.Alive)){
 				SInteraction interaction = new SInteraction(entity, Owner);
 				if (interaction.IsHappened()){
+					Owner.setExploded(true);
+					Owner.setExplosionPos(interaction.getContactPoint());
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM message = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(message);
@@ -44,7 +43,8 @@ public class SSimpleBulletControlServer extends SControlServer<SBullet> {
 					((SDebris)object).getController().setSendCounter(0);
 					SM message = SMPatterns.getObjectUpdateMessage(object);
 					SMain.getCommunicationHandler().SendMessage(message);
-					
+					Owner.setExploded(true);
+					Owner.setExplosionPos(interaction.getContactPoint());
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					SM messageObjectDelete = SMPatterns.getObjectDeleteMessage(Owner);
 					SMain.getCommunicationHandler().SendMessage(messageObjectDelete);

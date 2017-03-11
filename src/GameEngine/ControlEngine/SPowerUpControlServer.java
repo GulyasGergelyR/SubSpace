@@ -4,6 +4,7 @@ import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SGeomFunctions;
+import GameEngine.GeomEngine.SInteraction;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import Main.SMain;
@@ -36,13 +37,8 @@ public class SPowerUpControlServer extends SControlServer<SPowerUp>{
 		for(SEntity entity : SFH.Entities.getObjects()){
 			if(	entity.getPlayerGameState().equals(PlayerGameState.Alive) &&
 					entity.getObjectState().equals(ObjectState.Active)){
-				if (SGeomFunctions.intersects(entity, Owner)){
-					if (!Owner.applyToEntity(entity))
-						continue;
-					Owner.setObjectState(ObjectState.WaitingDelete);
-					SM message = SMPatterns.getObjectDeleteMessage(Owner);
-					SMain.getCommunicationHandler().SendMessage(message);
-					SFH.PowerUps.powerUpApplied(Owner.getType());
+				SInteraction interaction = new SInteraction(entity, Owner);
+				if (interaction.IsHappened()){
 					break;
 				}
 			}

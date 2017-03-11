@@ -12,14 +12,14 @@ import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.PlayerEngine.SPlayer;
-import Main.SMain;
-import WebEngine.MessageEngine.SM;
-import WebEngine.MessageEngine.SMPatterns;
 
 public class SBullet extends SMobile{
 	protected SEntity owner;
 	protected int numberOfBulletsAtOnce = 1;
 	protected float damage;
+	
+	protected boolean exploded;
+	protected SVector explosionPos;
 	
 	public SBullet createBullet(){
 		return new SBullet(owner, this);
@@ -96,5 +96,17 @@ public class SBullet extends SMobile{
 	}
 	public void setDamage(float damage) {
 		this.damage = damage;
+	}
+	public boolean isExploded() {
+		return exploded;
+	}
+	public void setExploded(boolean exploded) {
+		this.exploded = exploded;
+	}
+	public SVector getExplosionPos() {
+		return explosionPos;
+	}
+	public void setExplosionPos(SVector explosionPos) {
+		this.explosionPos = explosionPos;
 	}
 }

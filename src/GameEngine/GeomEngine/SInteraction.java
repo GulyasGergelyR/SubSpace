@@ -22,7 +22,7 @@ public class SInteraction {
 	private float cv1;
 	private float cv2;
 	private SVector contactPoint;
-	private boolean collisionExplosion = true;
+	private boolean collisionExplosion = false;
 	private boolean happened;
 	
 	public SInteraction(SMobile mobile1, SMobile mobile2){
@@ -49,21 +49,26 @@ public class SInteraction {
 				SM message = SMPatterns.getObjectDeleteMessage(powerUp);
 				SMain.getCommunicationHandler().SendMessage(message);
 				SFH.PowerUps.powerUpApplied(powerUp.getType());
+				happened = true;
 			} else {
 				if (collide()){
 					happened = true;
-					if ((mobile1 instanceof SDebris || mobile2 instanceof SBullet)&&
-							(mobile2 instanceof SDebris || mobile1 instanceof SBullet)){
-							collisionExplosion = true;
-					}
-					else if (mobile1 instanceof SHitable || mobile2 instanceof SHitable){
-						collisionExplosion = true;
+					if (mobile1 instanceof SHitable || mobile2 instanceof SHitable){
+						if ((mobile1 instanceof SDebris || mobile2 instanceof SDebris)||
+								(mobile1 instanceof SEntity && mobile2 instanceof SEntity)){
+							if (getRelativeSpeed() > 5)
+								collisionExplosion = true;
+						}
+						else {
+							//collisionExplosion = true;
+						}
 						applyDamage(mobile1, mobile2);
 						applyDamage(mobile2, mobile1);
-					}
-					if (collisionExplosion){
-						SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(contactPoint, (byte)61);
-						SMain.getCommunicationHandler().SendMessage(explosionMessage);
+						
+						if (collisionExplosion){
+							SM explosionMessage = SMPatterns.getAnimationObjectCreateMessage(contactPoint, (byte)61);
+							SMain.getCommunicationHandler().SendMessage(explosionMessage);
+						}
 					}
 				}
 			}
@@ -174,7 +179,7 @@ public class SInteraction {
 	private void applyDamage(SMobile source, SMobile target){
 		if (target instanceof SHitable){
 			if (source instanceof SBullet){
-				if (((SHitable)target).gotHit(((SBullet)source).getDamage(), ((SBullet)source).getOwner()))
+				if (((SHitable)target).gotHit(((SBullet)source).getDamage(), source))
 					((SBullet)source).getOwner().getPlayer().addKill(1);
 			}
 			else if (source instanceof SAsteroid){
@@ -205,4 +210,9 @@ public class SInteraction {
 	private float sqr(float f){
 		return f*f;
 	}
+
+	public SVector getContactPoint() {
+		return contactPoint;
+	}
+	
 }
