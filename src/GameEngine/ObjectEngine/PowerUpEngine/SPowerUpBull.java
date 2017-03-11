@@ -13,13 +13,10 @@ public class SPowerUpBull extends SPowerUp {
 	protected static int maxNumberOfPowerUps = Specifications.maxNumberOfPowerUpBull;
 	
 	public SPowerUpBull(SVector pos){
-		super(pos);
+		super(pos, Specifications.powerupBullDuration);
 		this.type = SPowerUpFactory.PowerUpBull;
 		this.getBody().setTexture("res/object/powerup/powerupbull.png");
 		this.setLookDir(new SVector(0, -1));
-		if (SMain.IsServer()){
-			((SPowerUpControlServer)this.getController()).setDuration(Specifications.powerupBullDuration);
-		}
 	}
 	
 	@Override

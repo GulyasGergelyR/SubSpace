@@ -24,7 +24,7 @@ public class SPowerUpFactory extends SFactory<SPowerUp>{
 		super("Power-up factory", (byte)40);
 	}
 	
-	public void createNewPowerUpAtClient(SVector pos, int id, byte powerUpType){
+	public void createNewPowerUpAtClient(SVector pos, int id, byte powerUpType, int duration){
 		SPowerUp powerUp = null;
 		if (powerUpType == PowerUpHeal){
 			powerUp = new SPowerUpHeal(pos);
@@ -35,7 +35,7 @@ public class SPowerUpFactory extends SFactory<SPowerUp>{
 		} else if (powerUpType == PowerUpBull){
 			powerUp = new SPowerUpBull(pos);
 		}
-		powerUp.setController(new SControlClient<SPowerUp>(powerUp));
+		powerUp.setDuration(duration);
 		powerUp.setId(new SId(id));
 		addObject(powerUp);
 	}

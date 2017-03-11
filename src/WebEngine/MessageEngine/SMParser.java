@@ -115,7 +115,8 @@ public class SMParser {
 		} else if (objectTypeId == SFH.PowerUps.getFactoryType()){
 			byte powerUpType = buffer.get();
 			SVector pos = parseBigVector(buffer);
-			SFH.PowerUps.createNewPowerUpAtClient(pos, id, powerUpType);
+			int duration = buffer.getShort();
+			SFH.PowerUps.createNewPowerUpAtClient(pos, id, powerUpType, duration);
 		} else if (objectTypeId == SFH.Debris.getFactoryType()){
 			byte debriesType = buffer.get();
 			SVector pos = parseBigVector(buffer);

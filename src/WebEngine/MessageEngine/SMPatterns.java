@@ -196,6 +196,7 @@ public class SMPatterns {
 			buffer.put(SFH.PowerUps.getFactoryType());
 			buffer.put(powerUp.getType());
 			powerUp.getPos().addToBufferAsBigVector(buffer);
+			buffer.putShort((short) powerUp.getDuration());
 		} else if (object instanceof SDebris){
 			SDebris debris = (SDebris) object;
 			buffer.put(SFH.Debris.getFactoryType());

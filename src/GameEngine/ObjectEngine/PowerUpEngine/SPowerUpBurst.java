@@ -13,13 +13,10 @@ public class SPowerUpBurst extends SPowerUp {
 	protected static int maxNumberOfPowerUps = Specifications.maxNumberOfPowerUpBurst;
 	
 	public SPowerUpBurst(SVector pos) {
-		super(pos);
+		super(pos, Specifications.powerupBurstDuration);
 		this.type = SPowerUpFactory.PowerUpBurst;
 		this.getBody().setTexture("res/object/powerup/powerupburst.png");
 		this.setLookDir(new SVector(0, -1));
-		if (SMain.IsServer()){
-			((SPowerUpControlServer)this.getController()).setDuration(Specifications.powerupBurstDuration);
-		}
 	}
 
 	@Override

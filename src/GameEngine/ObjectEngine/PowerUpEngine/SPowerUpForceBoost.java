@@ -13,13 +13,10 @@ public class SPowerUpForceBoost extends SPowerUp {
 	protected static int maxNumberOfPowerUps = Specifications.maxNumberOfPowerUpForceBoost;
 	
 	public SPowerUpForceBoost(SVector pos) {
-		super(pos);
+		super(pos, Specifications.powerupForceBoostDuration);
 		this.type = SPowerUpFactory.PowerUpForceBoost;
 		this.getBody().setTexture("res/object/powerup/powerupforceboost.png");
 		this.setLookDir(new SVector(0, -1));
-		if (SMain.IsServer()){
-			((SPowerUpControlServer)this.getController()).setDuration(Specifications.powerupForceBoostDuration);
-		}
 	}
 
 	@Override
