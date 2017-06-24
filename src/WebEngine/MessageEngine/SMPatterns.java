@@ -64,6 +64,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CConnect);
+		buffer.put((byte)0);
+		
 		byte[] name = nameString.getBytes();
 		buffer.put((byte)nameString.length());
 		buffer.put(name);
@@ -73,6 +75,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CDisconnect);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)localNode.getId().get());
 		return message;
 	}
@@ -80,6 +84,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CPingRequest);
+		buffer.put((byte)0);
+		
 		buffer.putLong(nanoTime);
 		if (client.getPing()>999){
 			buffer.putShort((short)999);
@@ -92,6 +98,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CPingAnswer);
+		buffer.put((byte)0);
+		
 		buffer.putLong(nanoTime);
 		return message;
 	}
@@ -99,6 +107,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CConnectAllowed);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)client.getId().get());
 		return message;
 	}
@@ -106,6 +116,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CConnectNotAllowed);
+		buffer.put((byte)0);
+		
 		buffer.put(reason);
 		return message;
 	}
@@ -113,6 +125,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CEntityUpdate);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)entity.getId().get());
 		// Add vectors
 		entity.getPos().addToBufferAsBigVector(buffer);
@@ -128,6 +142,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CEntityUpdateState);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)entity.getId().get());
 		buffer.put(entity.getObjectStateId());
 		buffer.put(entity.getPlayerGameStateId());
@@ -139,6 +155,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CEntityCreate);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)player.getId().get());
 		byte[] name = player.getName().getBytes();
 		buffer.put((byte)player.getName().length());
@@ -149,6 +167,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CEntityDelete);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)entity.getId().get());
 		return message;
 	}
@@ -157,6 +177,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CClientInput);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)mobile.getId().get());
 		buffer.put(command);
 		aim.addToBufferAsBigVector(buffer);
@@ -167,6 +189,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectUpdate);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)object.getId().get());
 		// Add vectors
 		if (object instanceof SAsteroid){
@@ -184,6 +208,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectCreate);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SBullet){
 			SBullet bullet = (SBullet) object;
@@ -218,6 +244,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CAnimationObjectCreate);
+		buffer.put((byte)0);
+		
 		buffer.put(animationId);
 		pos.addToBufferAsBigVector(buffer);
 		return message;
@@ -227,6 +255,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectRequestCreate);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)id);
 		buffer.put(factoryId);
 		return message;
@@ -236,6 +266,8 @@ public class SMPatterns {
 		SM message = new SM();
 		ByteBuffer buffer = message.getBuffer();
 		buffer.put(CObjectDelete);
+		buffer.put((byte)0);
+		
 		buffer.putShort((short)object.getId().get());
 		if (object instanceof SBullet){
 			buffer.put(SFH.Bullets.getFactoryType());

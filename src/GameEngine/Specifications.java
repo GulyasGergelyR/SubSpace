@@ -54,6 +54,7 @@ public final class Specifications {
 	public static int effectBurstDuration = 550;
 	public static int effectBullDuration = 600;
 	public static int effectForceBoostDuration = 400;
+	public static int effectBlackHoleDuration = 500;
 	
 	//Entity
 	public static int entityLife = 100;

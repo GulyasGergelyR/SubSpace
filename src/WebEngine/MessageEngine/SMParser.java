@@ -197,6 +197,5 @@ public class SMParser {
 				SMain.getGameInstance().addAnimationObject(object);
 			}
 		}
-		
 	}
 }

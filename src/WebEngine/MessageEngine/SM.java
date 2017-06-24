@@ -12,7 +12,9 @@ public class SM {
 	protected ByteBuffer buffer;
 	protected InetAddress address;
 	protected int port;
+	protected byte dataLength;
 	
+	@Deprecated
 	public SM(DatagramPacket receivePacket){
 		data = new byte[Specifications.DataLength];
 		System.arraycopy(receivePacket.getData(), receivePacket.getOffset(), data, 0, receivePacket.getLength());
@@ -21,18 +23,25 @@ public class SM {
 		buffer = ByteBuffer.wrap(data);
 		commandId = buffer.get();
 	}
+	public SM(byte commandId, byte[] data, InetAddress address, int port){
+		this.data = data;
+		this.address = address;
+		this.port = port;
+		buffer = ByteBuffer.wrap(data);
+		this.commandId = commandId;
+	}
 	public SM(){
 		data = new byte[Specifications.DataLength];
 		buffer = ByteBuffer.wrap(data);
 	}
 	public byte[] getData(){
-		int dataLength = 0; 
 		for(int i=data.length-1;i>=0;i--)
 			if (data[i] != 0){
-				dataLength = i+1;
+				dataLength = (byte)(i+1);
 				break;
 			}
 		byte[] temp = new byte[dataLength];
+		this.buffer.put(1, (byte)(this.dataLength-2));
 		System.arraycopy(data, 0, temp, 0, dataLength);
 		return temp;
 	}

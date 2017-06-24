@@ -53,8 +53,8 @@ public class SUDPNode {
 		
 		@Override
 		public void run() {
-			byte[] receiveData = new byte[Specifications.DataLength];
             while(running){
+            	byte[] receiveData = new byte[2048];
             	DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 try {
 					socket.receive(receivePacket);

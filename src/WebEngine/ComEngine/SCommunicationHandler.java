@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import GameEngine.SId;
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SyncEngine.SServerTimer;
@@ -209,7 +210,41 @@ public class SCommunicationHandler {
 	
 	/////////////////////////////Parsing\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
-		SM message = new SM(receivePacket);
+		byte[] data = receivePacket.getData();
+		int i = 0;
+		
+//		for (int j=0;j<data.length;j++){
+//			System.out.print(data[j]+".");
+//			if (j > 60){
+//				break;
+//			}
+//		}
+//			
+//		System.out.println();
+		
+		while (i<data.length){
+			// First byte is always the id
+			// second byte is the length of the message
+			
+			byte commandId = data[i];
+			if (commandId == 0) {
+				break;
+			}
+			int length = data[i+1];
+			if (length == 0) {
+				break;
+			}
+			//System.out.println("i: "+ i + " id: " + String.format("%02x", commandId & 0xff) + " length: " + length);
+			byte[] messageData = new byte[Specifications.DataLength];
+			System.arraycopy(data, i+2, messageData, 0, length);
+			
+			this.ParseMessageFromMessage(new SM(commandId, messageData, receivePacket.getAddress(), receivePacket.getPort()));
+			
+			i += length + 2;
+		}
+	}
+	
+	private void ParseMessageFromMessage(SM message){
 		//System.out.println("parsing message...");
 		if(message.isValid()){
 			byte command = message.getCommandId();

@@ -16,6 +16,7 @@ public class SEffectFactory extends SFactory<SEffect> {
 	public static final byte EffectBurst = 1;
 	public static final byte EffectForceBoost = 2;
 	public static final byte EffectBull = 3;
+	public static final byte EffectBlackHole = 4;
 	
 	public SEffectFactory(){
 		super("Effect factory", (byte) 70);
