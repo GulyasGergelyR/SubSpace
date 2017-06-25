@@ -256,16 +256,18 @@ public class SRenderer {
 	}
 	
 	private static void DrawHud(){
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0,
-				Specifications.WindowWidth,
-				Specifications.WindowHeight,
-				0, -10, 10);
-		glMatrixMode(GL_MODELVIEW);
-		
-		for(SRenderObject draw : SHud.DrawHud()){
-			Draw(draw);
+		if (SFH.Players.getLocalPlayer().getEntity() != null){
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(0,
+					Specifications.WindowWidth,
+					Specifications.WindowHeight,
+					0, -10, 10);
+			glMatrixMode(GL_MODELVIEW);
+			
+			for(SRenderObject draw : SHud.DrawHud()){
+				Draw(draw);
+			}
 		}
 	}
 	
