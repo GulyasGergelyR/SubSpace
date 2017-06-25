@@ -45,6 +45,7 @@ public class SM {
 		System.arraycopy(data, 0, temp, 0, dataLength);
 		return temp;
 	}
+	
 	public ByteBuffer getBuffer(){
 		return buffer;
 	}

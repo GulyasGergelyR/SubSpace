@@ -1,7 +1,5 @@
 package GameEngine;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Random;
@@ -13,11 +11,9 @@ import GameEngine.ObjectEngine.SBackGround;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUpFactory;
-import GameEngine.PlayerEngine.SPlayer.PlayerType;
 import GameEngine.SyncEngine.SFPS;
 import Main.SMain;
 import WebEngine.ComEngine.SCommunicationHandler;
-import WebEngine.ComEngine.SNode;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;

@@ -4,7 +4,6 @@ import java.util.Random;
 
 import GameEngine.SId;
 import GameEngine.Specifications;
-import GameEngine.ControlEngine.SControlClient;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
 import Main.SMain;

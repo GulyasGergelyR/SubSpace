@@ -1,10 +1,14 @@
 package WebEngine.ComEngine;
 import java.net.InetAddress;
+import java.nio.ByteBuffer;
+import java.util.LinkedList;
 
 import GameEngine.SId;
 import GameEngine.SIdentifiable;
+import GameEngine.Specifications;
 import GameEngine.PlayerEngine.SPlayer;
 import GameEngine.PlayerEngine.SPlayer.PlayerType;
+import WebEngine.MessageEngine.SM;
 
 public class SNode extends SIdentifiable{
 	private InetAddress address;
@@ -14,6 +18,8 @@ public class SNode extends SIdentifiable{
 	private ConnectionState state = ConnectionState.NotConnected;
 	private float ping = 1.0f;
 	private SPlayer player;
+	
+	private LinkedList<SM> messages = new LinkedList<SM>();
 	
 	public SNode(InetAddress address, int port, String name, PlayerType playerState){
 		super();
@@ -60,5 +66,30 @@ public class SNode extends SIdentifiable{
 	}
 	public SPlayer getPlayer(){
 		return player;
+	}
+	
+	public void addMessage(SM message){
+		synchronized (messages) {
+			messages.add(message);
+		}
+	}
+	public boolean hasMessages(){
+		synchronized (messages) {
+			return messages.size() > 0;
+		}
+	}
+	public byte[] flushMessages(){
+		byte[] data = new byte[Specifications.MessageLength];
+		ByteBuffer buffer = ByteBuffer.wrap(data);
+		synchronized (messages) {
+			// System.out.println("Flushing: "+ messages.size());
+			while (messages.size() > 0){
+				SM message = messages.pop();
+				buffer.put(message.getData());
+			}
+		}
+		byte[] temp = new byte[buffer.position()];
+		System.arraycopy(data, 0, temp, 0, buffer.position());
+		return temp;
 	}
 }

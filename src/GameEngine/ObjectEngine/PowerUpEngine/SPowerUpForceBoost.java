@@ -1,12 +1,10 @@
 package GameEngine.ObjectEngine.PowerUpEngine;
 
 import GameEngine.Specifications;
-import GameEngine.ControlEngine.SPowerUpControlServer;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.EffectEngine.SEffectForceBoost;
-import Main.SMain;
 
 public class SPowerUpForceBoost extends SPowerUp {
 	protected static int currentNumberOfPowerUps = 0;

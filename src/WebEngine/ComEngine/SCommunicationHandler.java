@@ -20,7 +20,7 @@ import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMParser;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SCommunicationHandler {
+public class SCommunicationHandler extends Thread{
 	private List<SNode> nodes;
 	private SNode server;
 	
@@ -168,6 +168,7 @@ public class SCommunicationHandler {
 	}
 	
 	////////////////////////////Message\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+	
 	public void SendMessage(SM message){
 		if(!SMain.IsServer()){
 			if (localNode.getState().equals(ConnectionState.Connected))
@@ -175,35 +176,50 @@ public class SCommunicationHandler {
 		} else{
 			synchronized (nodes) {
 				for(SNode node : nodes){
-					udpNode.SendMessage(message, node);
+					node.addMessage(message);
+					// udpNode.SendMessage(message, node);
 				}
 			}
 		}
 	}
+	
 	public void SendMessageToNode(SM message, int id){
 		synchronized (nodes){
 			SNode node = getNodeById(id);
 			if(!node.equals(localNode))
-				udpNode.SendMessage(message, node);
+				// udpNode.SendMessage(message, node);
+				node.addMessage(message);
 			else{
 				System.out.println("Trying to send to itself");
 			}
 		}
 	}
+	
 	public void SendMessageToNode(SM message, SNode node){
 		synchronized (nodes) {
 			if(!node.equals(localNode))
-				udpNode.SendMessage(message, node);
+				// udpNode.SendMessage(message, node);
+				node.addMessage(message);
 			else{
 				System.out.println("Trying to send to itself");
 			}
 		}
 	}
+	
 	public void SendMessageExceptToNode(SM message, SNode notNode){
 		synchronized (nodes) {
 			for(SNode node : nodes){
 				if(!node.equals(notNode))
-					udpNode.SendMessage(message, node);
+					// udpNode.SendMessage(message, node);
+					node.addMessage(message);
+			}
+		}
+	}
+	
+	public void SendMessagesToNodes(){
+		synchronized (nodes) {
+			for(SNode node : nodes){
+				udpNode.flushNode(node);
 			}
 		}
 	}
@@ -212,15 +228,6 @@ public class SCommunicationHandler {
 	public void ParseMessageFromDatagramPacket(DatagramPacket receivePacket){
 		byte[] data = receivePacket.getData();
 		int i = 0;
-		
-//		for (int j=0;j<data.length;j++){
-//			System.out.print(data[j]+".");
-//			if (j > 60){
-//				break;
-//			}
-//		}
-//			
-//		System.out.println();
 		
 		while (i<data.length){
 			// First byte is always the id
@@ -234,7 +241,6 @@ public class SCommunicationHandler {
 			if (length == 0) {
 				break;
 			}
-			//System.out.println("i: "+ i + " id: " + String.format("%02x", commandId & 0xff) + " length: " + length);
 			byte[] messageData = new byte[Specifications.DataLength];
 			System.arraycopy(data, i+2, messageData, 0, length);
 			

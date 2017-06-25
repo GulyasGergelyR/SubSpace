@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 public final class Specifications {
 	public static final int FPS_M = 60;
 	public static final int DataLength = 41;
+	public static final int MessageLength = 4096;
 	
 	//Player
 	public static String name = "Player";

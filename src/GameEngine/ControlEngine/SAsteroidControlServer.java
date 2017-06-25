@@ -3,8 +3,6 @@ package GameEngine.ControlEngine;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
-import GameEngine.GeomEngine.SCollision;
-import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SInteraction;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;

@@ -7,8 +7,6 @@ import GameEngine.SId;
 import GameEngine.Specifications;
 import GameEngine.BaseEngine.SUpdatable;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
-import GameEngine.GeomEngine.SCollision;
-import GameEngine.GeomEngine.SGeomFunctions;
 import GameEngine.GeomEngine.SInteraction;
 import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFactory;
