@@ -5,9 +5,13 @@ import GameEngine.GeomEngine.SHitboxSpherical;
 import GameEngine.GeomEngine.SVector;
 import Main.SMain;
 
-public class SInteracter<Type1, Type2>{
-	private Type1 mobile1;
-	private Type2 mobile2;
+public class SInteracter<Type1 extends SMobile, Type2 extends SMobile>{
+	private SMobile mobile1;
+	private SMobile mobile2;
+	
+	SHitboxSpherical hitbox1;
+	SHitboxSpherical hitbox2;
+	
 	private float t = 1f;
 	private float cv1;
 	private float cv2;
@@ -18,11 +22,14 @@ public class SInteracter<Type1, Type2>{
 	private SVector contactPoint;  // point of contact
 	private SVector posDuringContact1;  // center points during contact
 	private SVector posDuringContact2;
+	
 	private boolean happened;
 	
 	public SInteracter(Type1 mobile1, Type2 mobile2){
 		this.mobile1 = mobile1;
 		this.mobile2 = mobile2;
+		
+		hitboxSelector();
 		
 		if (intersects()){
 			setMass();
@@ -33,13 +40,7 @@ public class SInteracter<Type1, Type2>{
 		}
 	}
 	
-	private boolean intersects(){
-		SMobile mobile1 = (SMobile)this.mobile1;
-		SMobile mobile2 = (SMobile)this.mobile2; 
-		
-		SHitboxSpherical hitbox1 = (SHitboxSpherical)mobile1.getBody().getHitbox();
-		SHitboxSpherical hitbox2 = (SHitboxSpherical)mobile2.getBody().getHitbox();
-		
+	private boolean intersects(){ 
 		SVector v1 = mobile1.getPos().sub(mobile1.getPrevPos());
 		SVector v2 = mobile2.getPos().sub(mobile2.getPrevPos());
 		float ax = mobile1.getPrevPos().getX()-mobile2.getPrevPos().getX();
@@ -90,26 +91,23 @@ public class SInteracter<Type1, Type2>{
 		return bounce();
 	}
 	
+	private void hitboxSelector(){
+		hitbox1 = (SHitboxSpherical)mobile1.getBody().getHitbox();
+		hitbox2 = (SHitboxSpherical)mobile2.getBody().getHitbox();		
+	}
+	
 	private void collisionHook(){
 		// for explosion, applying damage
 	}
 	
-	private SVector calcContactPoint(){
-		SMobile mobile1 = (SMobile)this.mobile1;
-		SMobile mobile2 = (SMobile)this.mobile2; 
-		
+	private void calcContactPoint(){
 		posDuringContact1 = mobile1.getPrevPos().add(mobile1.getPos().sub(mobile1.getPrevPos()).m(t));
 		posDuringContact2 = mobile2.getPrevPos().add(mobile2.getPos().sub(mobile2.getPrevPos()).m(t));
 		// Determine contact point
-		contactPoint = posDuringContact1.add(posDuringContact2.sub(posDuringContact1).setLength(
-				((SHitboxSpherical)mobile1.getBody().getHitbox()).getRadius()));
-		return contactPoint;
+		contactPoint = posDuringContact1.add(posDuringContact2.sub(posDuringContact1).setLength(hitbox1.getRadius()));
 	}
 	
 	private boolean bounce(){
-		SMobile mobile1 = (SMobile)this.mobile1;
-		SMobile mobile2 = (SMobile)this.mobile2; 
-		
 		SVector n = posDuringContact2.sub(posDuringContact1);
 		cv1 = n.getProjection(mobile1.getMoveDir());
 		cv2 = n.getProjection(mobile2.getMoveDir());
@@ -135,9 +133,6 @@ public class SInteracter<Type1, Type2>{
 	}
 	
 	private void setMass(){
-		SMobile mobile1 = (SMobile)this.mobile1;
-		SMobile mobile2 = (SMobile)this.mobile2; 
-		
 		m1 = mobile1.getBody().getMass();
 		m2 = mobile2.getBody().getMass();
 	}

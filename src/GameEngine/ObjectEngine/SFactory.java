@@ -3,13 +3,12 @@ package GameEngine.ObjectEngine;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
-import WebEngine.MessageEngine.SM;
-import WebEngine.MessageEngine.SMPatterns;
-import GameEngine.SIdentifiable;
 import GameEngine.BaseEngine.SUpdatable;
 import Main.SMain;
+import WebEngine.MessageEngine.SM;
+import WebEngine.MessageEngine.SMPatterns;
 
-public class SFactory<Type> {
+public class SFactory<Type extends SUpdatable> {
 	protected LinkedList<Type> objects;
 	protected String FactoryName = "None";
 	protected byte factoryType;
@@ -24,7 +23,7 @@ public class SFactory<Type> {
 		if(!objects.isEmpty()){
 			ListIterator<Type> iter = objects.listIterator();
 			while(iter.hasNext()){
-				SUpdatable object = (SUpdatable)iter.next();
+				SUpdatable object = iter.next();
 			    if(object.shouldBeDeleted()){
 			    	object.kill();
 			        iter.remove();
@@ -40,7 +39,7 @@ public class SFactory<Type> {
 	}
 	
 	public void addObject(Type object){
-		if (getObjectById(((SIdentifiable)object).getId().get()) == null){
+		if (getObjectById(object.getId().get()) == null){
 			objects.add(object);
 		}
 	}
@@ -52,7 +51,7 @@ public class SFactory<Type> {
 	public void removeObjectFromList(int Id){
 		ListIterator<Type> iter = objects.listIterator();
 		while(iter.hasNext()){
-			SUpdatable object = (SUpdatable)iter.next();
+			SUpdatable object = iter.next();
 		    if(object.equals(Id)){
 		    	object.kill();
 		        iter.remove();
@@ -68,7 +67,7 @@ public class SFactory<Type> {
 	public Type getObjectById(int Id){
 		for(Type object : objects){
 			if (object.equals(Id))
-				return (Type)object;
+				return object;
 		}
 		return null;
 	}
@@ -76,7 +75,7 @@ public class SFactory<Type> {
 	public Type getObjectByIdWithCheck(int Id){
 		for(Type object : objects){
 			if (object.equals(Id))
-				return (Type)object;
+				return object;
 		}
 		System.out.printf("Object was not found in '%s', with Id: "+Id+"\n", FactoryName);
 		SM message = SMPatterns.getObjectRequestCreateMessage(Id, factoryType);

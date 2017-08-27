@@ -1,7 +1,8 @@
 package GameEngine.ControlEngine;
 
+import GameEngine.BaseEngine.SMobile;
 
-public class SControl<T> {
+public class SControl<T extends SMobile> {
 	protected int sendCounter = 0;
 	protected int maxSendCounter = 60;
 	protected T Owner;
