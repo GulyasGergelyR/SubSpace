@@ -31,8 +31,9 @@ public final class Specifications {
 	
 	//Debris
 	public static int maxNumberOfAsteroids = 100;
-	public static int maxNumberOfMines = 5;
+	public static int maxNumberOfMines = 10;
 	public static float chanceForAsteroid = 0.6f;
+	public static float chanceForMine = 0.9f;
 	public static float asteroidMaxSpeed = 130;
 	
 	//Power ups

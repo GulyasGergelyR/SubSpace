@@ -9,6 +9,7 @@ import GameEngine.GeomEngine.SVector;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.DebrisEngine.SMine;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.PlayerEngine.SPlayer;
@@ -198,6 +199,12 @@ public class SMPatterns {
 			buffer.put((byte)SFH.Debris.getFactoryType());
 			asteroid.getPos().addToBufferAsBigVector(buffer);
 			asteroid.getMoveDir().addToBufferAsBigVector(buffer);
+		} else if (object instanceof SMine){
+				SMine mine = (SMine) object;
+				buffer.put((byte)SFH.Debris.getFactoryType());
+				mine.getPos().addToBufferAsBigVector(buffer);
+				mine.getMoveDir().addToBufferAsBigVector(buffer);
+				mine.getAcclDir().addToBufferAsBigVector(buffer);
 		} else if (object instanceof SEffect){
 			buffer.put(SFH.Effects.getFactoryType());
 			buffer.putShort((short)((SEffect)object).getCurrentTime());
@@ -277,6 +284,8 @@ public class SMPatterns {
 			}
 		} else if (object instanceof SAsteroid){
 			buffer.put(SFH.Debris.getFactoryType());
+		} else if (object instanceof SMine){
+				buffer.put(SFH.Debris.getFactoryType());
 		} else if (object instanceof SPowerUp){
 			buffer.put(SFH.PowerUps.getFactoryType());
 		} else if (object instanceof SEffect){

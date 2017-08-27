@@ -8,6 +8,7 @@ import GameEngine.EntityEngine.SHitable;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.DebrisEngine.SMine;
 import GameEngine.ObjectEngine.EffectEngine.SEffectFactory;
 import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 import GameEngine.WeaponEngine.SBullet;
@@ -184,6 +185,9 @@ public class SInteraction {
 			}
 			else if (source instanceof SAsteroid){
 				((SHitable)target).gotHit(getRelativeSpeed()/3, source);
+			}
+			else if (source instanceof SMine){
+				((SHitable)target).gotHit(getRelativeSpeed()/15, source);
 			}
 			else if (source instanceof SEntity){
 				float damage = getRelativeSpeed()/3;

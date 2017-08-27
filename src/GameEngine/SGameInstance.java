@@ -107,6 +107,9 @@ public class SGameInstance {
 			if (random.nextFloat()>Specifications.chanceForAsteroid){
 				SFH.Debris.tryToCreateNewDebrisAtServer(SDebrisFactory.Asteroid);
 			}
+			if (random.nextFloat()>Specifications.chanceForMine){
+				SFH.Debris.tryToCreateNewDebrisAtServer(SDebrisFactory.Mine);
+			}
 			SFH.Debris.collisionCheckInFactory();
 		}
 		SFH.Bullets.UpdateObjects();

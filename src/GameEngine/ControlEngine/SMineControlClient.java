@@ -18,5 +18,10 @@ public class SMineControlClient extends SControlServer<SDebris>{
 	@Override
 	protected void Think() {
 		Owner.setLookDir(Owner.getLookDir().rotate(rotateDir*rotSpeed*SMain.getDeltaRatio()));
+		if (Owner.getAcclDir().l() > 0.0f){
+			Owner.getBody().setTexture("res/object/mine/Mine_red.png");
+		} else {
+			Owner.getBody().setTexture("res/object/mine/Mine_yellow.png");
+		}
 	}
 }

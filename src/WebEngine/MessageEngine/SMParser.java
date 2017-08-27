@@ -12,6 +12,8 @@ import GameEngine.ObjectEngine.SBulletExplosion;
 import GameEngine.ObjectEngine.SExplosion;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SDebris;
+import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
+import GameEngine.ObjectEngine.DebrisEngine.SMine;
 import GameEngine.ObjectEngine.EffectEngine.SEffect;
 import Main.SMain;
 
@@ -175,6 +177,9 @@ public class SMParser {
 			}
 			debris.setPos(parseBigVector(buffer));
 			debris.setMoveDir(parseBigVector(buffer));
+			if (debris.getType() == SDebrisFactory.Mine){
+				debris.setAcclDir(parseBigVector(buffer));
+			}
 		} else if (objectTypeId == SFH.Effects.getFactoryType()){
 			SEffect effect = SFH.Effects.getObjectByIdWithCheck(id);
 			if (effect == null){

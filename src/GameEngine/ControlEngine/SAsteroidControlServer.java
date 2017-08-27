@@ -6,14 +6,13 @@ import GameEngine.EntityEngine.SEntity.PlayerGameState;
 import GameEngine.GeomEngine.SInteraction;
 import GameEngine.ObjectEngine.SFH;
 import GameEngine.ObjectEngine.DebrisEngine.SAsteroid;
-import GameEngine.ObjectEngine.DebrisEngine.SDebris;
 import GameEngine.ObjectEngine.DebrisEngine.SDebrisFactory;
 import Main.SMain;
 import WebEngine.MessageEngine.SM;
 import WebEngine.MessageEngine.SMPatterns;
 
-public class SAsteroidControlServer extends SControlServer<SDebris>{
-	public SAsteroidControlServer(SDebris mobile){
+public class SAsteroidControlServer extends SControlServer<SAsteroid>{
+	public SAsteroidControlServer(SAsteroid mobile){
 		super(mobile);
 	}
 	@Override
@@ -24,7 +23,7 @@ public class SAsteroidControlServer extends SControlServer<SDebris>{
 				SInteraction interaction = new SInteraction(entity, Owner);
 				if (interaction.IsHappened()){
 						Owner.getController().setSendCounter(0);
-						SM message = SMPatterns.getObjectUpdateMessage((SAsteroid)Owner);
+						SM message = SMPatterns.getObjectUpdateMessage(Owner);
 						SMain.getCommunicationHandler().SendMessage(message);
 				}
 			}

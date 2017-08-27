@@ -16,12 +16,13 @@ public class SMine extends SDebris {
 		
 		this.setPos(new SVector(pos));
 		this.moveDir = new SVector(moveDir);
+		this.setMaxAcceleration(22.0f);
 		Random random = new Random();
 		this.lookDir = new SVector(1, 0).rotate(random.nextInt(360));
-		this.getBody().setTexture("res/entity/CrossHair.png");
+		this.getBody().setTexture("res/object/mine/Mine_yellow.png");
 		this.getBody().setScale(scale);
-		this.getBody().setHitbox(new SHitboxSpherical(this, 48));
-		this.getBody().setMass(scale*scale);
+		this.getBody().setHitbox(new SHitboxSpherical(this, 60));
+		this.getBody().setMass(1.0f);
 		this.setMaxSpeed(Specifications.asteroidMaxSpeed);
 		if (SMain.IsServer()){
 			this.setController(new SMineControlServer(this));
