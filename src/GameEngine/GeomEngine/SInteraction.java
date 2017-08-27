@@ -187,7 +187,7 @@ public class SInteraction {
 				((SHitable)target).gotHit(getRelativeSpeed()/3, source);
 			}
 			else if (source instanceof SMine){
-				((SHitable)target).gotHit(getRelativeSpeed()/15, source);
+				((SHitable)target).gotHit(getRelativeSpeed()/12 + 3, source);
 			}
 			else if (source instanceof SEntity){
 				float damage = getRelativeSpeed()/3;
