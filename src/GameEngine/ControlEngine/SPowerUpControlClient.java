@@ -6,13 +6,20 @@ import GameEngine.ObjectEngine.PowerUpEngine.SPowerUp;
 public class SPowerUpControlClient extends SControlClient<SPowerUp> {
 	protected int currentLifeTime = 0;
 	protected int maxLifeTime = 100;
-	protected float growing = 0.001f;
+	protected float growingRate = 0.001f;
 	
 	protected int currentTime = 0;
 	protected int duration;
 	
+	
+	private float defaultScale;
+	private float currentScale;
+	private float growing = 0;
+	
 	public SPowerUpControlClient(SPowerUp mobile){
 		super(mobile);
+		defaultScale = Owner.getBody().getScale();
+		currentScale = defaultScale;
 	}
 
 	@Override
@@ -23,15 +30,22 @@ public class SPowerUpControlClient extends SControlClient<SPowerUp> {
 				if (currentTime >= duration * 1.5f){	//automatic delete in case server does not send it
 					Owner.setObjectState(ObjectState.WaitingDelete);
 					return;
+				} else if (currentTime > duration * 0.8f && currentTime < duration){
+					currentScale = defaultScale	- (((float)currentTime)/duration - 0.8f) * (defaultScale - (maxLifeTime+1)*growingRate)/0.2f;
+				} else if (currentTime > duration) {
+					currentScale = 0.01f;
+					growing = 0.0f;
+					growingRate = 0.0f;
 				}
 			}
 			
 			if (currentLifeTime < maxLifeTime){
 				currentLifeTime++;
-				Owner.getBody().setScale(Owner.getBody().getScale()+growing);
+				growing = growing + growingRate;
+				Owner.getBody().setScale(currentScale+growing);
 			}
 			else{
-				growing = -1*growing;
+				growingRate = -1*growingRate;
 				currentLifeTime = 0;
 			}
 		}

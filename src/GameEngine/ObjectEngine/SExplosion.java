@@ -63,8 +63,8 @@ public class SExplosion extends SObject{
 		int Life = currentLife;
 		SVector leftBottom = new SVector(((Life-1)%8)*0.125f+0.0058f, ((Life-1)/8)*0.125f+0.028f+0.097f);
 		SVector rightUpper = new SVector(((Life-1)%8)*0.125f+0.0058f+0.097f, ((Life-1)/8)*0.125f+0.028f);
-		
-		list.add(new SRenderObject(body.getTexture(), getPos(), lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), leftBottom, rightUpper, 0.0101f));
+		Random random = new Random();
+		list.add(new SRenderObject(body.getTexture(), getPos(), lookDir.getAngle(), body.getCurrentDrawScale(), 1.0f, body.getColor(), leftBottom, rightUpper, 0.0101f+random.nextFloat()*0.0001f));
 		return list;
 	}
 	
