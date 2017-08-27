@@ -1,5 +1,6 @@
 package GameEngine.ControlEngine;
 
+import GameEngine.Specifications;
 import GameEngine.BaseEngine.SUpdatable.ObjectState;
 import GameEngine.EntityEngine.SEntity;
 import GameEngine.EntityEngine.SEntity.PlayerGameState;
@@ -15,19 +16,18 @@ import WebEngine.MessageEngine.SMPatterns;
 public class SMineControlServer extends SControlServer<SMine>{
 	SEntity target = null;
 	boolean hadTargetBefore = false;
-	final static float detectDistance = 900;
 	public SMineControlServer(SMine mobile){
 		super(mobile);
 	}
 	@Override
 	protected void Think() {
-		float distanceToClosestEntity = detectDistance;
+		float distanceToClosestEntity = Specifications.detectDistanceOfMines;
 		SVector direction = new SVector();
 		
 		if (target != null){
 			if (!target.isActive() || !target.isAlive()){
 				target = null;
-				distanceToClosestEntity = detectDistance;
+				distanceToClosestEntity = Specifications.detectDistanceOfMines;
 			} else {
 				distanceToClosestEntity = target.getPos().d(Owner.getPos());
 				direction = target.getPos().sub(Owner.getPos());

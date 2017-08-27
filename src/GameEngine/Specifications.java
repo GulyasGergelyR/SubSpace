@@ -32,6 +32,7 @@ public final class Specifications {
 	//Debris
 	public static int maxNumberOfAsteroids = 100;
 	public static int maxNumberOfMines = 10;
+	public static int detectDistanceOfMines = 900;
 	public static float chanceForAsteroid = 0.6f;
 	public static float chanceForMine = 0.9f;
 	public static float asteroidMaxSpeed = 130;
@@ -146,6 +147,8 @@ public final class Specifications {
 		print(fw, "[[Server]]");
 		print(fw, "[Debris]");
 		print(fw, "maxNumberOfAsteroids="+maxNumberOfAsteroids);
+		print(fw, "maxNumberOfMines="+maxNumberOfMines);
+		print(fw, "detectDistanceOfMines="+detectDistanceOfMines);
 		print(fw, "chanceForAsteroid="+chanceForAsteroid);
 		print(fw, "[PowerUps]");
 		print(fw, "allowPowerUps="+allowPowerUps);
@@ -188,6 +191,8 @@ public final class Specifications {
 			WindowHeight = (new SMatcher<Integer>()).match(line, "WindowHeight=(.*)", WindowHeight);
 			
 			maxNumberOfAsteroids = (new SMatcher<Integer>()).match(line, "maxNumberOfAsteroids=(.*)", maxNumberOfAsteroids);
+			maxNumberOfMines = (new SMatcher<Integer>()).match(line, "maxNumberOfMines=(.*)", maxNumberOfMines);
+			detectDistanceOfMines = (new SMatcher<Integer>()).match(line, "detectDistanceOfMines=(.*)", detectDistanceOfMines);
 			chanceForAsteroid = (new SMatcher<Float>()).match(line, "chanceForAsteroid=(.*)", chanceForAsteroid);
 			
 			allowPowerUps = (new SMatcher<Boolean>()).match(line, "allowPowerUps=(.*)", allowPowerUps);
