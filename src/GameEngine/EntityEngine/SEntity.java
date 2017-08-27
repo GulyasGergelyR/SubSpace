@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Color;
 
 import GameEngine.Specifications;
@@ -104,6 +105,10 @@ public class SEntity extends GameEngine.BaseEngine.SMobile implements SHitable{
 		} else if (playerGameState.equals(PlayerGameState.Respawning)){
 			list.add(new SRenderObject(body.getTexture(), getPos(), lookDir.getAngle(), body.getCurrentDrawScale(), body.getTransparency(), body.getColor(), 2.0f));
 		}
+		list.add(new SRenderObject("res/entity/CrossHair.png", getPos().add(
+				2*(-Specifications.WindowWidth/2+Mouse.getX()),
+				2*(-Specifications.WindowHeight/2+Mouse.getY())),
+				0.0f, 0.2f, body.getTransparency(), body.getColor(), 2.0f));
 		
 		return list;
 	}

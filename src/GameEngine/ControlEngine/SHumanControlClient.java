@@ -1,5 +1,8 @@
 package GameEngine.ControlEngine;
 
+import org.lwjgl.BufferUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -18,6 +21,13 @@ public class SHumanControlClient extends SControlClient<SEntity>{
 	
 	public SHumanControlClient(SEntity mobile) {
 		super(mobile);
+		try {
+			Cursor emptyCursor = new Cursor(1, 1, 0, 0, 1, BufferUtils.createIntBuffer(1), null);
+			Mouse.setNativeCursor(emptyCursor);
+		} catch (LWJGLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@Override
 	protected void Think() {

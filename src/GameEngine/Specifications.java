@@ -67,7 +67,7 @@ public final class Specifications {
 	
 	//Bullet
 	public static int bulletDamage = 8;
-	public static float bulletSpeed = 150;
+	public static float bulletSpeed = 300;
 	
 	
 	public static List<String> resourcePathStrings = new ArrayList<String>();
