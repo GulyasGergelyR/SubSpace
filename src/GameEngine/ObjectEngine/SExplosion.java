@@ -49,8 +49,6 @@ public class SExplosion extends SObject{
 			}
 			firstTime = false;
 		}
-		//TODO remove this commented out
-		//this.getBody().setScale(this.getBody().getScale()+growing);
 		currentLife++;
 		if(currentLife>=maxLife){
 			this.setObjectState(ObjectState.WaitingDelete);

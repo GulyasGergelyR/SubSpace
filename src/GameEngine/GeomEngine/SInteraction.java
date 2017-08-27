@@ -214,5 +214,4 @@ public class SInteraction {
 	public SVector getContactPoint() {
 		return contactPoint;
 	}
-	
 }

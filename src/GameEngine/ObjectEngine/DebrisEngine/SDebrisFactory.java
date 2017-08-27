@@ -16,8 +16,10 @@ import WebEngine.MessageEngine.SMPatterns;
 
 public class SDebrisFactory extends SFactory<SDebris>{
 	public static final byte Asteroid = 1;
+	public static final byte Mine = 10;
 	protected static int currentNumberOfAsteroids = 0;
 	protected static int maxNumberOfAsteroid = Specifications.maxNumberOfAsteroids;
+	protected static int maxNumberOfMines = Specifications.maxNumberOfMines;
 	
 	public SDebrisFactory(){
 		super("Debris factory", (byte)50);
